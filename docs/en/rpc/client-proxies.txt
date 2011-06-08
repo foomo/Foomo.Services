@@ -1,0 +1,6 @@
++++ Flex / AS3 Zugspitze
+Is the most robust and evolved proxy - it wraps service methods in Zugspitz commands.
++++ PHP
+Is also full featured and has some interesting parallelization features.
++++ jQuery
+Is a draft and be warned since JSON which is being used as a serializer does not support types all object are anonymous.

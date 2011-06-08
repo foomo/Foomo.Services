@@ -1,0 +1,1 @@
+The purpose of value objects is to transport data. They have to be properly annotated using php-doc.

@@ -1,0 +1,54 @@
+
+Service reflection relies on PHPDoc http://en.wikipedia.org/wiki/PHPDoc Doc Comments
+
+++ Used standard Doc Comments
+
+* @param
+* @return
+* @throws
+* @var
+* @property
+
+++ Additional PHPDoc Doc Comments
+
+* @serviceGen ignore - method will not be exposed
+* @serviceMessage Some\ClassName - method emits messages of Some\Type
+* @serviceStatus  Some\ClassName - method emits status updates of Some\Type
+
+++ Typed arrays aka Vectors (which are not supported by php)
+
+Whenever you need an array of Some\Type - add square brackets.
+
+++ The current state of namespace resolution
+
+* relative namespaces in doc comments are not supported
+* it has to be the Full\Name\Space\To\Class without \ in front
+
+<geshi type="php">
+/**
+ * a sample class
+ */
+class Sample {
+	const VERSION = 0.1;
+	/**
+	 * Foo
+	 *
+	 * @param string[] $names an array of string
+	 *
+	 * @return Some\ClassName[] an array of Some\ClassName instances
+	 */
+	function bar(array $names)
+	{
+		$ret = array();
+		foreach($names as $name) {
+			$ret[] = new \Some\Class($name);
+		}
+		return $ret;
+	}
+}
+</geshi>
+
+++ Example
+
+<geshi type="php" file="<?= implode(DIRECTORY_SEPARATOR, array(\Foomo\CORE_CONFIG_DIR_MODULES, 'Foomo.Services', 'tests', 'Rad', 'Services', 'Mock', 'Service.php')) ?>">
+</geshi>

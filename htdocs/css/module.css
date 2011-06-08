@@ -1,0 +1,113 @@
+/* services */
+
+#serviceDisplay {
+	bottom:100px;
+	background-color: red;
+}
+
+#serviceDisplay td {
+  border: none;
+  padding : 5px;
+  vertical-align:top;
+}
+
+#serviceHtmlRenderer {
+
+}
+
+#serviceHtmlRenderer .type {
+	font-family: 'Courier-new', Monaco, fixed;
+}
+
+#serviceHtmlRenderer .operation {
+	font-size: 24px;
+}
+
+#serviceHtmlRenderer .comment {
+	font-weight: normal;
+}
+
+#serviceHtmlRenderer .constValue {
+	color:green;
+	background-color: white;	
+}
+
+#serviceHtmlRenderer .parameter {
+	font-weight: bold;
+}
+
+#serviceHtmlRenderer .parametersHeader {
+	font-size: 18px;
+	background-color:white;
+}
+#serviceHtmlRenderer table, td {
+	padding:5px;
+	border-width: 0 0 0 0;
+	border-left: grey 1px dotted;
+}
+
+#serviceHtmlRenderer .header1, .header2 {
+	padding-top: 10px;
+	font-size:18;
+	font-weight: bold;
+}
+
+#serviceHtmlRenderer .header2 {
+	font-weight:normal;	
+}
+
+#serviceHtmlRenderer .header1 {
+	background-color:#aaaaaa;
+}
+
+#serviceHtmlRenderer .indent {
+	padding-left:10px;
+}
+
+#serviceHtmlRenderer .operationComment {
+	font-size: 12px;
+	font-weight: normal;
+	padding-left: 10px;	
+}
+
+#serviceHtmlRenderer .rowB {
+}
+
+#serviceHtmlRenderer .rowA {
+	background-color: #efefef;
+}
+
+#serviceHtmlRenderer .parameterHeader {
+	border-bottom:1px grey dotted;
+}
+
+#serviceHtmlRendererTypes .propName {
+	font-size:14px;
+}
+
+#serviceHtmlRendererTypes .typeDocs {
+	font-size:12px;
+}
+
+#serviceHtmlRendererTypes .code {
+}
+
+#serviceHtmlRendererTypes .codeToplevel {
+	padding-top:10px;
+	font-size:16px;
+}
+
+#serviceHtmlRendererTypes div {
+	border-bottom: 1px grey dotted;
+}
+#serviceHtmlRendererTypes .topLevelDiv {
+	padding-top:20px;
+	padding-bottom:2px;
+	background-color: #efefef;
+}
+#serviceHtmlRendererTypes p, code {
+	font-size:12px;
+	margin:0;
+	padding:0;
+	display:inline;
+}

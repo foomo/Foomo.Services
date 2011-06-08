@@ -1,0 +1,5 @@
+<?= Foomo\Services\Module::NAME ?> in a shortlist:
+
+* expose php classes as services
+* extensive client proxy generation examples
+* handy service class reflection
