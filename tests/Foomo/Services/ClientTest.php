@@ -59,8 +59,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 	}
 	public function testParallelCall()
 	{
-		trigger_error('haaaaa', E_USER_NOTICE);
-		trigger_error('hiiii', E_USER_WARNING);
 		$methodCalls = array();
 		$parallelity = 4;
 		for($i=0;$i<$parallelity;$i++) {
