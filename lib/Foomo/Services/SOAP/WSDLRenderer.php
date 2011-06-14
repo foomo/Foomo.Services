@@ -4,6 +4,8 @@ namespace Foomo\Services\SOAP;
 
 use DOMElement;
 use DOMAttr;
+use DOMDocument;
+use DOMComment;
 
 /**
  * @package radact
@@ -35,10 +37,6 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer {
 	private $typesAdded;
 	private $ops;
 	private $serviceName;
-	private $endPoint;
-	public function __construct($endPoint) {
-		$this->endPoint = $endPoint;
-	}
 	public function init($serviceName) {
 		$this->serviceName = $serviceName = str_replace('\\', '', $serviceName);
 		$this->ops = array();

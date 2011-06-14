@@ -40,25 +40,13 @@ final class Utils {
 		// echo serialize(array('package' => $package, 'class' => $service->className));
 	}
 	/**
-	 * recompile the server i.e. the wsdl
-	 *
+	 * @param string $serviceClassName
+	 * 
+	 * @return string wsdl
 	 */
-	public static function generateWSDL()
+	public static function generateWSDL($serviceClassName)
 	{
-		/*
-		$knowClasses = \Foomo\AutoLoader::getClassMap();
-		if(in_array(strtolower($this->serviceSoap->className), array_keys($knowClasses))) {
-			$serviceReader = new Reflection($this->serviceSoap->className, new WSDLRenderer($this->serviceSoap->getEndPoint()));
-			file_put_contents($this->serviceSoap->getWsdlCacheFilename(), $serviceReader->render());
-			$ret = 'recompiled wsdl';
-		} else {
-			$ret = 'upsi - ' . $service->className . ' does not exist => can not compile a wsdl' . PHP_EOL;
-		}
-		if(!$onTheFly) {
-			header('Content-Type: text/plain');
-			echo $ret;
-		}
-		*/
+		return WSDLRenderer::render($serviceClassName);
 	}
 	/**
 	 * compiles the AS Proxy

@@ -72,9 +72,17 @@ class Service {
 			$retStar->test = $starSeed;
 			$ret[] = $retStar;
 			RPC::addStatusUpdate('added another star ' . count($ret) . ' / ' . count($starSeeds) );
-			sleep(1);
 		}
 		return $ret;
+	}
+	/**
+	 * get a funky star
+	 * 
+	 * @return Foomo\Services\Mock\FunkyStar
+	 */
+	public function getAFunkyStar()
+	{
+		return new FunkyStar();
 	}
 	/**
 	 * session test

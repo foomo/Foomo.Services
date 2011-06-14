@@ -3,7 +3,13 @@
 
 namespace Foomo\Services\SOAP\Frontend;
 
+use Foomo\MVC;
+
 class Controller {
+	/**
+	 * @var Model
+	 */
+	public $model;
 	public function actionDefault() {}
 	/*
 		if(count($_GET) == 0) {
@@ -26,4 +32,25 @@ class Controller {
 			}
 		}
 	 */
+	public function actionServe()
+	{
+		$this->model->serve();
+	}
+	public function actionWsdl()
+	{
+		MVC::abort();
+		$this->model->streamWsdl();
+		exit;
+	}
+	public function actionGetASProxy()
+	{
+		MVC::abort();
+		\Foomo\Services\SOAP\Utils::compileASProxy();
+		exit;
+	}
+	public function actionRecompileWsdl()
+	{
+		$this->model->compileWsdl();
+		$this->actionWsdl();
+	}
 }

@@ -3,6 +3,7 @@
 namespace Foomo\Services\SOAP\Frontend;
 
 use SoapServer;
+use Foomo\Services\SOAP\Utils;
 
 class Model {
 	
@@ -58,31 +59,35 @@ class Model {
 	}
 	public function getWsdlCacheFilename()
 	{
-		return  \Foomo\Config::getCacheDir() . '/serviceSoap-' . $this->className;
+		return  \Foomo\Config::getCacheDir() . '/serviceSoap-' . str_replace('\\', '.', $this->className) . '.wsdl';
 	}
 	public function getEndPoint()
 	{
-		return \Foomo\Utils::getServerUrl() . $_SERVER['PHP_SELF'];
+		return \Foomo\Utils::getServerUrl($this->requireSSL) . \Foomo\MVC::getCurrentURLHandler()->renderMethodUrl('serve');
+		//return \Foomo\Utils::getServerUrl() . $_SERVER['PHP_SELF'];
 	}
 	private function getWsdl()
 	{
 		$cacheFileName = $this->getWsdlCacheFilename();
 		if(!file_exists($cacheFileName)) {
-			Util::compileServer($this, true);
+			$this->compileWsdl();
 		}
 		return str_replace('#endPointPlaceHolder#', $this->getEndPoint(), file_get_contents($cacheFileName));
 	}
 	private function getClassMap()
 	{
-		$wsdlGenerator = new ServiceSoapWsdlRenderer($this->getEndPoint());
-		$serviceReader = new ServiceReader($this->className, $wsdlGenerator);
-		$serviceReader->render();
-		return $wsdlGenerator->getClassMap();
+		$wsdlRenderer = new \Foomo\Services\SOAP\WSDLRenderer();
+		\Foomo\Services\SOAP\WSDLRenderer::render($this->className, $wsdlRenderer);
+		return $wsdlRenderer->getClassMap();
 	}
 	public function streamWsdl()
 	{
 		header('Content-Type: text/xml');
 		echo $this->getWsdl();
+	}
+	public function compileWsdl()
+	{
+		file_put_contents($this->getWsdlCacheFilename(), Utils::generateWSDL(get_class($this->serverObject)));
 	}
 	private function initializeSoapServer()
 	{
@@ -109,7 +114,7 @@ class Model {
 			}
 		}
 	}
-	private function internalServeClass()
+	public function serve()
 	{
 		$this->initializeSoapServer();
 		if($this->flashWorkaround) {
@@ -120,6 +125,7 @@ class Model {
 			header('HTTP/1.1 200 OK');
 			ob_end_flush();
 		}
+		
 	}
 	/**
 	 * serve a class as a service including documentation, AS proxy generation etc.
