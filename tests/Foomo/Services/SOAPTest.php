@@ -6,6 +6,12 @@ use SoapClient;
 use Foomo\Services\SOAP\Client\DomainConfig as SoapConfig;
 
 class SOAPTest extends \PHPUnit_Framework_TestCase {
+	public function setUp()
+	{
+		if(!\Foomo\Session::getEnabled()) {
+			$this->markTestSkipped('session not enabled');
+		}
+	}
 	/**
 	 * @return SoapClient;
 	 */

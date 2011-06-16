@@ -10,7 +10,11 @@ class ClientTest extends \PHPUnit_Framework_TestCase {
 	protected $proxy;
 	public function setUp()
 	{
-		$this->proxy = new \Foomo\Services\Mock\ServiceProxy();
+		if(!\Foomo\Session::getEnabled()) {
+			$this->markTestSkipped('session not enabled');
+		} else {
+			$this->proxy = new \Foomo\Services\Mock\ServiceProxy();
+		}
 	}
 	public function testSessionPersistence()
 	{
