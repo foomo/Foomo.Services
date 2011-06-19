@@ -85,14 +85,15 @@ class RPC extends AbstractGenerator
 	 * @param stdClass $serviceClassInstance
 	 * @param string $targetPackage
 	 * @param string $targetSrcDir
+	 * @param string $configId Flex config entry to use
 	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report
 	 */
-	public static function compileSrc($serviceClassInstance, $targetPackage, $targetSrcDir)
+	public static function compileSrc($serviceClassInstance, $targetPackage, $targetSrcDir, $configId)
 	{
 		$report = self::generateSrc($serviceClassInstance, $targetPackage, $targetSrcDir);
 		if ($report->success) {
 			try {
-				$compilationReport = $report->generator->compile();
+				$compilationReport = $report->generator->compile($configId);
 				$report->report = 'COMPILATION SUCCESS : ' . PHP_EOL . PHP_EOL . $compilationReport . PHP_EOL;
 				$report->success = true;
 			} catch (Exception $e) {

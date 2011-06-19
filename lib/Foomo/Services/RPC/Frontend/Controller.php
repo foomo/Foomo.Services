@@ -136,21 +136,23 @@ class Controller
 
 	/**
 	 * get the current swc
+	 * @param string $configId
 	 */
-	public function actionCompileASClient()
+	public function actionCompileASClient($configId)
 	{
 		if ($this->checkDevAccess()) {
-			$this->compileASClientSrc();
+			$this->compileASClientSrc($configId);
 		}
 	}
 
 	/**
 	 * get the current swc
+	 * @param string $configId
 	 */
-	public function actionGetASClientAsSwc()
+	public function actionGetASClientAsSwc($configId)
 	{
 		if ($this->checkDevAccess()) {
-			$this->compileASClientSrc();
+			$this->compileASClientSrc($configId);
 			if ($this->model->proxyGeneratorReport->success) $this->streamSwc();
 		}
 	}
@@ -194,14 +196,15 @@ class Controller
 	}
 
 	/**
-	 *
+	 * @param string $configId
 	 */
-	private function compileASClientSrc()
+	private function compileASClientSrc($configId)
 	{
 		$this->model->proxyGeneratorReport = RPC::compileSrc(
 			$this->model->serviceClassInstance,
 			$this->model->package,
-			$this->checkSrcDir($this->model->srcDir)
+			$this->checkSrcDir($this->model->srcDir),
+			$configId
 		);
 	}
 
@@ -211,7 +214,8 @@ class Controller
 	private function streamSwc()
 	{
 		MVC::abort();
-		Utils::streamSWC($this->model->proxyGeneratorReport->generator->getSWCFilename());
+		$filename = $this->model->proxyGeneratorReport->generator->getSWCFilename();
+		\Foomo\Utils::streamFile($filename, basename($filename), 'application/octet-stream', true);
 		exit;
 	}
 
@@ -221,26 +225,22 @@ class Controller
 	private function streamTgz()
 	{
 		MVC::abort();
-		Utils::streamTgz($this->model->proxyGeneratorReport->generator->getTGZFilename());
+		$filename = $this->model->proxyGeneratorReport->generator->getTGZFilename();
+		\Foomo\Utils::streamFile($filename, basename($filename), 'application/x-compressed', true);
 		exit;
 	}
 
 	/**
-	 *
-	 * @param type $asSrcDir
-	 * @return type
+	 * @param string $asSrcDir
+	 * @return string
 	 */
 	private function checkSrcDir($asSrcDir=null)
 	{
 		if (empty($asSrcDir)) {
-			$flexConfig = \Foomo\Flex\DomainConfig::getInstance();
-			if (!empty($flexConfig->generatedSrcDir)) {
-				$asSrcDir = $flexConfig->generatedSrcDir;
-			} else {
-				$asSrcDir = tempnam(\Foomo\Services\Module::getTmpDir(), 'asClientSrc-');
-				unlink($asSrcDir);
-				mkdir($asSrcDir);
-			}
+			$asSrcDir = tempnam(\Foomo\Services\Module::getTmpDir(), 'asClientSrc-');
+			// @todo: use resource to create folder
+			unlink($asSrcDir);
+			mkdir($asSrcDir);
 		}
 		return $asSrcDir;
 	}

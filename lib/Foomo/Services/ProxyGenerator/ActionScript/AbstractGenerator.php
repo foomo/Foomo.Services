@@ -6,7 +6,6 @@ use Foomo\Services\Reflection\ServiceObjectType;
 use Foomo\Config;
 use Exception;
 use Foomo\CliCall;
-use Foomo\Flex\Settings as FlexSettings;
 use Foomo\Flex\Utils as FlexUtils;
 use Foomo\Services\Renderer\AbstractRenderer;
 use Foomo\Services\Reflection\RemoteClass;
@@ -441,7 +440,11 @@ abstract class AbstractGenerator extends AbstractRenderer
 		return $ret;
 	}
 
-	public function compile()
+	/**
+	 * @param string $configId Flex config id to use
+	 * @return string
+	 */
+	public function compile($configId)
 	{
 		$ret = 'COMPILING' . PHP_EOL;
 		$ret .= 'removing old swc ' . $this->getSWCFileName() . PHP_EOL;
@@ -454,18 +457,11 @@ abstract class AbstractGenerator extends AbstractRenderer
 			$sourcePaths = array_unique(array_merge($sourcePaths, $flexConfig->srcDirs));
 		}
 
-		if (\Foomo\Services\Utils::getServiceUsesRemoteClasses($this->serviceName)) {
-			if (!is_dir(FlexSettings::$PROJECT_DIR . DIRECTORY_SEPARATOR . 'src') || !is_dir(FlexSettings::$PROJECT_DIR . DIRECTORY_SEPARATOR . 'libs')) {
-				throw new Exception('The project needs client sources and apparently they are not there - please check ' . FlexSettings::$PROJECT_DIR, 1);
-			}
-			$sourcePaths[] = FlexSettings::$PROJECT_DIR . DIRECTORY_SEPARATOR . 'src';
-			$sourcePaths[] = FlexSettings::$PROJECT_DIR . DIRECTORY_SEPARATOR . 'libs';
-		}
+		# get sdk path
+		$domainConfigEntry = \Foomo\Flex\DomainConfig::getInstance()->getEntry($configId);
 
-		$swcs = array(
-			FlexSettings::$FLEX_HOME . DIRECTORY_SEPARATOR . 'frameworks' . DIRECTORY_SEPARATOR . 'libs',
-			FlexSettings::$FLEX_HOME . DIRECTORY_SEPARATOR . 'frameworks' . DIRECTORY_SEPARATOR . 'libs' . DIRECTORY_SEPARATOR . 'air'
-		);
+		# set source paths
+		$swcs = $domainConfigEntry->sourcePaths;
 
 		# add zugspitze swcs
 		$zsScaffold = new \Foomo\Zugspitze\Scaffold(\Foomo\Zugspitze\Module::getVendorDir());
@@ -474,13 +470,14 @@ abstract class AbstractGenerator extends AbstractRenderer
 			'org.foomo.zugspitze.core' => 'zugspitze_core.swc',
 			'org.foomo.zugspitze.services.core' => 'zugspitze_servicesCore.swc',
 		);
+
 		foreach ($zsExternals as $zsKey => $zsValue) {
 			$zsLibrary = $zsLibraries[$zsKey];
 			$zsLibrarySwc = $zsLibrary->pathname . DIRECTORY_SEPARATOR . 'bin'  . DIRECTORY_SEPARATOR . $zsValue;
 			if (\file_exists($zsLibrarySwc)) $swcs[] = $zsLibrarySwc;
 		}
 
-		$swcFile = FlexUtils::compileLibrarySWC($compileReport, $sourcePaths, array($this->targetSrcDir), $swcs);
+		$swcFile = FlexUtils::compileLibrarySWC($compileReport, $domainConfigEntry->sdkPath, $sourcePaths, array($this->targetSrcDir), $swcs);
 
 		if (!file_exists($swcFile)) {
 			throw new Exception(
