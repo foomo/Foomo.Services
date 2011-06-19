@@ -5,8 +5,8 @@ namespace Foomo\Services\SOAP\Frontend;
 use SoapServer;
 
 class Model {
-	
-	
+
+
 	/**
 	 * @var SoapServer
 	 */
@@ -26,7 +26,7 @@ class Model {
 	 * @var ServiceSoapASProxyRendererSettings
 	 */
 	public  $ASProxyCompilerSettings;
-	
+
 	public function setServiceInstance($inst)
 	{
 		$this->className = get_class($inst);
@@ -126,7 +126,7 @@ class Model {
 	 *
 	 * @param string $className name of the class that shall be run as a service
 	 * @param boolean $persistent whether or not the served object should be persistant
-	 * @param string $asPackage a package name like com.bestbytes.some.package
+	 * @param string $asPackage a package name like org.foomo.some.package
 	 * @param string $asSrcDir where to write the sctionscript classes to typically /tmp
 	 * @param boolean $useFlashWorkaround send a 200 http header with a fault instead of a 500
 	 */

@@ -23,7 +23,7 @@ abstract class AbstractRenderer
 
 	/**
 	 * render the service type itself
-	 * 
+	 *
 	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	abstract public function renderServiceType(ServiceObjectType $type);
@@ -56,14 +56,14 @@ abstract class AbstractRenderer
 	/**
 	 * @param string $className
 	 * @param AbstractRenderer $renderer
-	 * @return mixed 
+	 * @return mixed
 	 */
 	public static function render($className, AbstractRenderer $renderer = null)
 	{
 		$reflection = new \Foomo\Services\Reflection($className);
 
 		$calledClassName = \get_called_class();
-		
+
 		if (is_null($renderer)) $renderer = new $calledClassName;
 
 		$renderer->init($reflection->getClassName());

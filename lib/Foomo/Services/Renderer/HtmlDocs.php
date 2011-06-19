@@ -21,7 +21,7 @@ final class HtmlDocs extends AbstractRenderer {
 	public $serviceClassDocs = '';
 	private $renderedTypes;
 	public $types = array();
-	public $baseTypes = array('float', 'integer', 'boolean', 'string', 'mixed'); 
+	public $baseTypes = array('float', 'integer', 'boolean', 'string', 'mixed', 'bool', 'int', 'double');
 	public function init($serviceName)
 	{
 		$this->serviceName = $serviceName;
@@ -29,7 +29,7 @@ final class HtmlDocs extends AbstractRenderer {
 	}
 	/**
 	 * render the service type itself
-	 * 
+	 *
 	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(ServiceObjectType $type)
@@ -63,7 +63,7 @@ final class HtmlDocs extends AbstractRenderer {
 				}
 				$level --;
 			}
-		}		
+		}
 	}
 	public function typeIsInRecursion(ServiceObjectType $type)
 	{
@@ -82,14 +82,14 @@ final class HtmlDocs extends AbstractRenderer {
 			return false;
 		}
 	}
-	
+
 	public function renderOperation(ServiceOperation $op)
 	{
 		$this->opsHtmlToc .= \Foomo\Services\Module::getView($this, self::TEMPLATE_FOLDER . DIRECTORY_SEPARATOR . 'operationTocEntry', array('op' => $op, 'renderer' => $this));
 		$this->opsHtml .= \Foomo\Services\Module::getView($this, self::TEMPLATE_FOLDER . DIRECTORY_SEPARATOR . 'operation', array('op' => $op, 'renderer' => $this))->render();
 	}
 	public function output()
-	{	
+	{
 		$view = \Foomo\Services\Module::getView($this, self::TEMPLATE_FOLDER . DIRECTORY_SEPARATOR . 'service', $this) ;
 		return $view->render();
 	}

@@ -21,9 +21,9 @@
 					(Actionscript / Zugspitze)
 						<ul>
 							<li><?= $view->link('generate client source code', 'generateASClient', array(), 'This is useful, when you are generating the sources') ?></li>
-							<li><?= $view->link('generate client source code, compile it and download swc', 'compileAndDownloadClient') ?></li>
-							<li><?= $view->link('download as swc library', 'getASClientAsSWC') ?></li>
-							<li><?= $view->link('download sources as an archive', 'getASClientAsTgz') ?></li>
+							<li><?= $view->link('generate client source code and download tgz', 'getASClientAsTgz') ?></li>
+							<li><?= $view->link('generate client source code and compile it', 'compileASClient') ?></li>
+							<li><?= $view->link('generate client source code, compile it and download swc', 'getASClientAsSwc') ?></li>
 						</ul>
 				<? elseif($model->serializer instanceof Foomo\Services\RPC\Serializer\JSON): ?>
 					(Javascript / JSON)

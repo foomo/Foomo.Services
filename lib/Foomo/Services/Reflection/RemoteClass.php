@@ -10,7 +10,7 @@ namespace Foomo\Services\Reflection;
 class RemoteClass extends \Annotation {
 	/**
 	 * if there is an existing class on the actionscript client class add the name of it here - the client is on the remote side
-	 * @example com.bestbytes.bla.Blubb
+	 * @example org.foomo.bla.Blubb
 	 *
 	 * @var string
 	 */
@@ -18,7 +18,7 @@ class RemoteClass extends \Annotation {
 	/**
 	 * if you want the ValueObject to go into a specific package -  sth. like
 	 *
-	 * @example com.bestbytes.serverObjects
+	 * @example org.foomo.serverObjects
 	 *
 	 * @var string
 	 */

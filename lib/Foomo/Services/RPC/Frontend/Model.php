@@ -40,14 +40,14 @@ class Model
 	 * @var Foomo\Services\ProxyGenerator\RPC\Report
 	 */
 	public $proxyGeneratorReport;
-	
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
 
 	/**
 	 * @param string $method
-	 * @param array $arguments 
+	 * @param array $arguments
 	 */
 	public function serve($method=null, array $arguments=array())
 	{
@@ -98,6 +98,7 @@ class Model
 		}
 		// Content header
 		header('Content-Type: ' . $this->serializer->getContentMime());
+		header('Content-Length: ' . strlen($ret));
 		// gzipped output
 		ob_start('ob_gzhandler');
 		// \Foomo\Utils::appendToPhpErrorLog(PHP_EOL .  '----------------------------------------' . PHP_EOL . $ret);
@@ -105,7 +106,7 @@ class Model
 	}
 
 	/**
-	 * @return Foomo\Services\ServiceDescription 
+	 * @return Foomo\Services\ServiceDescription
 	 */
 	public function serveServiceDescription()
 	{

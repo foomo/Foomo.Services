@@ -4,8 +4,8 @@ namespace Foomo\Services\Types;
 
 /**
  * type to describe generic properties
- * 
- * @Foomo\Services\Reflection\RemoteClass(package='com.bestbytes.services.sharedVo')
+ *
+ * @Foomo\Services\Reflection\RemoteClass(package='org.foomo.services.sharedVo')
  */
 class Property {
 	/**
@@ -21,10 +21,10 @@ class Property {
 	 */
 	public $value;
 	/**
-	 * helper function to translate a hash 
+	 * helper function to translate a hash
 	 *
 	 * @param array $sourceHash
-	 * 
+	 *
 	 * @return Foomo\Services\Types\Property[]
 	 */
 	public static function castHashToServicePropertyArray($sourceHash)

@@ -11,7 +11,12 @@ use Foomo\Services\Reflection;
 /**
  * renders AS RPC Proxy clients rocking Zugspitze
  */
-class RPC extends AbstractGenerator {
+class RPC extends AbstractGenerator
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * @var string
 	 */
@@ -19,12 +24,16 @@ class RPC extends AbstractGenerator {
 	/**
 	 * @var string[]
 	 */
-	public $packageFolders = array('model', 'vo', 'events', 'commands', 'responders');
+	public $packageFolders = array('calls', 'operations', 'events', 'commands');
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
 
 	/**
 	 * compile and report
 	 *
-	 * @param string $serviceClassInstance
+	 * @param stdClass $serviceClassInstance
 	 * @param string $targetPackage
 	 * @param string $targetSrcDir
 	 *
@@ -50,11 +59,10 @@ class RPC extends AbstractGenerator {
 	}
 
 	/**
-	 *
-	 * @param string $serviceClassInstance
+	 * @param stdClass $serviceClassInstance
 	 * @param string $targetPackage
 	 * @param string $targetSrcDir
-	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report 
+	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report
 	 */
 	public static function packSrc($serviceClassInstance, $targetPackage, $targetSrcDir)
 	{
@@ -73,6 +81,12 @@ class RPC extends AbstractGenerator {
 		return $report;
 	}
 
+	/**
+	 * @param stdClass $serviceClassInstance
+	 * @param string $targetPackage
+	 * @param string $targetSrcDir
+	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report
+	 */
 	public static function compileSrc($serviceClassInstance, $targetPackage, $targetSrcDir)
 	{
 		$report = self::generateSrc($serviceClassInstance, $targetPackage, $targetSrcDir);
@@ -84,7 +98,7 @@ class RPC extends AbstractGenerator {
 			} catch (Exception $e) {
 				$report->success = false;
 				$report->report .= 'COMPILATION FAILURE :' . PHP_EOL;
-				$report->report .= '----------- ' . $e->getMessage() . ' ----------' . PHP_EOL . PHP_EOL . $e->getTraceAsString();
+				$report->report .= '----------- ' . $e->getMessage() . ' ----------' . PHP_EOL . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
 			}
 		}
 		return $report;
@@ -94,8 +108,8 @@ class RPC extends AbstractGenerator {
 	 * @param stdClass $serviceClassInstance
 	 * @param string $targetPackage
 	 * @param string $targetSrcDir
-	 * 
-	 * @return Foomo\Services\ProxyGenerator\ActionScript\RPC 
+	 *
+	 * @return Foomo\Services\ProxyGenerator\ActionScript\RPC
 	 */
 	public static function getGenerator($serviceClassInstance, $targetPackage, $targetSrcDir)
 	{
@@ -104,5 +118,4 @@ class RPC extends AbstractGenerator {
 		$renderer->targetSrcDir = $targetSrcDir;
 		return $renderer;
 	}
-
 }

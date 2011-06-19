@@ -6,10 +6,24 @@ use Foomo\Reflection\PhpDocArg;
 use Exception;
 
 /**
- * 
+ *
  */
-class ServiceOperation {
+class ServiceOperation
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	const ERROR_PARAMETER_USED = 1;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 * @var string
+	 */
 	public $name;
 	/**
 	 * hash name => type
@@ -37,7 +51,7 @@ class ServiceOperation {
 	public $throwsTypes;
 	/**
 	 * messages that can be send from this method
-	 * 
+	 *
 	 * @var Foomo\Reflection\PhpDocArg[]
 	 */
 	public $messageTypes;
@@ -47,6 +61,11 @@ class ServiceOperation {
 	 * @var sring
 	 */
 	public $comment;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	public function __construct($name, $returnType = null, $throwsTypes = null, $messageTypes = null, $comment = null)
 	{
 		$this->name = $name;
@@ -55,6 +74,11 @@ class ServiceOperation {
 		$this->returnType = $returnType;
 		$this->throwsTypes = $throwsTypes;
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * add a parameter
 	 *
@@ -69,6 +93,7 @@ class ServiceOperation {
 			throw new Exception('parameter "'.$name.'":'.$type.' was already used', self::ERROR_PARAMETER_USED);
 		}
 	}
+	
 	/**
 	 * add parameter docs
 	 *

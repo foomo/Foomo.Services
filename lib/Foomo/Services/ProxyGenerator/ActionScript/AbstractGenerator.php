@@ -20,17 +20,6 @@ abstract class AbstractGenerator extends AbstractRenderer
 	//---------------------------------------------------------------------------------------------
 	// ~ Variables
 	//---------------------------------------------------------------------------------------------
-	
-	public $standarTypes = array(
-		'int' => 'int',
-		'integer' => 'int',
-		'bool' => 'Boolean',
-		'boolean' => 'Boolean',
-		'string' => 'String',
-		'float' => 'Number',
-		'double' => 'Number',
-		'mixed' => 'Object',
-	);
 
 	/**
 	 * @var string
@@ -52,7 +41,7 @@ abstract class AbstractGenerator extends AbstractRenderer
 	 * class files namely ASClasses, which need to go in extra packages aka the sharedVo√î√∏Œ©s
 	 *
 	 * hash filename => filecontents
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $commonClassFiles = array();
@@ -80,6 +69,12 @@ abstract class AbstractGenerator extends AbstractRenderer
 	 * @var ServiceObjectType[]
 	 */
 	public $complexTypes;
+	/**
+	 * throw types
+	 *
+	 * @var ServiceObjectType[]
+	 */
+	public $throwsTypes = array();
 	/**
 	 * name of the service
 	 *
@@ -134,7 +129,7 @@ abstract class AbstractGenerator extends AbstractRenderer
 		$this->proxyClassName = $this->serviceName . 'Proxy';
 		$this->proxyBaseClassName = $this->serviceName . 'ProxyBase';
 		if ($this->myPackage != '') {
-			$this->myPackage = $this->targetPackage . '.' . strtolower(substr($this->typeToASType($this->serviceName), 0, 1)) . substr($this->typeToASType($this->serviceName), 1);
+			$this->myPackage = $this->targetPackage . '.' . strtolower(substr(Utils::getASType($this->serviceName), 0, 1)) . substr(Utils::getASType($this->serviceName), 1);
 		} else {
 			$serviceType = new ServiceObjectType($this->serviceName);
 			// you can only do that in a language as dirty as php ;)
@@ -160,68 +155,95 @@ abstract class AbstractGenerator extends AbstractRenderer
 
 	/**
 	 * render the service type itself
-	 * 
+	 *
 	 * @param ServiceObjectType $type
 	 */
 	public function renderServiceType(ServiceObjectType $type)
 	{
-		
+
 	}
 
 	/**
-	 * @param ServiceObjectType $type 
+	 * @param ServiceObjectType $type
 	 */
 	public function renderType(ServiceObjectType $type)
 	{
-		if (!\in_array(\strtolower($type->type), \array_keys($this->standarTypes))) {
-			$this->complexTypes[$type->type] = $type;
-		} 
+		if (!Utils::isASStandardType($type->type)) $this->complexTypes[$type->type] = $type;
 	}
 
+	/**
+	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
 		$this->currentOperation = $op;
 		array_push($this->operations, $op);
-		
-		// Events
-		$view = $this->getView('EventClass');
-		$this->classFiles['events' . DIRECTORY_SEPARATOR . $this->operationToEventClassName($op->name)] = $view->render();
 
-		// ops
+		// Method calls
+		$view = $this->getView('MethodCallClass');
+		$this->classFiles['calls' . DIRECTORY_SEPARATOR . $this->operationToMethodCallName($op->name)] = $view->render();
+
+		// Method calls events
+		$view = $this->getView('MethodCallEventClass');
+		$this->classFiles['events' . DIRECTORY_SEPARATOR . $this->operationToMethodCallEventName($op->name)] = $view->render();
+
+		// Method calls exceptions
+		if (count($this->currentOperation->throwsTypes) > 0) {
+			foreach ($this->currentOperation->throwsTypes as $throwType) {
+				if (!isset($this->throwsTypes[$throwType->type])) $this->throwsTypes[$throwType->type] = $throwType;
+			}
+		}
+
+		// Operations
 		$view = $this->getView('OperationClass');
-		$this->classFiles['model' . DIRECTORY_SEPARATOR . $this->operationToOperationName($op->name)] = $view->render();
+		$this->classFiles['operations' . DIRECTORY_SEPARATOR . $this->operationToOperationName($op->name)] = $view->render();
 
-		// commands
-		$view = $this->getView('CommandClass');
-		$this->classFiles['commands' . DIRECTORY_SEPARATOR . $this->operationToCommandName($op->name)] = $view->render();
-		
-		// responders
-		$view = $this->getView('ResponderInterface');
-		$this->classFiles['responders' . DIRECTORY_SEPARATOR . $this->operationToResponderInterfaceName($op->name)] = $view->render();
+		// Operations events
+		$view = $this->getView('OperationEventClass');
+		$this->classFiles['events' . DIRECTORY_SEPARATOR . $this->operationToOperationEventName($op->name)] = $view->render();
+
+		// Commands
+		$view = $this->getView('AbstractCommandClass');
+		$this->classFiles['commands' . DIRECTORY_SEPARATOR . $this->operationToAbstractCommandName($op->name)] = $view->render();
 	}
 
+	/**
+	 * @return string a report of what was done
+	 */
 	public function output()
 	{
+		// rendering the proxy class
+		$view = $this->getView('ProxyClass');
+		$this->classFiles[Utils::getASType($this->serviceName) . 'Proxy'] = $view->render();
+
+		// render all the vos
+		foreach ($this->complexTypes as $complexType) $this->renderVOClass($complexType);
+
+		// render all exception events
+		foreach ($this->throwsTypes as $throwType) {
+			$this->currentDataClass = $this->complexTypes[$throwType->type];
+			$view = $this->getView('ExceptionEventClass');
+			$this->classFiles['events' . DIRECTORY_SEPARATOR . $this->toEventName(Utils::getASType($this->currentDataClass->type))] = $view->render();
+		}
+
+
+		/*
 		// rendering the proxy base class
 		$view = $this->getView('ProxyBaseClass');
-		$this->classFiles['model' . DIRECTORY_SEPARATOR . $this->typeToASType($this->serviceName) . 'ProxyBase'] = $view->render();
+		$this->classFiles['model' . DIRECTORY_SEPARATOR . Utils::getASType($this->serviceName) . 'ProxyBase'] = $view->render();
 
 		// rendering the proxy class
 		$view = $this->getView('ProxyClass');
-		$this->classFiles['model' . DIRECTORY_SEPARATOR . $this->typeToASType($this->serviceName) . 'Proxy'] = $view->render();
+		$this->classFiles['model' . DIRECTORY_SEPARATOR . Utils::getASType($this->serviceName) . 'Proxy'] = $view->render();
 
 		// AS3 class alias registry
 		$view = $this->getView('ClassAliasRegistry');
 		$this->classFiles['model' . DIRECTORY_SEPARATOR . 'ClassAliasRegistry'] = $view->render();
-
-		// render all the vos
-		foreach ($this->complexTypes as $complexType) {
-			$this->renderTypeClass($complexType);
-		}
+		*/
 
 		return $this->export();
 	}
-	
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
@@ -275,111 +297,10 @@ abstract class AbstractGenerator extends AbstractRenderer
 	}
 
 	/**
-	 * map a type between php and ActionScript
-	 *
-	 * @param string $type php class name | type
-	 * @return string ActionScript class name | type
-	 */
-	public function typeToASType($type)
-	{
-		$asType = '*';
-		# check if it's a typed array
-		$isArray = (substr($type, strlen($type) - 2) == '[]');
-		if ($isArray) $type = \substr($type, 0, strlen($type) - 2);
-
-		if (isset($this->standarTypes[\strtolower($type)])) {
-			$asType = $this->standarTypes[\strtolower($type)];
-		} else {
-			$serviceObjectType = new ServiceObjectType($type);
-			if ('' != $remoteClass = $serviceObjectType->getRemoteClass()) {
-				$remoteClass = basename(str_replace('.', DIRECTORY_SEPARATOR, $remoteClass));
-				$asType = $remoteClass;
-			} else {
-				if (strpos($type, '\\') !== false) {
-					$parts = explode('\\', $type);
-					$asType = $parts[count($parts) - 1];
-				} else {
-					$asType = $type;
-				}
-			}
-		}
-		return ($isArray) ? 'Array' : $asType;
-		// @todo kevin: switch to vectors
-		#return ($isArray) ? 'Vector.<' . $asType . '>' : $asType;
-	}
-
-	/**
-	 * derive an event name from an operation name - basically turns sth. like myOpName to MY_OP_NAME
-	 *
-	 * @param string $opName name of the operation
-	 * @return string name of the event
-	 */
-	public function operationToEventName($opName)
-	{
-		$ret = '';
-		for ($i = 0; $i < strlen($opName); $i++) {
-			$c = substr($opName, $i, 1);
-			if (strtoupper($c) != $c) {
-				$ret .= strtoupper($c);
-			} else {
-				$ret .= '_' . $c;
-			}
-		}
-		return $ret;
-	}
-
-	/**
-	 * render a (complex) type - and write it into $this->classFiles
-	 *
-	 * @param ServiceObjectType $type
-	 */
-	protected function renderTypeClass(ServiceObjectType $type)
-	{
-		// that is for the views
-		$this->currentDataClass = $type;
-
-		// check in the annotations if the class is shared by other services or has a remote class
-		$isCommonClass = false;
-		$hasRemoteClass = false;
-		foreach ($type->annotations as $annotation) {
-			if ($annotation instanceOf RemoteClass) {
-				/* @var $annotation RemoteClass */
-				if (!empty($annotation->package)) {
-					$commonPath = str_replace('.', DIRECTORY_SEPARATOR, $annotation->package);
-					$isCommonClass = true;
-				}
-
-				if (!empty($annotation->name)) {
-					trigger_error('rendering a base class for remote class ' . $annotation->name, E_USER_NOTICE);
-					$remoteBaseClassName = basename(str_replace('.', DIRECTORY_SEPARATOR, $annotation->name));
-					$hasRemoteClass = true;
-				}
-
-				break;
-			}
-		}
-		
-		$view = $this->getView('DataClass');
-		$content = $view->render();
-
-		if ($hasRemoteClass) {
-			$classFileName = $this->getVOClassName($type);
-		} else {
-			$classFileName = $this->typeToASType($type->type);
-		}
-
-		if ($isCommonClass) {
-			$this->commonClassFiles[$commonPath . DIRECTORY_SEPARATOR . $classFileName] = $content;
-		} else {
-			$this->commonClassFiles[$type->getRemotePackagePath() . DIRECTORY_SEPARATOR . $this->typeToASType($type->type)] = $content;
-		}
-	}
-
-	/**
 	 * for remote class alias registration
 	 *
 	 * @param ServiceObjectType $type
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getVORemoteAliasName(ServiceObjectType $type)
@@ -433,7 +354,7 @@ abstract class AbstractGenerator extends AbstractRenderer
 			}
 		} else {
 			if (is_writable(dirname($folder))) {
-				if (@mkdir($folder)) {
+				if (@mkdir($folder) && @chmod($folder, 0775)) {
 					return true;
 				} else {
 					throw new Exception('could not create ' . $folder, 1);
@@ -457,13 +378,7 @@ abstract class AbstractGenerator extends AbstractRenderer
 		if ((!empty($this->targetSrcDir) && is_dir($this->targetSrcDir)) || $this->tryCreateFolder($this->targetSrcDir)) { // && is_writable($this->targetSrcDir)) {
 			$path = $this->getPath();
 			if ($this->clearSrcDir) {
-				$rmCall = new CliCall(
-								'rm',
-								array(
-									'-Rvf',
-									$path . '/*'
-								)
-				);
+				$rmCall = new CliCall('rm', array('-Rvf', $path . '/*'));
 				$rmCall->execute();
 				if ($rmCall->exitStatus === 0) {
 					$ret .= PHP_EOL . 'clearing old sources in ' . $path . ' :' . PHP_EOL . implode(PHP_EOL . '  ', explode(PHP_EOL, $rmCall->stdOut)) . PHP_EOL;
@@ -507,16 +422,18 @@ abstract class AbstractGenerator extends AbstractRenderer
 		$ret = 'PACKING SOURCES' . PHP_EOL;
 		$ret .= 'removing old archive ' . $this->getTGZFileName() . PHP_EOL;
 		@unlink($this->getTgzFileName());
-		$tarFiles = array_diff(\scandir($this->targetSrcDir), array('.', '..'));;
+		$tarFiles = array_values(array_diff(\scandir($this->targetSrcDir), array('.', '..')));
 		$ret .= PHP_EOL . 'packing sources with tar - ';
 		$tarCall = new CliCall(
 						'tar',
-						array(
-							'--directory',
-							$this->targetSrcDir,
-							'-czvf',
-							$this->getTgzFileName(),
-							\implode(' ', $tarFiles)
+						array_merge(
+							array(
+								'--directory',
+								$this->targetSrcDir,
+								'-czvf',
+								$this->getTgzFileName(),
+							),
+							$tarFiles
 						)
 		);
 		$tarCall->execute();
@@ -549,13 +466,13 @@ abstract class AbstractGenerator extends AbstractRenderer
 			FlexSettings::$FLEX_HOME . DIRECTORY_SEPARATOR . 'frameworks' . DIRECTORY_SEPARATOR . 'libs',
 			FlexSettings::$FLEX_HOME . DIRECTORY_SEPARATOR . 'frameworks' . DIRECTORY_SEPARATOR . 'libs' . DIRECTORY_SEPARATOR . 'air'
 		);
-		
+
 		# add zugspitze swcs
-		$zsScaffold = new \Zugspitze\Scaffold(\Zugspitze\Module::getVendorDir());
+		$zsScaffold = new \Foomo\Zugspitze\Scaffold(\Foomo\Zugspitze\Module::getVendorDir());
 		$zsLibraries = $zsScaffold->getLibraries(false);
 		$zsExternals = array(
-			'com.bestbytes.zugspitze.core' => 'zugspitze_core.swc',
-			'com.bestbytes.zugspitze.services' => 'zugspitze_services.swc',
+			'org.foomo.zugspitze.core' => 'zugspitze_core.swc',
+			'org.foomo.zugspitze.services.core' => 'zugspitze_servicesCore.swc',
 		);
 		foreach ($zsExternals as $zsKey => $zsValue) {
 			$zsLibrary = $zsLibraries[$zsKey];
@@ -564,7 +481,7 @@ abstract class AbstractGenerator extends AbstractRenderer
 		}
 
 		$swcFile = FlexUtils::compileLibrarySWC($compileReport, $sourcePaths, array($this->targetSrcDir), $swcs);
-		
+
 		if (!file_exists($swcFile)) {
 			throw new Exception(
 					'Adobe Compc (Flex Component Compiler) failed to create the swc.' . PHP_EOL .
@@ -611,16 +528,6 @@ abstract class AbstractGenerator extends AbstractRenderer
 		return $ret;
 	}
 
-	public function getSWCFilename()
-	{
-		return Config::getTempDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.swc';
-	}
-
-	public function getTGZFilename()
-	{
-		return Config::getTempDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.tgz';
-	}
-
 	protected function indent($code, $indent)
 	{
 		return str_repeat(chr(9), 3 + $indent) . $code;
@@ -633,7 +540,7 @@ abstract class AbstractGenerator extends AbstractRenderer
 
 	public function operationExceptionName($opName, $excetionType)
 	{
-		return $opName . 'Exception' . $this->typeToASType($excetionType);
+		return $opName . 'Exception' . Utils::getASType($excetionType);
 	}
 
 	public function operationToEventResultName($opName)
@@ -647,21 +554,9 @@ abstract class AbstractGenerator extends AbstractRenderer
 		//return $this->serviceName . ucfirst($opName) . 'Event';
 	}
 
-	public function operationToOperationName($opName)
-	{
-		return ucfirst($opName) . 'Operation';
-		//return $this->serviceName . ucfirst($opName) . 'Operation';
-	}
-
 	public function operationToOperationVarName($opName)
 	{
 		return 'operation' . ucfirst($opName);
-		//return $this->serviceName . ucfirst($opName) . 'Operation';
-	}
-
-	public function operationToCommandName($opName)
-	{
-		return ucfirst($opName) . 'Command';
 		//return $this->serviceName . ucfirst($opName) . 'Operation';
 	}
 
@@ -695,32 +590,203 @@ abstract class AbstractGenerator extends AbstractRenderer
 		//return $this->serviceName . ucfirst($opName) . 'Operation';
 	}
 
-	public function getAllClientClassImports()
-	{
-		$ret = '// all local imports' . PHP_EOL;
-		foreach ($this->complexTypes as $type) {
-			if ('' != $import = $this->getClientAsClassImport($type->type)) {
-				$ret .= $import . PHP_EOL;
-			}
-		}
-		return $ret;
-	}
-
 	public function getClientAsClassImport($type)
 	{
 		$asType = new ServiceObjectType($type);
 		foreach ($asType->annotations as $annotation) {
 			if ($annotation instanceOf RemoteClass && !empty($annotation->name)) {
-				return '	import ' . $annotation->name . ';';
+				return 'import ' . $annotation->name . ';';
 			}
 			if ($annotation instanceOf RemoteClass && !empty($annotation->package)) {
 				$type = str_replace('[]', '', $type);
-				return '	import ' . $annotation->package . '.' . $this->typeToASType($type) . ';';
+				return 'import ' . $annotation->package . '.' . Utils::getASType($type) . ';';
 			}
 		}
-		if (!\array_key_exists($asType->type, $this->standarTypes)) {
-			return '	import ' . $asType->getRemotePackage() . '.' . $this->typeToASType(str_replace('[]', '', $type)) . ';';
+		if (!Utils::isASStandardType($asType->type)) {
+			return 'import ' . $asType->getRemotePackage() . '.' . Utils::getASType(str_replace('[]', '', $type)) . ';';
 		}
 	}
 
+
+
+
+
+
+	/**
+	 * @return string
+	 */
+	public function getSWCFilename()
+	{
+		return \Foomo\Services\Module::getTmpDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.swc';
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getTGZFilename()
+	{
+		return \Foomo\Services\Module::getTmpDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.tgz';
+	}
+
+	/**
+	 * render a (complex) type - and write it into $this->classFiles
+	 *
+	 * @param ServiceObjectType $type
+	 */
+	protected function renderVOClass(ServiceObjectType $type)
+	{
+		// that is for the views
+		$this->currentDataClass = $type;
+
+		// check in the annotations if the class is shared by other services or has a remote class
+		$isCommonClass = false;
+		$hasRemoteClass = false;
+		foreach ($type->annotations as $annotation) {
+			if ($annotation instanceOf RemoteClass) {
+				/* @var $annotation RemoteClass */
+				if (!empty($annotation->package)) {
+					$commonPath = str_replace('.', DIRECTORY_SEPARATOR, $annotation->package);
+					$isCommonClass = true;
+				}
+
+				if (!empty($annotation->name)) {
+					trigger_error('rendering a base class for remote class ' . $annotation->name, E_USER_NOTICE);
+					$remoteBaseClassName = basename(str_replace('.', DIRECTORY_SEPARATOR, $annotation->name));
+					$hasRemoteClass = true;
+				}
+				break;
+			}
+		}
+
+		$view = $this->getView('VOClass');
+		$content = $view->render();
+
+		if ($hasRemoteClass) {
+			$classFileName = $this->getVOClassName($type);
+		} else {
+			$classFileName = Utils::getASType($type->type);
+		}
+
+		if ($isCommonClass) {
+			$this->commonClassFiles[$commonPath . DIRECTORY_SEPARATOR . $classFileName] = $content;
+		} else {
+			$this->commonClassFiles[$type->getRemotePackagePath() . DIRECTORY_SEPARATOR . Utils::getASType($type->type)] = $content;
+		}
+	}
+
+	/**
+	 * myMethod => AbstractMyMethodCommand
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public function operationToAbstractCommandName($name)
+	{
+		return 'Abstract' . ucfirst($name) . 'Command';
+	}
+
+	/**
+	 * myMethod => MyMethodCall
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public function operationToMethodCallName($name)
+	{
+		return ucfirst($name) . 'Call';
+	}
+
+	/**
+	 * myMethod => MyMethodCallEvent
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public function operationToMethodCallEventName($name)
+	{
+		return ucfirst($name) . 'CallEvent';
+	}
+
+	/**
+	 * myMethod => MyMethodOperation
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public function operationToOperationName($name)
+	{
+		return ucfirst($name) . 'Operation';
+	}
+
+	/**
+	 * myMethod => MyMethodOperationEvent
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public function operationToOperationEventName($name)
+	{
+		return ucfirst($name) . 'OperationEvent';
+	}
+
+	/**
+	 * myMethod => MyMethodEvent
+	 *
+	 * @param string $name
+	 * @return string
+	 */
+	public function toEventName($name)
+	{
+		return ucfirst($name) . 'Event';
+	}
+
+	/**
+	 * myOpName => MY_OP_NAME
+	 *
+	 * @param string $opName name of the operation
+	 * @return string name of the event
+	 */
+	public function toConstantName($opName)
+	{
+		$ret = '';
+		for ($i = 0; $i < strlen($opName); $i++) {
+			$c = substr($opName, $i, 1);
+			if (strtoupper($c) != $c) {
+				$ret .= strtoupper($c);
+			} else {
+				$ret .= '_' . $c;
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 *	Returns all client class imports
+	 *
+	 * @return string
+	 */
+	public function getAllClientClassImports()
+	{
+		$output = array();
+		foreach ($this->complexTypes as $type) {
+			if ('' != $import = $this->getClientAsClassImport($type->type)) {
+				$output[] = $import;
+			}
+		}
+		return implode(PHP_EOL, $output);
+	}
+
+	/**
+	 * Returns all your.package.calls.*Operation
+	 *
+	 * @return string
+	 */
+	public function getMethodCallImports()
+	{
+		$output = array();
+		foreach ($this->operations as $operation) {
+			$output[] = '	import ' . $this->myPackage . '.calls.' . $this->operationToMethodCallName($operation->name) . ';';
+		}
+		return implode(PHP_EOL, $output);
+	}
 }

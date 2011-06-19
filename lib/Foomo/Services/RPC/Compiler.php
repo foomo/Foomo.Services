@@ -19,7 +19,7 @@ class Compiler {
 	 * WARNING this will write over existing code !!!
 	 *
 	 * @param string $serviceClassName name of the service class
-	 * @param string $package as package like 'com.bestbytes.test'
+	 * @param string $package as package like 'org.foomo.test'
 	 * @param string $srcDir src directory
 	 *
 	 * @return string

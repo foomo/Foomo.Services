@@ -13,16 +13,29 @@ class Controller
 	//---------------------------------------------------------------------------------------------
 	// ~ Variables
 	//---------------------------------------------------------------------------------------------
-	
+
 	/**
 	 * @var Foomo\Services\RPC\Frontend\Model
 	 */
 	public $model;
-	
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Action methods
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 *
+	 */
+	public function actionDefault()
+	{
+		if (isset($_GET['explainMachine'])) {
+			$this->actionExplainMachine();
+		}
+	}
+
+	/**
+	 *
+	 */
 	public function actionGetPHPClient()
 	{
 		MVC::abort();
@@ -31,13 +44,6 @@ class Controller
 				$this->model->serviceClassName, new \Foomo\Services\ProxyGenerator\PHP\RPC(MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), 'Foomo\\Services\\RPC\\Serializer\\PHP')
 		);
 		exit;
-	}
-
-	public function actionDefault()
-	{
-		if (isset($_GET['explainMachine'])) {
-			$this->actionExplainMachine();
-		}
 	}
 
 	/**
@@ -67,26 +73,18 @@ class Controller
 
 	/**
 	 * @todo http GET support and let the browser cache things too ...
-	 * 
+	 *
 	 * @param type $method
-	 * @param type $parameters 
+	 * @param type $parameters
 	 */
 	public function actionGet($method, $parameters)
 	{
-		
+
 	}
 
 	/**
-	 * compile an AS client and make it availabe as .tgz source and .swc and output a report
 	 *
 	 */
-	public function actionGenerateASClient()
-	{
-		if ($this->checkDevAccess()) {
-			$this->generateASCientSrc();
-		}
-	}
-
 	public function actionGenerateJQueryClient()
 	{
 		MVC::abort();
@@ -104,6 +102,9 @@ class Controller
 		exit;
 	}
 
+	/**
+	 *
+	 */
 	public function actionplainTextDocs()
 	{
 		MVC::abort();
@@ -112,32 +113,13 @@ class Controller
 		exit;
 	}
 
-	public function actionCompileAndDownloadClient()
-	{
-		if ($this->checkDevAccess()) {
-			$this->model->proxyGeneratorReport = RPC::compileSrc(
-				$this->model->serviceClassInstance, 
-				$this->model->package, 
-				$this->checkSrcDir($this->model->srcDir)
-			);
-			if ($this->model->proxyGeneratorReport->success) {
-				$this->streamSwc();
-			}
-		}
-	}
-
 	/**
-	 * get the current swc
+	 * compile an AS client and make it availabe as .tgz source and .swc and output a report
 	 */
-	public function actionGetASClientAsSWC()
+	public function actionGenerateASClient()
 	{
 		if ($this->checkDevAccess()) {
 			$this->generateASCientSrc();
-			if (!file_exists($this->model->proxyGeneratorReport->generator->getSWCFilename())) {
-				$this->actionCompileAndDownloadClient();
-			} else {
-				$this->streamSwc();
-			}
 		}
 	}
 
@@ -147,20 +129,34 @@ class Controller
 	public function actionGetASClientAsTgz()
 	{
 		if ($this->checkDevAccess()) {
-			$this->model->proxyGeneratorReport = RPC::packSrc(
-							$this->model->serviceClassInstance, $this->model->package, $this->checkSrcDir($this->model->srcDir)
-			);
-			if ($this->model->proxyGeneratorReport->success) {
-				MVC::abort();
-				Utils::streamSourcesAsTgz($this->model->proxyGeneratorReport->generator->getTGZFilename());
-				exit;
-			}
+			$this->compressASClientSrc();
+			if ($this->model->proxyGeneratorReport->success) $this->streamTgz();
+		}
+	}
+
+	/**
+	 * get the current swc
+	 */
+	public function actionCompileASClient()
+	{
+		if ($this->checkDevAccess()) {
+			$this->compileASClientSrc();
+		}
+	}
+
+	/**
+	 * get the current swc
+	 */
+	public function actionGetASClientAsSwc()
+	{
+		if ($this->checkDevAccess()) {
+			$this->compileASClientSrc();
+			if ($this->model->proxyGeneratorReport->success) $this->streamSwc();
 		}
 	}
 
 	/**
 	 * explain the service to a machine by dumping a serialized ServiceDescription
-	 *
 	 */
 	public function actionExplainMachine()
 	{
@@ -174,19 +170,43 @@ class Controller
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * 
+	 *
 	 */
 	private function generateASCientSrc()
 	{
 		$this->model->proxyGeneratorReport = RPC::generateSrc(
-			$this->model->serviceClassInstance, 
-			$this->model->package, 
+			$this->model->serviceClassInstance,
+			$this->model->package,
 			$this->checkSrcDir($this->model->srcDir)
 		);
 	}
 
 	/**
-	 * 
+	 *
+	 */
+	private function compressASClientSrc()
+	{
+		$this->model->proxyGeneratorReport = RPC::packSrc(
+			$this->model->serviceClassInstance,
+			$this->model->package,
+			$this->checkSrcDir($this->model->srcDir)
+		);
+	}
+
+	/**
+	 *
+	 */
+	private function compileASClientSrc()
+	{
+		$this->model->proxyGeneratorReport = RPC::compileSrc(
+			$this->model->serviceClassInstance,
+			$this->model->package,
+			$this->checkSrcDir($this->model->srcDir)
+		);
+	}
+
+	/**
+	 *
 	 */
 	private function streamSwc()
 	{
@@ -197,8 +217,18 @@ class Controller
 
 	/**
 	 *
+	 */
+	private function streamTgz()
+	{
+		MVC::abort();
+		Utils::streamTgz($this->model->proxyGeneratorReport->generator->getTGZFilename());
+		exit;
+	}
+
+	/**
+	 *
 	 * @param type $asSrcDir
-	 * @return type 
+	 * @return type
 	 */
 	private function checkSrcDir($asSrcDir=null)
 	{
@@ -207,7 +237,7 @@ class Controller
 			if (!empty($flexConfig->generatedSrcDir)) {
 				$asSrcDir = $flexConfig->generatedSrcDir;
 			} else {
-				$asSrcDir = tempnam(Config::getTempDir(), __CLASS__ . '-srcDir-');
+				$asSrcDir = tempnam(\Foomo\Services\Module::getTmpDir(), 'asClientSrc-');
 				unlink($asSrcDir);
 				mkdir($asSrcDir);
 			}
@@ -230,5 +260,4 @@ class Controller
 		}
 		return $ret;
 	}
-
 }

@@ -6,32 +6,57 @@ namespace Foomo\Services\RPC\Serializer;
  * AMF (un)serializer
  *
  */
-class AMF implements SerializerInterface {
+class AMF implements SerializerInterface
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	const BACK_END_AMF_EXT = 0;
 	const BACK_END_ZEND_AMF = 1;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 * @var string
+	 */
     private $encodingFlags;
+	/**
+	 * @var int
+	 */
     private $backEnd;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
     public function __construct()
     {
-      $amf3 = false;
-      $this->encodingFlags = (pack("d", 1) ?2:0) | ($amf3 ? 1:0);
-      if(!function_exists('amf_encode')) {
-      	$this->backEnd = self::BACK_END_ZEND_AMF;
-      } else {
-      	$this->backEnd = self::BACK_END_AMF_EXT;
-      }
-      
+		$amf3 = false;
+		$this->encodingFlags = (pack("d", 1) ? 2 : 0) | ($amf3 ? 1 : 0);
+		if (!function_exists('amf_encode')) {
+			$this->backEnd = self::BACK_END_ZEND_AMF;
+		} else {
+			$this->backEnd = self::BACK_END_AMF_EXT;
+		}
     }
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * serialize
 	 *
-	 * @param mixed $var
-	 * 
+	 * @param mixed $call
 	 * @return string serialized data
 	 */
 	public function serialize($call)
 	{
-		
+
 		if($this->backEnd == self::BACK_END_AMF_EXT) {
 			return amf_encode($call, $this->encodingFlags, __CLASS__ . '::callBackEncode');
 		} else {
@@ -41,11 +66,11 @@ class AMF implements SerializerInterface {
 			return $outStream->getStream();
 		}
 	}
+
 	/**
 	 * unserialize
 	 *
 	 * @param string $serialized
-	 * 
 	 * @return mixed unserialized call
 	 */
 	public function unserialize($serialized)
@@ -58,6 +83,13 @@ class AMF implements SerializerInterface {
 			return $unSer->readTypeMarker();
 		}
 	}
+
+	/**
+	 *
+	 * @param int $arg
+	 * @param string $event
+	 * @return array
+	 */
 	public static function callBackEncode($arg, $event)
 	{
 		$args = func_get_args();
@@ -74,11 +106,18 @@ class AMF implements SerializerInterface {
 				}
 		}
 	}
+
+	/**
+	 *
+	 * @param int $event
+	 * @param string $arg
+	 * @return stdClass
+	 */
 	public static function callBackDecode($event, $arg)
 	{
 		switch($event) {
 			case 1: // AMFE_MAP
-				if(strpos($arg, '.') !== false) {
+				if (strpos($arg, '.') !== false) {
 					//trigger_error(__FUNCTION__ . $event . ' ========> ' . $arg);
 					$ret = str_replace('.', '\\', $arg);
 					if(class_exists($ret)) {
@@ -88,15 +127,23 @@ class AMF implements SerializerInterface {
 				break;
 			default:
 				// trigger_error($event . ' => ' . $arg);
+				break;
 		}
 	}
+
+	/**
+	 * @return string
+	 */
 	public function getContentMime()
 	{
 		return 'application/x-amf';
 	}
+
+	/**
+	 * @return boolean
+	 */
 	public function supportsTypes()
 	{
 		return true;
 	}
 }
-

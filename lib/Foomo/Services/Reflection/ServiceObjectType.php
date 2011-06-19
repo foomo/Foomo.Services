@@ -10,14 +10,43 @@ use Foomo\AutoLoader;
 /**
  * This class is used to reflect Types that will be exposed for usage in services
  */
-class ServiceObjectType {
+class ServiceObjectType
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * the phpDoc comments are not ok
+	 */
+	const ERROR_DOCS_SUCK = 1;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Static variables
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * type => ServiceObjectType
+	 *
+	 * @var ServiceObjectType[]
+	 */
+	private static $cache = array();
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * possibly many Annotations
 	 *
 	 * @var Annotation[]
 	 */
-	public $annotations = array();	
-	private static $cache = array();
+	public $annotations = array();
+	/**
+	 * php => as
+	 *
+	 * @var string[]
+	 */
 	public $standarTypes = array(
 		'int' => 'int',
 		'integer' => 'int',
@@ -27,15 +56,10 @@ class ServiceObjectType {
 		'float' => 'Number',
 		'double' => 'Number',
 		'mixed' => 'Object',
-	);	
-	/**
-	 * the phpDoc comments are not ok
-	 *
-	 */
-	const ERROR_DOCS_SUCK = 1;
+	);
 	/**
 	 * namespace of the class
-	 * 
+	 *
 	 * @var string
 	 */
 	public $namespace = '\\';
@@ -56,7 +80,7 @@ class ServiceObjectType {
 	 *
 	 * @var array
 	 */
-	public $constants = array();	
+	public $constants = array();
 	/**
 	 * the reflected
 	 *
@@ -73,27 +97,94 @@ class ServiceObjectType {
 	 * @var string
 	 */
 	public $plainType = '';
-	public function __construct($type)//, Foomo\Reflection\PhpDocEntry $Foomo\Reflection\PhpDocEntry = null)
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param string $type
+	 */
+	public function __construct($type)
 	{
 		self::$cache[$type] = $this;
 		$this->plainType = $type;
-		if(substr($type, strlen($type)-2) == '[]') {
+		if (substr($type, strlen($type)-2) == '[]') {
 			$type = substr($type,0,strlen($type)-2);
 			$this->isArrayOf = true;
 		}
 		$this->type = $type;
-		if(strpos($this->type, '\\') !== false) {
+		if (strpos($this->type, '\\') !== false) {
 			$parts = explode('\\', $this->type);
 			$this->namespace = implode('\\', array_slice($parts, 0, count($parts)-1) );
 		}
 		$exists = AutoLoader::loadClass($type, false, true);
-		if($exists) {
+		if ($exists) {
 			$this->readClass($this->type);
 		} else {
 			$this->type = $type;
 		}
 	}
-	private function setProp($propName, $propType = 'unknown', PhpDocEntry $phpDocEntry = null)
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * get the remote class name if annotation set
+	 *
+	 * @return string
+	 */
+	public function getRemoteClass()
+	{
+		foreach($this->annotations as $annotation) {
+			if($annotation instanceof RemoteClass && !empty($annotation->name)) {
+				return $annotation->name;
+			}
+		}
+	}
+
+	/**
+	 * get the remote class name if annotation set
+	 *
+	 * @return string
+	 */
+	public function getRemotePackage()
+	{
+		foreach($this->annotations as $annotation) {
+			if ($annotation instanceof RemoteClass && !empty($annotation->package)) {
+				return $annotation->package;
+			}
+		}
+		// php namespaces
+		if (!\array_key_exists($this->type, $this->standarTypes)) {
+			$parts = ($this->namespace != '\\') ? explode('\\', $this->namespace) : array();
+			$package = array('org', 'foomo', 'zugspitze', 'services', 'namespaces', 'php');
+			foreach($parts as $part) {
+				$package[] = lcfirst($part);
+			}
+			return implode('.', $package);
+		}
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getRemotePackagePath()
+	{
+		return str_replace('.', DIRECTORY_SEPARATOR, $this->getRemotePackage());
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param string $propName
+	 * @param string $propType
+	 * @param PhpDocEntry $phpDocEntry
+	 */
+	private function setProp($propName, $propType = 'unknown', PhpDocEntry $phpDocEntry=null)
 	{
 		if(!isset($this->props[$propName])) {
 			if(isset(self::$cache[$propType])) {
@@ -108,6 +199,10 @@ class ServiceObjectType {
 			throw new Exception('property with name' . $propName . ' was already set');
 		}
 	}
+
+	/**
+	 * @param string $className
+	 */
 	private function readClass($className)
 	{
 		try {
@@ -149,45 +244,5 @@ class ServiceObjectType {
 			trigger_error("could not parse annotations for $className: '{$e->getMessage()}'", E_USER_WARNING);
 		}
 	}
-	/**
-	 * get the remote class name if annotation set
-	 * 
-	 * @return string
-	 *
-	 */
-	public function getRemoteClass()
-	{
-		foreach($this->annotations as $annotation) {
-			if($annotation instanceof RemoteClass && !empty($annotation->name)) {
-				return $annotation->name;
-			}
-		}
-	}
-	/**
-	 * get the remote class name if annotation set
-	 * 
-	 * @return string
-	 *
-	 */
-	public function getRemotePackage()
-	{
-		foreach($this->annotations as $annotation) {
-			if($annotation instanceof RemoteClass && !empty($annotation->package)) {
-				return $annotation->package;
-			}
-		}
-		// php namespaces
-		if (!\array_key_exists($this->type, $this->standarTypes)) {
-			$parts = ($this->namespace != '\\') ? explode('\\', $this->namespace) : array();
-			$package = array('com', 'bestbytes', 'zugspitze', 'services', 'namespaces', 'php');
-			foreach($parts as $part) {
-				$package[] = lcfirst($part);
-			}
-			return implode('.', $package);
-		}
-	}
-	public function getRemotePackagePath()
-	{
-		return str_replace('.', DIRECTORY_SEPARATOR, $this->getRemotePackage());
-	}
+
 }
