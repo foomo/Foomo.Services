@@ -110,7 +110,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
 
 	public function testOperations()
 	{
-		$expectedOps = array('iPlusPlus', 'getSomeFunkyStars', 'makeException', 'addNumbers');
+		$expectedOps = array('iPlusPlus', 'getAFunkyStar', 'getSomeFunkyStars', 'getThatDamnArrayArray', 'makeException', 'addNumbers');
 		$ops = array();
 		foreach($this->reader->getOperations() as $op) {
 			/* @var $op ServiceOperation */

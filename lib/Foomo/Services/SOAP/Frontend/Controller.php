@@ -3,8 +3,21 @@
 
 namespace Foomo\Services\SOAP\Frontend;
 
+use Foomo\MVC;
+
 class Controller {
-	public function actionDefault() {}
+	/**
+	 * @var Model
+	 */
+	public $model;
+	public function actionDefault()
+	{
+		if(isset($_GET['explainMachine']) ) {
+			MVC::abort();
+			\Foomo\Services\SOAP\Utils::explainMachine($this->model->serviceClassInstance);
+			exit;
+		}
+	}
 	/*
 		if(count($_GET) == 0) {
 			$this->internalServeClass();
@@ -26,4 +39,25 @@ class Controller {
 			}
 		}
 	 */
+	public function actionServe()
+	{
+		$this->model->serve();
+	}
+	public function actionWsdl()
+	{
+		MVC::abort();
+		$this->model->streamWsdl();
+		exit;
+	}
+	public function actionGetASProxy()
+	{
+		MVC::abort();
+		\Foomo\Services\SOAP\Utils::compileASProxy();
+		exit;
+	}
+	public function actionRecompileWsdl()
+	{
+		$this->model->compileWsdl();
+		$this->actionWsdl();
+	}
 }

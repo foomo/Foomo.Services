@@ -96,8 +96,8 @@ class RPCTest extends \PHPUnit_Framework_TestCase
 		$result = $serializer->unserialize(Server::run($this->mockService, $serializer, $input));
 		/* $methodReply RPCCallMethodReply */
 		$methodReply = $result->methodReplies[0];
-		$this->assertType('Foomo\Services\Mock\Message', $methodReply->messages[0]);
-		$this->assertType('string', $methodReply->messages[1]);
+		$this->assertInstanceOf('Foomo\Services\Mock\Message', $methodReply->messages[0]);
+		$this->assertInternalType('string', $methodReply->messages[1]);
 	}
 
 	//---------------------------------------------------------------------------------------------
