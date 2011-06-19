@@ -25,17 +25,17 @@ final class Utils {
 		$baseUrl = $_SERVER['PHP_SELF'];
 		$description = new ServiceDescription();
 		$description->type = ServiceDescription::TYPE_SOAP;
-		$description->downloadUrl = $this->ASProxyClientSWCUrl;//$baseUrl . '?getASProxySWC';
+		//$description->downloadUrl = $this->ASProxyClientSWCUrl;//$baseUrl . '?getASProxySWC';
 		$description->documentationUrl = $baseUrl . '?explain';
 		$description->package = $package;
-		$description->name = $service->className;
+		$description->name = get_class($service);
 		$description->usesRemoteClasses = \Foomo\Services\Utils::getServiceUsesRemoteClasses($description->name);
-		$description->compilerAvailable = \Foomo\Config::getMode() != Foomo\Config::MODE_PRODUCTION;
-		$versionConstName = $service->className . '::VERSION';
+		$description->compilerAvailable = \Foomo\Config::getMode() != \Foomo\Config::MODE_PRODUCTION;
+		$versionConstName = get_class($service) . '::VERSION';
 		if(defined($versionConstName)) {
 			$description->version = constant($versionConstName);
 		}
-		$description->recompileUrl = $this->compileProxyUrl;//$baseUrl . '?compile&clearSrcDir';
+		//$description->recompileUrl = $this->compileProxyUrl;//$baseUrl . '?compile&clearSrcDir';
 		echo serialize($description);
 		// echo serialize(array('package' => $package, 'class' => $service->className));
 	}

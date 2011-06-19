@@ -76,6 +76,15 @@ class Service {
 		return $ret;
 	}
 	/**
+	 * test that damn array
+	 * 
+	 * @return Foomo\Services\Mock\DamnArray
+	 */
+	public function getThatDamnArrayArray()
+	{
+		return new \Foomo\Services\Mock\DamnArray();
+	}
+	/**
 	 * get a funky star
 	 * 
 	 * @return Foomo\Services\Mock\FunkyStar

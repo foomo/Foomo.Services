@@ -8,7 +8,7 @@ use Foomo\Services\SOAP\Client\DomainConfig as SoapConfig;
 class SOAPTest extends \PHPUnit_Framework_TestCase {
 	public function setUp()
 	{
-		if(!\Foomo\Session::getEnabled()) {
+		if(!\Foomo\Session::getEnabled() || php_sapi_name() == 'cli') {
 			$this->markTestSkipped('session not enabled');
 		}
 	}

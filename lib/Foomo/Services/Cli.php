@@ -84,7 +84,7 @@ class Cli {
 								$args[] = $rawValue;
 						}
 					} else {
-						if($type->type == 'array') {
+						if($type->isArrayOf || $type->type == 'array') {
 							$args[] = (array) json_decode($rawValue);
 						} else {
 							$args[] = json_decode($rawValue);

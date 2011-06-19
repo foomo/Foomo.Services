@@ -1,7 +1,9 @@
 <?php
 
 namespace Foomo\Services\Mock;
-
+/**
+ * a mock class to test arg parsing
+ */
 class Cli {
 	/**
 	 * something to reflect upon

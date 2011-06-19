@@ -10,7 +10,14 @@ class Controller {
 	 * @var Model
 	 */
 	public $model;
-	public function actionDefault() {}
+	public function actionDefault()
+	{
+		if(isset($_GET['explainMachine']) ) {
+			MVC::abort();
+			\Foomo\Services\SOAP\Utils::explainMachine($this->model->serviceClassInstance);
+			exit;
+		}
+	}
 	/*
 		if(count($_GET) == 0) {
 			$this->internalServeClass();

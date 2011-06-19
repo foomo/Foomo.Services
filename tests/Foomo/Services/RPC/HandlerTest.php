@@ -1,6 +1,6 @@
 <?php
 
-namespace Foomo\Services;
+namespace Foomo\Services\RPC;
 
 use Foomo\Services\RPC\Serializer\PHP;
 use Foomo\Services\RPC\Protocol\Call\MethodCall;
@@ -28,8 +28,8 @@ class HandlerTest extends \PHPUnit_Framework_TestCase {
 	private function makeMockCall($calls)
 	{
 		static $i = 0;
-		$request = new RPC\Protocol\Call();
-		$request->head = new RPC\Protocol\Call\Head();
+		$request = new \Foomo\Services\RPC\Protocol\Call();
+		$request->head = new \Foomo\Services\RPC\Protocol\Call\Head();
 		$request->head->classVersion = 1;
 		$request->head->callId = $i ++;
 		$request->head->className = get_class($this->mockService);
@@ -99,7 +99,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase {
 		$result = $serializer->unserialize(Server::run($this->mockService, $serializer, $input));
 		/* $methodReply RPCCallMethodReply */
 		$methodReply = $result->methodReplies[0];
-		$this->assertType('Foomo\Services\Mock\Message', $methodReply->messages[0]);
-		$this->assertType('string', $methodReply->messages[1]);
+		$this->assertInstanceOf('Foomo\Services\Mock\Message', $methodReply->messages[0]);
+		$this->assertInternalType('string', $methodReply->messages[1]);
 	}
 }
