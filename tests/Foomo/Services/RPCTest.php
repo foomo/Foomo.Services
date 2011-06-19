@@ -7,35 +7,30 @@ use Foomo\Services\RPC\Protocol\Call\MethodCall;
 use Foomo\Services\RPC\Server;
 use Foomo\Services\Mock\FunkyStar;
 
-class HandlerTest extends \PHPUnit_Framework_TestCase {
+class RPCTest extends \PHPUnit_Framework_TestCase
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
-	 * my mock
-	 *
-	 * @var RPCServiceHandlerMockService
+	 * @var Foomo\Services\Mock\Service
 	 */
 	private $mockService;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Initialization
+	//---------------------------------------------------------------------------------------------
+
 	public function setUp()
 	{
 		$this->mockService = new \Foomo\Services\Mock\Service();
 	}
-	/**
-	 * prepare call(s)
-	 *
-	 * @param  RPCCallMethodCall[] $calls
-	 *
-	 * @return RPCCall
-	 */
-	private function makeMockCall($calls)
-	{
-		static $i = 0;
-		$request = new RPC\Protocol\Call();
-		$request->head = new RPC\Protocol\Call\Head();
-		$request->head->classVersion = 1;
-		$request->head->callId = $i ++;
-		$request->head->className = get_class($this->mockService);
-		$request->calls = $calls;
-		return $request;
-	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Test methods
+	//---------------------------------------------------------------------------------------------
+
 	public function testFuncWithTwoIntegers()
 	{
 		$methodCalls = array();
@@ -63,6 +58,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase {
 		}
 
 	}
+
 	public function testCallException()
 	{
 		$methodCall = new MethodCall();
@@ -82,6 +78,7 @@ class HandlerTest extends \PHPUnit_Framework_TestCase {
 		/* @var $result RPCCallReply */
 		$this->assertEquals($result->methodReplies[0]->exception->message, 'expected exception');
 	}
+
 	public function testCallMessages()
 	{
 		$methodCall = new MethodCall();
@@ -101,5 +98,27 @@ class HandlerTest extends \PHPUnit_Framework_TestCase {
 		$methodReply = $result->methodReplies[0];
 		$this->assertType('Foomo\Services\Mock\Message', $methodReply->messages[0]);
 		$this->assertType('string', $methodReply->messages[1]);
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * prepare call(s)
+	 *
+	 * @param  RPCCallMethodCall[] $calls
+	 * @return RPCCall
+	 */
+	private function makeMockCall($calls)
+	{
+		static $i = 0;
+		$request = new RPC\Protocol\Call();
+		$request->head = new RPC\Protocol\Call\Head();
+		$request->head->classVersion = 1;
+		$request->head->callId = $i ++;
+		$request->head->className = get_class($this->mockService);
+		$request->calls = $calls;
+		return $request;
 	}
 }

@@ -7,16 +7,36 @@ use Foomo\Services\RPC;
 /**
  * awesome mock service
  */
-class Service {
+class Service
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * you have to give it a VERSION number
 	 */
 	const VERSION = 1.0;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	private $i;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	public function __construct()
 	{
 		$this->i = 0;
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * add two numbers
 	 *
@@ -34,7 +54,7 @@ class Service {
 		//trigger_error('FUPPED', E_USER_ERROR);
 		return $numberOne + $numberTwo;
 	}
-	
+
 	/**
 	 * generate an exception
 	 *
@@ -46,6 +66,7 @@ class Service {
 		RPC::addMessage('there we go');
 		throw new Exception('expected exception', 0);
 	}
+
 	/**
 	 * test a funky star
 	 * also does not really do
@@ -76,6 +97,7 @@ class Service {
 		}
 		return $ret;
 	}
+
 	/**
 	 * session test
 	 *
@@ -85,6 +107,7 @@ class Service {
 	{
 		return $this->i++;
 	}
+
 	/**
 	 * a method, that will not be exposed
 	 *
@@ -93,9 +116,14 @@ class Service {
 	 * @return null
 	 */
 	public function noExpose() {}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * this method will not be exposed, because it is static
-	 * 
+	 *
 	 * @return null
 	 */
 	public static function fooStatic() {}

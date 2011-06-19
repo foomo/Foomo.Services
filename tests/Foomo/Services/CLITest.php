@@ -1,9 +1,13 @@
 <?php
-namespace Foomo\Services\RPC;
 
-use Foomo\Services\Cli;
+namespace Foomo\Services;
 
-class CliTest extends \PHPUnit_Framework_TestCase {
+class CLITest extends \PHPUnit_Framework_TestCase
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Test methods
+	//---------------------------------------------------------------------------------------------
+
 	public function testParseArgs()
 	{
 		$rawArgs = array('stringVal', '111', '1.234', '[1,2,3,"hans", "peter"]', '{"a":1,"b":"lalala"}', '{"prop":"value"}');
@@ -15,4 +19,4 @@ class CliTest extends \PHPUnit_Framework_TestCase {
 		$this->assertType('array', $args[4]);
 		$this->assertType('object', $args[5]);
 	}
-} 
+}

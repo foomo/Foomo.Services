@@ -5,7 +5,12 @@ namespace Foomo\Services\Mock;
 /**
  * a mock message
  */
-class Message {
+class Message
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * id
 	 *
@@ -14,7 +19,7 @@ class Message {
 	public $id;
 	/**
 	 * message content
-	 * 
+	 *
 	 * @var string
 	 */
 	public $content;

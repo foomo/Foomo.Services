@@ -1,19 +1,35 @@
 <?php
 namespace Foomo\Services;
+
 /**
- * 
+ *
  */
-class ReflectionTest extends \PHPUnit_Framework_TestCase {
+class ReflectionTest extends \PHPUnit_Framework_TestCase
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * my reader
 	 *
 	 * @var ServiceReader
 	 */
 	private $reader;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Initialization
+	//---------------------------------------------------------------------------------------------
+
 	public function setUp()
 	{
 		$this->reader = new Reflection('Foomo\Services\Mock\Service');
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Test methods
+	//---------------------------------------------------------------------------------------------
+
 	public function testOperationsNoStatic()
 	{
 		foreach($this->reader->getOperations() as $op) {
@@ -23,6 +39,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase {
 			}
 		}
 	}
+
 	public function testServigenIgnore()
 	{
 		foreach($this->reader->getOperations() as $op) {
@@ -32,6 +49,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase {
 			}
 		}
 	}
+
 	public function testTypes()
 	{
 		$expectedTypes = array(
@@ -53,6 +71,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase {
 			}
 		}
 	}
+
 	public function testMessages()
 	{
 		$expectedMessageTypes = array('string', 'Foomo\Services\Mock\Message');
@@ -70,6 +89,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase {
 		sort($expectedMessageTypes);
 		$this->assertEquals($expectedMessageTypes, $messageTypes, 'expected and returned message types did not match');
 	}
+
 	public function testExceptions()
 	{
 		$expectedExceptionTypes = array('Foomo\Services\Mock\Exception');
@@ -87,6 +107,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase {
 		sort($expectedExceptionTypes);
 		$this->assertEquals($expectedExceptionTypes, $exceptionTypes, 'expected and returned exception types did not match');
 	}
+
 	public function testOperations()
 	{
 		$expectedOps = array('iPlusPlus', 'getSomeFunkyStars', 'makeException', 'addNumbers');
