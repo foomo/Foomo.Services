@@ -1,40 +1,39 @@
 <?php
-namespace Foomo\Services\Mock
-{
+
+namespace Foomo\Services\Mock;
+
+/**
+ * a mock exception
+ */
+class Exception extends \Exception {
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
-	 * a mock exception
+	 * error code
+	 *
+	 * @var integer
 	 */
-	class Exception extends \Exception
-	{
-		//---------------------------------------------------------------------------------------------
-		// ~ Variables
-		//---------------------------------------------------------------------------------------------
+	public $code;
+	/**
+	 * message
+	 *
+	 * @var string
+	 */
+	public $message;
 
-		/**
-		 * error code
-		 *
-		 * @var integer
-		 */
-		public $code;
-		/**
-		 * message
-		 *
-		 * @var string
-		 */
-		public $message;
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
 
-		//---------------------------------------------------------------------------------------------
-		// ~ Constructor
-		//---------------------------------------------------------------------------------------------
-
-		/**
-		 * @param string $msg
-		 */
-		public function __construct($msg)
-		{
-			parent::__construct($msg);
-			$this->code = $this->getCode();
-			$this->message = $this->getMessage();
-		}
+	/**
+	 * @param string $msg
+	 */
+	public function __construct($msg) {
+		parent::__construct($msg);
+		$this->code = $this->getCode();
+		$this->message = $this->getMessage();
 	}
+
 }
