@@ -5,7 +5,12 @@ namespace Foomo\Services;
 /**
  * provides a directory of available services
  */
-class Utils {
+class Utils
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * get services
 	 *
@@ -16,45 +21,11 @@ class Utils {
 		$allServices = array();
 		foreach(\Foomo\Modules\Manager::getEnabledModules() as $enabledModuleName) {
 			$services = self::getServices($enabledModuleName);
-			$allServices[$enabledModuleName] = $services; 
+			$allServices[$enabledModuleName] = $services;
 		}
 		return $allServices;
 	}
-	/**
-	 * scans for module services
-	 *
-	 * @param string $moduleName name of the module
-	 * @param string $path
-	 * @return array
-	 */
-	private static function getServices($moduleName, $path = null)
-	{
-		if(is_null($path)) {
-			$path = \Foomo\CORE_CONFIG_DIR_MODULES . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'htdocs' . DIRECTORY_SEPARATOR . 'services';
-		}
-		$results = array();
-		if(is_dir($path)) {
-			$directoryIterator = new \DirectoryIterator($path);
-			while($directoryIterator->valid()) {
-				$current = $directoryIterator->current();
-				if(!$current->isDot() && $current->isFile()) {
-					$suffix = substr($current->getFilename(), strlen($current->getFilename())-4);
-					if($suffix === '.php') {
-						$serviceFilename = $path . '/' . $current->getFilename(); 
-						$results[] = \Foomo\ROOT_HTTP . '/modules/' . $moduleName . '/services/' . substr($serviceFilename, strlen($path)+1); 
-					}
-				} else {
-					$dot = substr($current->getFilename(),0,1);
-					if($dot != '.' && $current->isDir() && !$current->isDot() &&$current->getFilename() != '') {
-						$results = array_merge($results, self::getServices($moduleName, $path . '/' . $current->getFilename()));
-					}
-				}
-				$directoryIterator->next();
-			}
-			sort($results);
-		}
-		return $results;
-	}
+
 	/**
 	 * get all local service descriptions
 	 *
@@ -74,6 +45,7 @@ class Utils {
 		}
 		return $ret;
 	}
+
 	/**
 	 * load a service description
 	 *
@@ -92,9 +64,12 @@ class Utils {
 			return null;
 		}
 	}
+
 	/**
 	 * map a host to a service url
 	 *
+	 * @todo reimplement
+	 * @deprecated needs reimplementation
 	 * @param string $host the blank host
 	 */
 	public static function getServiceToolsUrl($host)
@@ -110,30 +85,12 @@ class Utils {
 		}
 		return $scheme . $host . '/r/modules/services/index.php';
 	}
-	/**
-	 * get the remote service sites in an array
-	 * 
-	 * @return array
-	 */
-	private static function getRemoteServiceSites()
-	{
-		static $ret;
-		if(!$ret) {
-		 	$ret = array();
-			if(defined('\Foomo\EXTERNAL_SERVICE_SITES')) {
-				$siteUrls = explode(', ', \Foomo\EXTERNAL_SERVICE_SITES);
-				foreach($siteUrls as $siteUrl) {
-					$ret[] = trim($siteUrl);
-				}
-			}
-		}
-		return $ret;
-	}
+
 	/**
 	 * if you want to call stuff from a remote host, you might need crecentials
 	 *
 	 * @param string $host somehost.com
-	 * 
+	 *
 	 * @return string sth. like http://user:password@somehost.com
 	 */
 	public static function getRemoteServiceUrlWithCredentials($host)
@@ -143,15 +100,16 @@ class Utils {
 		}
 		foreach(self::getRemoteServiceSites() as $remoteSite) {
 			if(parse_url($remoteSite, PHP_URL_HOST) == $host) {
-				return $remoteSite; 
+				return $remoteSite;
 			}
 		}
 	}
+
 	/**
 	 * if you want to call stuff from a remote host, you might need crecentials
 	 *
 	 * @param string $host somehost.com
-	 * 
+	 *
 	 * @return string sth. like http://user:password@somehost.com
 	 */
 	public static function getRemoteServiceUrl($host)
@@ -165,9 +123,12 @@ class Utils {
 			}
 		}
 	}
+
 	/**
 	 * check all remote service sites defined in the comma separated list \Foomo\EXTERNAL_SERVICE_SITES and returns the in an array
 	 *
+	 * @todo reimplement
+	 * @deprecated needs reimplementation
 	 * @return array array('sitea.com' => array('site' => arrray(), 'radact' => array), 'siteb.com' ) => array())
 	 */
 	public static function getAllRemoteServiceDescriptions()
@@ -196,11 +157,12 @@ class Utils {
 		}
 		return $ret;
 	}
+
 	/**
 	 * does the given service use remote client classes
 	 *
 	 * @param string $serviceName name of the service
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public static function getServiceUsesRemoteClasses($serviceName)
@@ -216,5 +178,67 @@ class Utils {
 			}
 		}
 		return false;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private static methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * get the remote service sites in an array
+	 *
+	 * @todo reimplement
+	 * @deprecated needs reimplementation
+	 * @return array
+	 */
+	private static function getRemoteServiceSites()
+	{
+		static $ret;
+		if(!$ret) {
+		 	$ret = array();
+			if(defined('\Foomo\EXTERNAL_SERVICE_SITES')) {
+				$siteUrls = explode(', ', \Foomo\EXTERNAL_SERVICE_SITES);
+				foreach($siteUrls as $siteUrl) {
+					$ret[] = trim($siteUrl);
+				}
+			}
+		}
+		return $ret;
+	}
+
+	/**
+	 * scans for module services
+	 *
+	 * @param string $moduleName name of the module
+	 * @param string $path
+	 * @return array
+	 */
+	private static function getServices($moduleName, $path = null)
+	{
+		if(is_null($path)) {
+			$path = \Foomo\CORE_CONFIG_DIR_MODULES . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'htdocs' . DIRECTORY_SEPARATOR . 'services';
+		}
+		$results = array();
+		if(is_dir($path)) {
+			$directoryIterator = new \DirectoryIterator($path);
+			while($directoryIterator->valid()) {
+				$current = $directoryIterator->current();
+				if(!$current->isDot() && $current->isFile()) {
+					$suffix = substr($current->getFilename(), strlen($current->getFilename())-4);
+					if($suffix === '.php') {
+						$serviceFilename = $path . '/' . $current->getFilename();
+						$results[] = \Foomo\ROOT_HTTP . '/modules/' . $moduleName . '/services/' . substr($serviceFilename, strlen($path)+1);
+					}
+				} else {
+					$dot = substr($current->getFilename(),0,1);
+					if($dot != '.' && $current->isDir() && !$current->isDot() &&$current->getFilename() != '') {
+						$results = array_merge($results, self::getServices($moduleName, $path . '/' . $current->getFilename()));
+					}
+				}
+				$directoryIterator->next();
+			}
+			sort($results);
+		}
+		return $results;
 	}
 }

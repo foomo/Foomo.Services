@@ -2,11 +2,17 @@
 namespace Foomo\Services;
 
 use Foomo\Config;
+
 /**
  * describes a service
  *
  */
-class ServiceDescription {
+class ServiceDescription
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * a rpc service at this point using AMF for transports
 	 *
@@ -17,12 +23,11 @@ class ServiceDescription {
 	 *
 	 */
 	const TYPE_SOAP = 'serviceTypeSoap';
-	/**
-	 * the uri on the host the service is running on - it can possibly contain ampersands, so do not forget to escape them, when you use them in a markup context
-	 *
-	 * @var string
-	 */
-	public $downloadUrl;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * uri, where to find a html documentation
 	 *
@@ -31,7 +36,7 @@ class ServiceDescription {
 	public $documentationUrl;
 	/**
 	 * compile and download - all at once
-	 * 
+	 *
 	 * @var string
 	 */
 	public $compileAndDownloadUrl;
@@ -71,6 +76,11 @@ class ServiceDescription {
 	 * @var boolean
 	 */
 	public $compilerAvailable;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	public function __construct()
 	{
 		$this->compilerAvailable = Config::getMode() == Config::MODE_DEVELOPMENT;

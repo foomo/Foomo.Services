@@ -248,23 +248,6 @@ abstract class AbstractGenerator extends AbstractRenderer
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * get a (specific) template
-	 *
-	 * @param string $templateBaseName base name of the template
-	 *
-	 * @return Foomo\View
-	 */
-	protected function getView($templateBaseName)
-	{
-		$view = \Foomo\Services\Module::getView($this, $this->templateFolder . DIRECTORY_SEPARATOR . $templateBaseName, $this);
-		if($view) {
-			return $view;
-		} else {
-			return \Foomo\Services\Module::getView($this, $templateBaseName, $this);
-		}
-	}
-
-	/**
 	 * derive a constant name for an exception event
 	 *
 	 * @param string $type exception type
@@ -336,83 +319,6 @@ abstract class AbstractGenerator extends AbstractRenderer
 		} else {
 			return $type->type;
 		}
-	}
-
-	/**
-	 * try to create a folder - will only work, if the parent folder exists
-	 *
-	 * @param string $folder /path/to/some/folder
-	 * @return boolean true
-	 * @throws Exception if it does not work
-	 */
-	protected function tryCreateFolder($folder)
-	{
-		if (file_exists($folder)) {
-			if (!is_dir($folder)) {
-				throw new Exception($folder . ' should be a folder', 1);
-			}
-		} else {
-			if (is_writable(dirname($folder))) {
-				if (@mkdir($folder) && @chmod($folder, 0775)) {
-					return true;
-				} else {
-					throw new Exception('could not create ' . $folder, 1);
-				}
-			} else {
-				throw new Exception('could not create ' . $folder, 1);
-			}
-		}
-	}
-
-	/**
-	 * write the classes to the file system, tar them and if possible create a swc
-	 *
-	 * @return string a report of what was done
-	 * @throws Exception with a text report, of what went wrong
-	 */
-	protected function export()
-	{
-		// setup structure
-		$ret = 'GENERATING SOURCES' . PHP_EOL;
-		if ((!empty($this->targetSrcDir) && is_dir($this->targetSrcDir)) || $this->tryCreateFolder($this->targetSrcDir)) { // && is_writable($this->targetSrcDir)) {
-			$path = $this->getPath();
-			if ($this->clearSrcDir) {
-				$rmCall = new CliCall('rm', array('-Rvf', $path . '/*'));
-				$rmCall->execute();
-				if ($rmCall->exitStatus === 0) {
-					$ret .= PHP_EOL . 'clearing old sources in ' . $path . ' :' . PHP_EOL . implode(PHP_EOL . '  ', explode(PHP_EOL, $rmCall->stdOut)) . PHP_EOL;
-				} else {
-					throw new Exception('failed to remove old sources ' . PHP_EOL . $rmCall->report, 1);
-				}
-			}
-		} else {
-			throw new Exception('targetSrcDir does not exist ... ' . $this->targetSrcDir);
-		}
-		foreach ($this->packageFolders as $folder) {
-			$folder = $path . DIRECTORY_SEPARATOR . $folder;
-			$this->tryCreateFolder($folder);
-		}
-		$ret .= 'writing class files :' . PHP_EOL . PHP_EOL;
-		foreach ($this->classFiles as $fileName => $fileContents) {
-			$fileName = $path . DIRECTORY_SEPARATOR . $fileName . '.as';
-			$ret .= '  ' . $fileName . PHP_EOL;
-			if (!@file_put_contents($fileName, $fileContents)) {
-				throw new Exception('could not write file ' . $fileName . ' ' . $fileContents, 1);
-			}
-		}
-		$ret .= $this->writeCommonClassFiles();
-		return $ret;
-	}
-
-	private function getPath()
-	{
-		$packageFolders = explode('.', $this->myPackage);
-		$path = $this->targetSrcDir;
-		foreach ($packageFolders as $packageFolder) {
-			$path .= DIRECTORY_SEPARATOR . $packageFolder;
-			$this->tryCreateFolder($path);
-		}
-		return $path;
 	}
 
 	public function packTgz()
@@ -506,30 +412,6 @@ abstract class AbstractGenerator extends AbstractRenderer
 		return $ret;
 	}
 
-	/**
-	 * write shared value objects
-	 *
-	 */
-	private function writeCommonClassFiles()
-	{
-		$ret = '';
-		foreach ($this->commonClassFiles as $fileName => $fileContents) {
-			$path = $this->targetSrcDir;
-			foreach (explode(DIRECTORY_SEPARATOR, dirname($fileName)) as $packageFolder) {
-				$path .= DIRECTORY_SEPARATOR . $packageFolder;
-				$this->tryCreateFolder($path);
-			}
-			$ret .= '  ' . $this->targetSrcDir . DIRECTORY_SEPARATOR . $fileName . '.as' . PHP_EOL;
-			file_put_contents($this->targetSrcDir . DIRECTORY_SEPARATOR . $fileName . '.as', $fileContents);
-		}
-		return $ret;
-	}
-
-	protected function indent($code, $indent)
-	{
-		return str_repeat(chr(9), 3 + $indent) . $code;
-	}
-
 	public function operationToEventFaultName($opName)
 	{
 		return $opName . 'Fault';
@@ -603,11 +485,6 @@ abstract class AbstractGenerator extends AbstractRenderer
 			return 'import ' . $asType->getRemotePackage() . '.' . Utils::getASType(str_replace('[]', '', $type)) . ';';
 		}
 	}
-
-
-
-
-
 
 	/**
 	 * @return string
@@ -785,5 +662,140 @@ abstract class AbstractGenerator extends AbstractRenderer
 			$output[] = '	import ' . $this->myPackage . '.calls.' . $this->operationToMethodCallName($operation->name) . ';';
 		}
 		return implode(PHP_EOL, $output);
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Protected methods
+	//---------------------------------------------------------------------------------------------
+
+
+	/**
+	 * @param string $code
+	 * @param int $indent
+	 * @return string
+	 */
+	protected function indent($code, $indent)
+	{
+		return str_repeat(chr(9), 3 + $indent) . $code;
+	}
+
+	/**
+	 * try to create a folder - will only work, if the parent folder exists
+	 *
+	 * @param string $folder /path/to/some/folder
+	 * @return boolean true
+	 * @throws Exception if it does not work
+	 */
+	protected function tryCreateFolder($folder)
+	{
+		if (file_exists($folder)) {
+			if (!is_dir($folder)) {
+				throw new Exception($folder . ' should be a folder', 1);
+			}
+		} else {
+			if (is_writable(dirname($folder))) {
+				if (@mkdir($folder) && @chmod($folder, 0775)) {
+					return true;
+				} else {
+					throw new Exception('could not create ' . $folder, 1);
+				}
+			} else {
+				throw new Exception('could not create ' . $folder, 1);
+			}
+		}
+	}
+
+	/**
+	 * write the classes to the file system, tar them and if possible create a swc
+	 *
+	 * @return string a report of what was done
+	 * @throws Exception with a text report, of what went wrong
+	 */
+	protected function export()
+	{
+		// setup structure
+		$ret = 'GENERATING SOURCES' . PHP_EOL;
+		if ((!empty($this->targetSrcDir) && is_dir($this->targetSrcDir)) || $this->tryCreateFolder($this->targetSrcDir)) { // && is_writable($this->targetSrcDir)) {
+			$path = $this->getPath();
+			if ($this->clearSrcDir) {
+				$rmCall = new CliCall('rm', array('-Rvf', $path . '/*'));
+				$rmCall->execute();
+				if ($rmCall->exitStatus === 0) {
+					$ret .= PHP_EOL . 'clearing old sources in ' . $path . ' :' . PHP_EOL . implode(PHP_EOL . '  ', explode(PHP_EOL, $rmCall->stdOut)) . PHP_EOL;
+				} else {
+					throw new Exception('failed to remove old sources ' . PHP_EOL . $rmCall->report, 1);
+				}
+			}
+		} else {
+			throw new Exception('targetSrcDir does not exist ... ' . $this->targetSrcDir);
+		}
+		foreach ($this->packageFolders as $folder) {
+			$folder = $path . DIRECTORY_SEPARATOR . $folder;
+			$this->tryCreateFolder($folder);
+		}
+		$ret .= 'writing class files :' . PHP_EOL . PHP_EOL;
+		foreach ($this->classFiles as $fileName => $fileContents) {
+			$fileName = $path . DIRECTORY_SEPARATOR . $fileName . '.as';
+			$ret .= '  ' . $fileName . PHP_EOL;
+			if (!@file_put_contents($fileName, $fileContents)) {
+				throw new Exception('could not write file ' . $fileName . ' ' . $fileContents, 1);
+			}
+		}
+		$ret .= $this->writeCommonClassFiles();
+		return $ret;
+	}
+
+	/**
+	 * get a (specific) template
+	 *
+	 * @param string $templateBaseName base name of the template
+	 *
+	 * @return Foomo\View
+	 */
+	protected function getView($templateBaseName)
+	{
+		$view = \Foomo\Services\Module::getView($this, $this->templateFolder . DIRECTORY_SEPARATOR . $templateBaseName, $this);
+		if($view) {
+			return $view;
+		} else {
+			return \Foomo\Services\Module::getView($this, $templateBaseName, $this);
+		}
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @return string
+	 */
+	private function getPath()
+	{
+		$packageFolders = explode('.', $this->myPackage);
+		$path = $this->targetSrcDir;
+		foreach ($packageFolders as $packageFolder) {
+			$path .= DIRECTORY_SEPARATOR . $packageFolder;
+			$this->tryCreateFolder($path);
+		}
+		return $path;
+	}
+
+	/**
+	 * write shared value objects
+	 *
+	 */
+	private function writeCommonClassFiles()
+	{
+		$ret = '';
+		foreach ($this->commonClassFiles as $fileName => $fileContents) {
+			$path = $this->targetSrcDir;
+			foreach (explode(DIRECTORY_SEPARATOR, dirname($fileName)) as $packageFolder) {
+				$path .= DIRECTORY_SEPARATOR . $packageFolder;
+				$this->tryCreateFolder($path);
+			}
+			$ret .= '  ' . $this->targetSrcDir . DIRECTORY_SEPARATOR . $fileName . '.as' . PHP_EOL;
+			file_put_contents($this->targetSrcDir . DIRECTORY_SEPARATOR . $fileName . '.as', $fileContents);
+		}
+		return $ret;
 	}
 }

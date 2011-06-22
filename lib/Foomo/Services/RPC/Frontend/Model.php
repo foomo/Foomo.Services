@@ -112,9 +112,8 @@ class Model
 	{
 		$descr = new ServiceDescription();
 		$descr->compilerAvailable = Config::getMode() != Config::MODE_PRODUCTION;
-		$descr->downloadUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('getASClientAsAWC');
 		$descr->documentationUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('default');
-		$descr->compileAndDownloadUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('compileAndDownloadClient');
+		$descr->compileAndDownloadUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('getASClientAsSwc');
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
 		$descr->type = ServiceDescription::TYPE_RPC;
