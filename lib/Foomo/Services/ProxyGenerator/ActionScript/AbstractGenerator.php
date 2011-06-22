@@ -357,33 +357,27 @@ abstract class AbstractGenerator extends AbstractRenderer
 		@unlink($this->getSWCFileName());
 		$ret .= 'calling Adobe Compc (Flex Component Compiler) see what the compiler reported - ';
 		$compileReport = '';
+		$externalLibs = array();
 		$sourcePaths = array($this->targetSrcDir);
-		$flexConfig = \Foomo\Flex\DomainConfig::getInstance();
-		if ($flexConfig && !empty($flexConfig->srcDirs)) {
-			$sourcePaths = array_unique(array_merge($sourcePaths, $flexConfig->srcDirs));
-		}
 
-		# get sdk path
-		$domainConfigEntry = \Foomo\Flex\DomainConfig::getInstance()->getEntry($configId);
-
-		# set source paths
-		$swcs = $domainConfigEntry->sourcePaths;
+		# get flex config
+		$flexConfigEntry = \Foomo\Flex\DomainConfig::getInstance()->getEntry($configId);
+		$sourcePaths = array_unique(array_merge($sourcePaths, $flexConfigEntry->sourcePaths));
+		$externalLibs = array_unique(array_merge($externalLibs, $flexConfigEntry->externalLibs));
 
 		# add zugspitze swcs
-		$zsScaffold = new \Foomo\Zugspitze\Scaffold(\Foomo\Zugspitze\Module::getVendorDir());
-		$zsLibraries = $zsScaffold->getLibraries(false);
+		$sources = \Foomo\Zugspitze\Vendor::getSources();
 		$zsExternals = array(
 			'org.foomo.zugspitze.core' => 'zugspitze_core.swc',
 			'org.foomo.zugspitze.services.core' => 'zugspitze_servicesCore.swc',
 		);
-
 		foreach ($zsExternals as $zsKey => $zsValue) {
-			$zsLibrary = $zsLibraries[$zsKey];
-			$zsLibrarySwc = $zsLibrary->pathname . DIRECTORY_SEPARATOR . 'bin'  . DIRECTORY_SEPARATOR . $zsValue;
-			if (\file_exists($zsLibrarySwc)) $swcs[] = $zsLibrarySwc;
+			$libraryProject = $sources->getLibraryProject($zsKey);
+			$zsLibrarySwc = $libraryProject->pathname . DIRECTORY_SEPARATOR . 'bin'  . DIRECTORY_SEPARATOR . $zsValue;
+			if (\file_exists($zsLibrarySwc)) $externalLibs[] = $zsLibrarySwc;
 		}
 
-		$swcFile = FlexUtils::compileLibrarySWC($compileReport, $domainConfigEntry->sdkPath, $sourcePaths, array($this->targetSrcDir), $swcs);
+		$swcFile = FlexUtils::compileLibrarySWC($compileReport, $flexConfigEntry->sdkPath, $sourcePaths, array($this->targetSrcDir), $externalLibs);
 
 		if (!file_exists($swcFile)) {
 			throw new Exception(
