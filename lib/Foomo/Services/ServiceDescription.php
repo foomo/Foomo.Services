@@ -14,32 +14,22 @@ class ServiceDescription
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * a rpc service at this point using AMF for transports
-	 *
+	 * a rpc service JSON for transports
 	 */
-	const TYPE_RPC = 'serviceTypeRPC';
+	const TYPE_RPC_JSON		= 'serviceTypeRpcJson';
+	/**
+	 * a rpc service using AMF for transports
+	 */
+	const TYPE_RPC_AMF		= 'serviceTypeRpcAmf';
 	/**
 	 * a soap service
-	 *
 	 */
-	const TYPE_SOAP = 'serviceTypeSoap';
+	const TYPE_SOAP			= 'serviceTypeSoap';
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Variables
 	//---------------------------------------------------------------------------------------------
 
-	/**
-	 * uri, where to find a html documentation
-	 *
-	 * @var string
-	 */
-	public $documentationUrl;
-	/**
-	 * compile and download - all at once
-	 *
-	 * @var string
-	 */
-	public $compileAndDownloadUrl;
 	/**
 	 * basically the name of the class that was exposed as a service
 	 *
@@ -70,6 +60,18 @@ class ServiceDescription
 	 * @var boolean
 	 */
 	public $usesRemoteClasses = false;
+	/**
+	 * uri, where to find a html documentation
+	 *
+	 * @var string
+	 */
+	public $documentationUrl;
+	/**
+	 * compile and download - all at once
+	 *
+	 * @var string
+	 */
+	public $compileAndDownloadUrl;
 	/**
 	 * is the compiler available or not to provide the compilation of sources and swcs
 	 *

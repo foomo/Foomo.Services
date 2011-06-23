@@ -111,12 +111,11 @@ class Model
 	public function serveServiceDescription()
 	{
 		$descr = new ServiceDescription();
-		$descr->compilerAvailable = Config::getMode() != Config::MODE_PRODUCTION;
 		$descr->documentationUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('default');
 		$descr->compileAndDownloadUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('getASClientAsSwc');
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
-		$descr->type = ServiceDescription::TYPE_RPC;
+		$descr->type = ($this->serializer instanceof \Foomo\Services\RPC\Serializer\JSON) ? ServiceDescription::TYPE_RPC_JSON : ServiceDescription::TYPE_RPC_AMF;
 		$descr->usesRemoteClasses = Utils::getServiceUsesRemoteClasses($descr->name);
 		$descr->version = @constant($descr->name . '::VERSION');
 		return $descr;
