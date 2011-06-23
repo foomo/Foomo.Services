@@ -31,7 +31,7 @@ class Module extends ModuleBase
 	{
 		return array(
 			\Foomo\Modules\Resource\Module::getResource('Foomo.Flash', self::VERSION),
-			//\Foomo\Modules\Resource\Module::getResource('Zugspitze', self::VERSION),
+			\Foomo\Modules\Resource\Module::getResource('Foomo.Zugspitze', self::VERSION),
 			\Foomo\Modules\Resource\PhpModule::getResource('amf')
 		);
 	}
