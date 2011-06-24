@@ -50,8 +50,9 @@ class Utils
 	 * load a service description
 	 *
 	 * @param string $url
+	 * @return Foomo\Services\ServiceDescription
 	 */
-	private static function getServiceDescription($url)
+	public static function getServiceDescription($url)
 	{
 		$serviceUrl = $url .'?explainMachine';
 		if(!($serialized = @file_get_contents($serviceUrl))) {

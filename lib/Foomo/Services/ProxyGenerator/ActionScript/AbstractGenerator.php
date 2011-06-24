@@ -369,7 +369,8 @@ abstract class AbstractGenerator extends AbstractRenderer
 		$sources = \Foomo\Zugspitze\Vendor::getSources();
 		$zsExternals = array(
 			'org.foomo.zugspitze.core' => 'zugspitze_core.swc',
-			'org.foomo.zugspitze.services.core' => 'zugspitze_servicesCore.swc',
+			'org.foomo.zugspitze.services.core.rpc' => 'zugspitze_servicesCoreRpc.swc',
+			'org.foomo.zugspitze.services.core.proxy' => 'zugspitze_servicesCoreProxy.swc',
 		);
 		foreach ($zsExternals as $zsKey => $zsValue) {
 			$libraryProject = $sources->getLibraryProject($zsKey);

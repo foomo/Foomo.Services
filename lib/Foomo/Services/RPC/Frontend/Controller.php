@@ -105,7 +105,7 @@ class Controller
 	/**
 	 *
 	 */
-	public function actionplainTextDocs()
+	public function actionPlainTextDocs()
 	{
 		MVC::abort();
 		header('Content-Type: text/plain;charset=utf-8;');
