@@ -1,14 +1,19 @@
 <?php
 /* @var $model Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator */
 /* @var $operation ServiceOperation */
-use Foomo\Services\ProxyGenerator\ActionScript\Utils;
+/* @var $view Foomo\MVC\View */
+use Foomo\Flash\ActionScript\PHPUtils;
+use Foomo\Flash\ActionScript\ViewHelper;
 ?>package <?= $model->myPackage . PHP_EOL; ?>
 {
 	import org.foomo.zugspitze.zugspitze_internal;
 	import org.foomo.zugspitze.services.core.proxy.Proxy;
-<?= $model->getMethodCallImports() . PHP_EOL ?>
+<? foreach($model->operations as $operation): ?>
+	import <?= $model->myPackage ?>.calls.<?=ViewHelper::toClassName($operation->name, 'Call') ?>;
+<? endforeach; ?>
+<?= $view->indent($model->getAllClientClassImports(), 1) . PHP_EOL; ?>
 
-	public class <?= Utils::getASType($model->proxyClassName) ?> extends Proxy
+	public class <?= PHPUtils::getASType($model->proxyClassName) ?> extends Proxy
 	{
 		//-----------------------------------------------------------------------------------------
 		// ~ Constants
@@ -30,7 +35,7 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 		// ~ Constructor
 		//-----------------------------------------------------------------------------------------
 
-		public function <?= Utils::getASType($model->proxyClassName) ?>(endPoint:String=null)
+		public function <?= PHPUtils::getASType($model->proxyClassName) ?>(endPoint:String=null)
 		{
 			super((endPoint != null) ? endPoint : defaultEndPoint, CLASS_NAME, VERSION);
 		}
@@ -43,9 +48,9 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 		/**
 		 *
 		 */
-		public function <?= $operation->name; ?>(<?= Utils::renderParameters($operation->parameters) ?>):<?= $model->operationToMethodCallName($operation->name). PHP_EOL ?>
+		public function <?= $operation->name; ?>(<?= ViewHelper::renderParameters($operation->parameters) ?>):<?= ViewHelper::toClassName($operation->name, 'Call') . PHP_EOL ?>
 		{
-			return zugspitze_internal::sendMethodCall(new <?= $model->operationToMethodCallName($operation->name) ?>(<?= Utils::renderParameters($operation->parameters, false) ?>));
+			return zugspitze_internal::sendMethodCall(new <?= ViewHelper::toClassName($operation->name, 'Call') ?>(<?= ViewHelper::renderParameters($operation->parameters, false) ?>));
 		}
 <?php endforeach; ?>
 	}

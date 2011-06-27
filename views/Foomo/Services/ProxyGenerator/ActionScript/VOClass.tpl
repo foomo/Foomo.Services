@@ -2,7 +2,9 @@
 /* @var $model Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator */
 /* @var $dataClass ServiceObjectType */
 /* @var $type ServiceObjectType */
-use Foomo\Services\ProxyGenerator\ActionScript\Utils;
+/* @var $view Foomo\MVC\View */
+use Foomo\Flash\ActionScript\PHPUtils;
+use Foomo\Flash\ActionScript\ViewHelper;
 $dataClass = $model->currentDataClass;
 ?>package <?= $dataClass->getRemotePackage() . PHP_EOL ?>
 {
@@ -15,7 +17,7 @@ $dataClass = $model->currentDataClass;
 	[RemoteClass(alias='<?= $model->getVORemoteAliasName($dataClass) ?>')]
 <? endif; ?>
 
-<?= Utils::indentLines(Utils::renderComment((isset($dataClass->phpDocEntry) && !empty($dataClass->phpDocEntry->comment)) ? $dataClass->phpDocEntry->comment : ''), 1) . PHP_EOL; ?>
+<?= $view->indent(ViewHelper::renderComment((isset($dataClass->phpDocEntry) && !empty($dataClass->phpDocEntry->comment)) ? $dataClass->phpDocEntry->comment : ''), 1) . PHP_EOL; ?>
 	public class <?= $model->getVOClassName($dataClass) . PHP_EOL ?>
 	{
 <?php if (count($dataClass->constants) > 0): ?>
@@ -23,7 +25,7 @@ $dataClass = $model->currentDataClass;
 		// ~ Constants
 		//-----------------------------------------------------------------------------------------
 
-<?= Utils::renderConstants($dataClass->constants) . PHP_EOL ?>
+<?= $view->intend(ViewHelper::renderConstants($dataClass->constants), 2) . PHP_EOL ?>
 
 <?php endif; ?>
 <? if (count($dataClass->props) > 0): ?>
@@ -32,12 +34,12 @@ $dataClass = $model->currentDataClass;
 		//-----------------------------------------------------------------------------------------
 <? foreach($dataClass->props as $name => $type): ?>
 
-<?= Utils::indentLines(Utils::renderComment((isset($type->phpDocEntry) && !empty($type->phpDocEntry->comment)) ? $type->phpDocEntry->comment : ''), 2) . PHP_EOL; ?>
+<?= $view->indent(ViewHelper::renderComment((isset($type->phpDocEntry) && !empty($type->phpDocEntry->comment)) ? $type->phpDocEntry->comment : ''), 2) . PHP_EOL; ?>
 <? if ($type->isArrayOf): ?>
-		[ArrayElementType("<?= Utils::getASType($type->type); ?>")]
+		[ArrayElementType("<?= PHPUtils::getASType($type->type); ?>")]
 		public var <?= $name ?>:Array;
 <? else: ?>
-		public var <?= $name ?>:<?= Utils::getASType($type->type); ?>;
+		public var <?= $name ?>:<?= PHPUtils::getASType($type->type); ?>;
 <? endif; ?>
 <? endforeach; ?>
 <?php endif; ?>

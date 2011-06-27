@@ -4,7 +4,6 @@ namespace Foomo\Services\RPC\Frontend;
 
 use Foomo\Services\Renderer\RendererInterface;
 use Foomo\Config;
-use Foomo\Services\ProxyGenerator\ActionScript\RPC;
 use Foomo\Flex\Utils;
 use Foomo\MVC;
 
@@ -176,10 +175,12 @@ class Controller
 	 */
 	private function generateASCientSrc()
 	{
-		$this->model->proxyGeneratorReport = RPC::generateSrc(
-			$this->model->serviceClassInstance,
-			$this->model->package,
-			$this->checkSrcDir($this->model->srcDir)
+		$this->model->proxyGeneratorReport = \Foomo\Services\ProxyGenerator\ActionScript::generateSrc(
+			$this->model->serviceClassName,
+			new \Foomo\Services\ProxyGenerator\ActionScript\RPC(
+				$this->model->package,
+				$this->checkSrcDir($this->model->srcDir)
+			)
 		);
 	}
 
@@ -188,10 +189,12 @@ class Controller
 	 */
 	private function compressASClientSrc()
 	{
-		$this->model->proxyGeneratorReport = RPC::packSrc(
-			$this->model->serviceClassInstance,
-			$this->model->package,
-			$this->checkSrcDir($this->model->srcDir)
+		$this->model->proxyGeneratorReport = \Foomo\Services\ProxyGenerator\ActionScript::packSrc(
+			$this->model->serviceClassName,
+			new \Foomo\Services\ProxyGenerator\ActionScript\RPC(
+				$this->model->package,
+				$this->checkSrcDir($this->model->srcDir)
+			)
 		);
 	}
 
@@ -200,10 +203,12 @@ class Controller
 	 */
 	private function compileASClientSrc($configId)
 	{
-		$this->model->proxyGeneratorReport = RPC::compileSrc(
-			$this->model->serviceClassInstance,
-			$this->model->package,
-			$this->checkSrcDir($this->model->srcDir),
+		$this->model->proxyGeneratorReport = \Foomo\Services\ProxyGenerator\ActionScript::compileSrc(
+			$this->model->serviceClassName,
+			new \Foomo\Services\ProxyGenerator\ActionScript\RPC(
+				$this->model->package,
+				$this->checkSrcDir($this->model->srcDir)
+			),
 			$configId
 		);
 	}

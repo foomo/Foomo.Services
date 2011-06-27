@@ -1,10 +1,12 @@
 <?php
 /* @var $model Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator */
 /* @var $operation ServiceOperation */
-use Foomo\Services\ProxyGenerator\ActionScript\Utils;
+/* @var $view Foomo\MVC\View */
+use Foomo\Flash\ActionScript\PHPUtils;
+use Foomo\Flash\ActionScript\ViewHelper;
 ?>package <?= $model->myPackage; ?>.events
 {
-<?	if (!Utils::isASStandardType($model->currentOperation->returnType->type)): ?>
+<?	if (!PHPUtils::isASStandardType($model->currentOperation->returnType->type)): ?>
 	<?= $model->getClientAsClassImport($model->currentOperation->returnType->type) . PHP_EOL ?>
 
 <? endif; ?>
@@ -13,21 +15,21 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 	/**
 	 *
 	 */
-	public class <?= $model->operationToOperationEventName($model->currentOperation->name) ?> extends ProxyMethodOperationEvent
+	public class <?= ViewHelper::toClassName($model->currentOperation->name, 'OperationEvent') ?> extends ProxyMethodOperationEvent
 	{
 		//-----------------------------------------------------------------------------------------
 		// ~ Constants
 		//-----------------------------------------------------------------------------------------
 
-		public static const <?= $model->toConstantName($model->currentOperation->name) ?>_OPERATION_COMPLETE:String = '<?= lcfirst($model->currentOperation->name) ?>OperationComplete';
-		public static const <?= $model->toConstantName($model->currentOperation->name) ?>_OPERATION_PROGRESS:String = '<?= lcfirst($model->currentOperation->name) ?>OperationProgress';
-		public static const <?= $model->toConstantName($model->currentOperation->name) ?>_OPERATION_ERROR:String = '<?= lcfirst($model->currentOperation->name) ?>OperationError';
+		public static const <?= ViewHelper::toConstantName($model->currentOperation->name) ?>_OPERATION_COMPLETE:String = '<?= lcfirst($model->currentOperation->name) ?>OperationComplete';
+		public static const <?= ViewHelper::toConstantName($model->currentOperation->name) ?>_OPERATION_PROGRESS:String = '<?= lcfirst($model->currentOperation->name) ?>OperationProgress';
+		public static const <?= ViewHelper::toConstantName($model->currentOperation->name) ?>_OPERATION_ERROR:String = '<?= lcfirst($model->currentOperation->name) ?>OperationError';
 
 		//-----------------------------------------------------------------------------------------
 		// ~ Constructor
 		//-----------------------------------------------------------------------------------------
 
-		public function <?= $model->operationToOperationEventName($model->currentOperation->name) ?>(type:String, result:*=null, error:*=null, messages:Array=null, total:Number=0, progress:Number=0)
+		public function <?= ViewHelper::toClassName($model->currentOperation->name, 'OperationEvent') ?>(type:String, result:*=null, error:*=null, messages:Array=null, total:Number=0, progress:Number=0)
 		{
 			super(type, result, error, messages, total, progress);
 		}
@@ -39,7 +41,7 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 		/**
 		 *
 		 */
-		public function get result():<?= Utils::getASType($model->currentOperation->returnType->type) . PHP_EOL ?>
+		public function get result():<?= PHPUtils::getASType($model->currentOperation->returnType->type) . PHP_EOL ?>
 		{
 			return this.untypedResult;
 		}

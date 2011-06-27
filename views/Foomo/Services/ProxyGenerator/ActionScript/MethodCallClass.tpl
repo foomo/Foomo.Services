@@ -2,6 +2,9 @@
 /* @var $model Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator */
 /* @var $dataClass ServiceObjectType */
 /* @var $operation ServiceOperation */
+/* @var $view Foomo\MVC\View */
+use Foomo\Flash\ActionScript\PHPUtils;
+use Foomo\Flash\ActionScript\ViewHelper;
 $operation = $model->currentOperation;
 
 
@@ -20,9 +23,6 @@ function renderMethodProperties($props)
 	}
 	return ', ' . implode(', ', $output);
 }
-
-
-use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 ?>package <?= $model->myPackage; ?>.calls
 {
 <? if (count($operation->throwsTypes) > 0): ?>
@@ -30,30 +30,30 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 <? foreach ($operation->throwsTypes as $throwType): ?>
 <? $dataClass = $model->complexTypes[$throwType->type]; ?>
 	<?= $model->getClientAsClassImport($throwType->type) .PHP_EOL ?>
-	import <?= $model->myPackage; ?>.events.<?= $model->toEventName($model->getVOClassName($dataClass)) ?>;
+	import <?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>;
 <? endforeach; ?>
 
 <? endif; ?>
-	import <?= $model->myPackage; ?>.events.<?= $model->operationToMethodCallEventName($operation->name) ?>;
+	import <?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>;
 	import org.foomo.zugspitze.services.core.proxy.calls.ProxyMethodCall;
-<?	if (!Utils::isASStandardType($operation->returnType->type)): ?>
+<?	if (!PHPUtils::isASStandardType($operation->returnType->type)): ?>
 	<?= $model->getClientAsClassImport($operation->returnType->type) . PHP_EOL ?>
 <? endif ?>
 
-	[Event(name="<?= $operation->name ?>CallComplete", type="<?= $model->myPackage; ?>.events.<?= $model->operationToMethodCallEventName($operation->name) ?>")]
-	[Event(name="<?= $operation->name ?>CallProgress", type="<?= $model->myPackage; ?>.events.<?= $model->operationToMethodCallEventName($operation->name) ?>")]
-	[Event(name="<?= $operation->name ?>CallError", type="<?= $model->myPackage; ?>.events.<?= $model->operationToMethodCallEventName($operation->name) ?>")]
+	[Event(name="<?= $operation->name ?>CallComplete", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>")]
+	[Event(name="<?= $operation->name ?>CallProgress", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>")]
+	[Event(name="<?= $operation->name ?>CallError", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>")]
 <? if (count($operation->throwsTypes) > 0): ?>
 <? foreach ($operation->throwsTypes as $throwType): ?>
 <? $dataClass = $model->complexTypes[$throwType->type]; ?>
-	[Event(name="<?= lcfirst($model->getVOClassName($dataClass)) ?>", type="<?= $model->myPackage; ?>.events.<?= $model->toEventName($model->getVOClassName($dataClass)) ?>")]
+	[Event(name="<?= lcfirst($model->getVOClassName($dataClass)) ?>", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>")]
 <? endforeach; ?>
 <? endif; ?>
 
 	/**
 	 *
 	 */
-	public class <?= $model->operationToMethodCallName($operation->name) ?> extends ProxyMethodCall
+	public class <?= ViewHelper::toClassName($operation->name, 'Call') ?> extends ProxyMethodCall
 	{
 		//-----------------------------------------------------------------------------------------
 		// ~ Constants
@@ -65,9 +65,9 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 		// ~ Constructor
 		//-----------------------------------------------------------------------------------------
 
-		public function <?= $model->operationToMethodCallName($operation->name) ?>(<?= Utils::renderParameters($operation->parameters) ?>)
+		public function <?= ViewHelper::toClassName($operation->name, 'Call') ?>(<?= ViewHelper::renderParameters($operation->parameters) ?>)
 		{
-			super(METHOD_NAME, [<?= Utils::renderParameters($operation->parameters, false) ?>], <?= $model->operationToMethodCallEventName($operation->name) ?>);
+			super(METHOD_NAME, [<?= ViewHelper::renderParameters($operation->parameters, false) ?>], <?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>);
 		}
 
 		//-----------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 		/**
 		 * Method call result
 		 */
-		public function get result():<?= Utils::getASType($operation->returnType->type) . PHP_EOL ?>
+		public function get result():<?= PHPUtils::getASType($operation->returnType->type) . PHP_EOL ?>
 		{
 			return this.methodReply.value;
 		}
@@ -100,7 +100,7 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 <? foreach ($operation->throwsTypes as $throwType): ?>
 <? $dataClass = $model->complexTypes[$throwType->type]; ?>
 					case (this._methodReply.exception is <?= $model->getVOClassName($dataClass) ?>):
-						this.dispatchEvent(new <?= $model->toEventName($model->getVOClassName($dataClass)) ?>(<?= $model->toEventName($model->getVOClassName($dataClass)) ?>.<?= $model->toConstantName(lcfirst($model->getVOClassName($dataClass))) ?><?= renderMethodProperties($dataClass->props) ?>));
+						this.dispatchEvent(new <?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>(<?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>.<?= ViewHelper::toConstantName($model->getVOClassName($dataClass)) ?><?= renderMethodProperties($dataClass->props) ?>));
 						break;
 <? endforeach; ?>
 					default:
@@ -108,7 +108,7 @@ use Foomo\Services\ProxyGenerator\ActionScript\Utils;
 						break;
 				}
 			} else {
-				this.dispatchEvent(new <?= $model->operationToMethodCallEventName($operation->name) ?>(<?= $model->operationToMethodCallEventName($operation->name) ?>.<?= $model->toConstantName($operation->name) ?>_CALL_COMPLETE, this));
+				this.dispatchEvent(new <?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>(<?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>.<?= ViewHelper::toConstantName($operation->name) ?>_CALL_COMPLETE, this));
 			}
 		}
 <? endif; ?>

@@ -1,14 +1,16 @@
 <?php
 /* @var $model Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator */
 /* @var $operation ServiceOperation */
-use Foomo\Services\ProxyGenerator\ActionScript\Utils;
+/* @var $view Foomo\MVC\View */
+use Foomo\Flash\ActionScript\PHPUtils;
+use Foomo\Flash\ActionScript\ViewHelper;
 $operation = $model->currentOperation;
 ?>package <?= $model->myPackage; ?>.events
 {
-<?	if (!Utils::isASStandardType($operation->returnType->type)): ?>
+<?	if (!PHPUtils::isASStandardType($operation->returnType->type)): ?>
 	<?= $model->getClientAsClassImport($operation->returnType->type) . PHP_EOL ?>
 <? endif ?>
-	import <?= $model->myPackage; ?>.calls.<?= $model->operationToMethodCallName($operation->name) ?>;
+	import <?= $model->myPackage; ?>.calls.<?= ViewHelper::toClassName($operation->name, 'Call') ?>;
 
 	import flash.events.Event;
 
@@ -17,21 +19,21 @@ $operation = $model->currentOperation;
 	/**
 	 *
 	 */
-	public class <?= $model->operationToMethodCallEventName($operation->name) ?> extends ProxyMethodCallEvent
+	public class <?= ViewHelper::toClassName($operation->name, 'CallEvent') ?> extends ProxyMethodCallEvent
 	{
 		//-----------------------------------------------------------------------------------------
 		// ~ Constants
 		//-----------------------------------------------------------------------------------------
 
-		public static const <?= $model->toConstantName($operation->name) ?>_CALL_COMPLETE:String = "<?= $operation->name ?>CallComplete";
-		public static const <?= $model->toConstantName($operation->name) ?>_CALL_PROGRESS:String = "<?= $operation->name ?>CallProgress";
-		public static const <?= $model->toConstantName($operation->name) ?>_CALL_ERROR:String = "<?= $operation->name ?>CallError";
+		public static const <?= ViewHelper::toConstantName($operation->name) ?>_CALL_COMPLETE:String = "<?= $operation->name ?>CallComplete";
+		public static const <?= ViewHelper::toConstantName($operation->name) ?>_CALL_PROGRESS:String = "<?= $operation->name ?>CallProgress";
+		public static const <?= ViewHelper::toConstantName($operation->name) ?>_CALL_ERROR:String = "<?= $operation->name ?>CallError";
 
 		//-----------------------------------------------------------------------------------------
 		// ~ Constructor
 		//-----------------------------------------------------------------------------------------
 
-		public function <?= $model->operationToMethodCallEventName($operation->name) ?>(type:String, result:*=null, error:String='', exception:*=null, messages:Array=null, bytesTotal:Number=0, bytesLoaded:Number=0)
+		public function <?= ViewHelper::toClassName($operation->name, 'CallEvent') ?>(type:String, result:*=null, error:String='', exception:*=null, messages:Array=null, bytesTotal:Number=0, bytesLoaded:Number=0)
 		{
 			super(type, result, error, exception, messages, bytesTotal, bytesLoaded);
 		}
@@ -43,7 +45,7 @@ $operation = $model->currentOperation;
 		/**
 		 * Method call result
 		 */
-		public function get result():<?= Utils::getASType($operation->returnType->type) . PHP_EOL ?>
+		public function get result():<?= PHPUtils::getASType($operation->returnType->type) . PHP_EOL ?>
 		{
 			return this.untypedResult;
 		}

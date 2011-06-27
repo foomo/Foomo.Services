@@ -1,34 +1,36 @@
 <?php
 /* @var $model Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator */
 /* @var $operation ServiceOperation */
-use Foomo\Services\ProxyGenerator\ActionScript\Utils;
+/* @var $view Foomo\MVC\View */
+use Foomo\Flash\ActionScript\PHPUtils;
+use Foomo\Flash\ActionScript\ViewHelper;
 $operation = $model->currentOperation;
 ?>package <?= $model->myPackage; ?>.operations
 {
-<?	if (!Utils::isASStandardType($operation->returnType->type)): ?>
+<?	if (!PHPUtils::isASStandardType($operation->returnType->type)): ?>
 	<?= $model->getClientAsClassImport($operation->returnType->type) . PHP_EOL ?>
 
 <? endif ?>
-	import <?= $model->myPackage; ?>.<?= Utils::getASType($model->proxyClassName) ?>;
-	import <?= $model->myPackage; ?>.events.<?= $model->operationToOperationEventName($operation->name) ?>;
+	import <?= $model->myPackage; ?>.<?= PHPUtils::getASType($model->proxyClassName) ?>;
+	import <?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'OperationEvent') ?>;
 <? if (count($operation->throwsTypes) > 0): ?>
 <? foreach ($operation->throwsTypes as $throwType): ?>
 <? $dataClass = $model->complexTypes[$throwType->type]; ?>
 	<?= $model->getClientAsClassImport($throwType->type) .PHP_EOL ?>
-	import <?= $model->myPackage; ?>.events.<?= $model->toEventName($model->getVOClassName($dataClass)) ?>;
+	import <?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>;
 <? endforeach; ?>
 <? endif; ?>
 
 	import org.foomo.zugspitze.services.core.proxy.operations.ProxyMethodOperation;
 
-	[Event(name="<?= ucfirst($model->operationToOperationName($operation->name)) ?>Complete", type="<?= $model->myPackage; ?>.events.<?= $model->operationToOperationEventName($operation->name) ?>")]
-	[Event(name="<?= ucfirst($model->operationToOperationName($operation->name)) ?>Progress", type="<?= $model->myPackage; ?>.events.<?= $model->operationToOperationEventName($operation->name) ?>")]
-	[Event(name="<?= ucfirst($model->operationToOperationName($operation->name)) ?>Error", type="<?= $model->myPackage; ?>.events.<?= $model->operationToOperationEventName($operation->name) ?>")]
+	[Event(name="<?= ucfirst(ViewHelper::toClassName($operation->name, 'Operation')) ?>Complete", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'OperationEvent') ?>")]
+	[Event(name="<?= ucfirst(ViewHelper::toClassName($operation->name, 'Operation')) ?>Progress", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'OperationEvent') ?>")]
+	[Event(name="<?= ucfirst(ViewHelper::toClassName($operation->name, 'Operation')) ?>Error", type="<?= $model->myPackage; ?>.events.<?= ViewHelper::toClassName($operation->name, 'OperationEvent') ?>")]
 
 	/**
 	 *
 	 */
-	public class <?= $model->operationToOperationName($operation->name) ?> extends ProxyMethodOperation
+	public class <?= ViewHelper::toClassName($operation->name, 'Operation') ?> extends ProxyMethodOperation
 	{
 		//-----------------------------------------------------------------------------------------
 		// ~ Constructor
@@ -37,13 +39,13 @@ $operation = $model->currentOperation;
 		/**
 		 *
 		 */
-		public function <?= $model->operationToOperationName($operation->name) ?>(<?= Utils::renderParameters($operation->parameters); ?><?= (count($operation->parameters) > 0) ? ', ' : ''; ?>proxy:<?= Utils::getASType($model->proxyClassName) ?>)
+		public function <?= ViewHelper::toClassName($operation->name, 'Operation') ?>(<?= ViewHelper::renderParameters($operation->parameters); ?><?= (count($operation->parameters) > 0) ? ', ' : ''; ?>proxy:<?= PHPUtils::getASType($model->proxyClassName) ?>)
 		{
-			super(proxy, '<?= $operation->name ?>', [<?= Utils::renderParameters($operation->parameters, false); ?>], <?= $model->operationToOperationEventName($operation->name) ?>);
+			super(proxy, '<?= $operation->name ?>', [<?= ViewHelper::renderParameters($operation->parameters, false); ?>], <?= ViewHelper::toClassName($operation->name, 'OperationEvent') ?>);
 <? if (count($operation->throwsTypes) > 0): ?>
 <? foreach ($operation->throwsTypes as $throwType): ?>
 <? $dataClass = $model->complexTypes[$throwType->type]; ?>
-			this._methodCall.addEventListener(<?= $model->toEventName($model->getVOClassName($dataClass)) ?>.<?= $model->toConstantName(lcfirst($model->getVOClassName($dataClass))) ?>, this.methodCall_proxyMethodCallExceptionHandler);
+			this._methodCall.addEventListener(<?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>.<?= ViewHelper::toConstantName($model->getVOClassName($dataClass)) ?>, this.methodCall_proxyMethodCallExceptionHandler);
 <? endforeach; ?>
 <? endif; ?>
 		}
@@ -55,7 +57,7 @@ $operation = $model->currentOperation;
 		/**
 		 *
 		 */
-		public function get result():<?= Utils::getASType($operation->returnType->type) . PHP_EOL ?>
+		public function get result():<?= PHPUtils::getASType($operation->returnType->type) . PHP_EOL ?>
 		{
 			return this.untypedResult;
 		}
@@ -83,7 +85,7 @@ $operation = $model->currentOperation;
 		{
 <? foreach ($operation->throwsTypes as $throwType): ?>
 <? $dataClass = $model->complexTypes[$throwType->type]; ?>
-			this._methodCall.removeEventListener(<?= $model->toEventName($model->getVOClassName($dataClass)) ?>.<?= $model->toConstantName(lcfirst($model->getVOClassName($dataClass))) ?>, this.methodCall_proxyMethodCallExceptionHandler);
+			this._methodCall.removeEventListener(<?= ViewHelper::toClassName($model->getVOClassName($dataClass), 'Event') ?>.<?= ViewHelper::toConstantName($model->getVOClassName($dataClass)) ?>, this.methodCall_proxyMethodCallExceptionHandler);
 <? endforeach; ?>
 			super.unload();
 		}
