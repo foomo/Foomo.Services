@@ -15,18 +15,27 @@ class Module extends ModuleBase
 	const NAME = 'Foomo.Services';
 
 	//---------------------------------------------------------------------------------------------
-	// ~ Public static methods
+	// ~ Overriden methods
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 *
+	 */
 	public static function initializeModule()
 	{
 	}
 
+	/**
+	 * @return string
+	 */
 	public static function getDescription()
 	{
 		return 'Services in many flavours, but without pain';
 	}
 
+	/**
+	 * @return array
+	 */
 	public static function getResources()
 	{
 		return array(
@@ -34,25 +43,5 @@ class Module extends ModuleBase
 			\Foomo\Modules\Resource\Module::getResource('Foomo.Zugspitze', self::VERSION),
 			\Foomo\Modules\Resource\PhpModule::getResource('amf')
 		);
-	}
-
-	/**
-	 * @return string
-	 */
-	public static function getTmpDir()
-	{
-		$filename = 'tmp' . DIRECTORY_SEPARATOR . self::NAME;
-		self::validateResourceDir($filename);
-		return \Foomo\Config::getVarDir() . DIRECTORY_SEPARATOR . $filename;
-	}
-
-	/**
-	 * @param string $filename
-	 */
-	public static function validateResourceDir($filename)
-	{
-		$resource = \Foomo\Modules\Resource\Fs::getVarResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $filename);
-		if (!$resource->resourceValid()) $resource->tryCreate();
-		if (!\file_exists(\Foomo\Config::getVarDir() . DIRECTORY_SEPARATOR . $filename)) throw new \Exception('Resource ' . $filename . ' does not exits');
 	}
 }

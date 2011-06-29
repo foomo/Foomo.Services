@@ -4,7 +4,6 @@ namespace Foomo\Services\RPC\Frontend;
 
 use Foomo\Services\Renderer\RendererInterface;
 use Foomo\Config;
-use Foomo\Flex\Utils;
 use Foomo\MVC;
 
 class Controller
@@ -242,7 +241,7 @@ class Controller
 	private function checkSrcDir($asSrcDir=null)
 	{
 		if (empty($asSrcDir)) {
-			$asSrcDir = tempnam(\Foomo\Services\Module::getTmpDir(), 'asClientSrc-');
+			$asSrcDir = tempnam(\Foomo\Services\Module::getTempDir(), 'asClientSrc-');
 			// @todo: use resource to create folder
 			unlink($asSrcDir);
 			mkdir($asSrcDir);

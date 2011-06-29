@@ -290,7 +290,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 
 
 		# get flex config
-		$flexConfigEntry = \Foomo\Flex\DomainConfig::getInstance()->getEntry($configId);
+		$flexConfigEntry = \Foomo\Flash\Module::getCompilerConfig()->getEntry($configId);
 
 		# get compiler
 		$compc = \Foomo\CliCall\Compc::create($flexConfigEntry->sdkPath);
@@ -387,7 +387,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$path = $this->targetSrcDir;
 		foreach ($packageFolders as $packageFolder) {
 			$path .= DIRECTORY_SEPARATOR . $packageFolder;
-			\Foomo\Modules\Resource\Fs::createInstance(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $path)->tryCreate();
+			\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $path)->tryCreate();
 		}
 		return $path;
 	}
@@ -402,7 +402,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 			$path = $this->targetSrcDir;
 			foreach (explode(DIRECTORY_SEPARATOR, dirname($fileName)) as $packageFolder) {
 				$path .= DIRECTORY_SEPARATOR . $packageFolder;
-				\Foomo\Modules\Resource\Fs::createInstance(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $path)->tryCreate();
+				\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $path)->tryCreate();
 			}
 			$ret .= '  ' . $this->targetSrcDir . DIRECTORY_SEPARATOR . $fileName . '.as' . PHP_EOL;
 			file_put_contents($this->targetSrcDir . DIRECTORY_SEPARATOR . $fileName . '.as', $fileContents);
@@ -420,7 +420,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	{
 		// setup structure
 		$ret = 'GENERATING SOURCES' . PHP_EOL;
-		if ((!empty($this->targetSrcDir) && is_dir($this->targetSrcDir)) || \Foomo\Modules\Resource\Fs::createInstance(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate()) {
+		if ((!empty($this->targetSrcDir) && is_dir($this->targetSrcDir)) || \Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate()) {
 			$path = $this->getPath();
 			if ($this->clearSrcDir) {
 				$rmCall = new \Foomo\CliCall('rm', array('-Rvf', $path . '/*'));
@@ -435,7 +435,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 			throw new \Exception('targetSrcDir does not exist ... ' . $this->targetSrcDir);
 		}
 		foreach ($this->packageFolders as $folder) {
-			\Foomo\Modules\Resource\Fs::createInstance(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $path . DIRECTORY_SEPARATOR . $folder)->tryCreate();
+			\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $path . DIRECTORY_SEPARATOR . $folder)->tryCreate();
 		}
 		$ret .= 'writing class files :' . PHP_EOL . PHP_EOL;
 		foreach ($this->classFiles as $fileName => $fileContents) {

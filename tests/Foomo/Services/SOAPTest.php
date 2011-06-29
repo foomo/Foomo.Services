@@ -2,37 +2,30 @@
 
 namespace Foomo\Services;
 
-use SoapClient;
-use Foomo\Services\SOAP\Client\DomainConfig as SoapConfig;
+class SOAPTest extends \PHPUnit_Framework_TestCase
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Hooks
+	//---------------------------------------------------------------------------------------------
 
-class SOAPTest extends \PHPUnit_Framework_TestCase {
 	public function setUp()
 	{
 		if(!\Foomo\Session::getEnabled() || php_sapi_name() == 'cli') {
 			$this->markTestSkipped('session not enabled');
 		}
 	}
-	/**
-	 * @return SoapClient;
-	 */
-	private function getClient()
-	{
-		$domainConfig = new SoapConfig;
-		
-		$domainConfig->wsdlUrl = 
-			\Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP . '/modules/' . 
-			\Foomo\Services\Module::NAME . #
-			'/services/mockServiceSOAP.php/Foomo.Services.SOAP/wsdl'
-		;
-		$domainConfig->classMap = array(
-			'FoomoServicesMockFunkyStar' => 'Foomo\\Services\\Mock\\FunkyStar'
-		);
-		return $domainConfig->getSoapClient();
-	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Test methods
+	//---------------------------------------------------------------------------------------------
+
 	public function testSimpleCall()
 	{
 		$this->assertEquals(7, $this->getClient()->addNumbers(3,4));
 	}
+
+	/*
+	 * @todo: make real test out of it
 	public function testComplexCall()
 	{
 		var_dump(
@@ -40,5 +33,20 @@ class SOAPTest extends \PHPUnit_Framework_TestCase {
 			$this->getClient()->getAFunkyStar()
 		);
 	}
-	
+	 */
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @return SoapClient
+	 */
+	private function getClient()
+	{
+		$domainConfig = new \Foomo\Services\SOAP\Client\DomainConfig;
+		$domainConfig->wsdlUrl = \Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP . '/modules/' . \Foomo\Services\Module::NAME . '/services/mockServiceSOAP.php/Foomo.Services.SOAP/wsdl';
+		$domainConfig->classMap = array('FoomoServicesMockFunkyStar' => 'Foomo\\Services\\Mock\\FunkyStar');
+		return $domainConfig->getSoapClient();
+	}
 }

@@ -24,7 +24,7 @@ if ($model->serializer instanceof Foomo\Services\RPC\Serializer\AMF) {
 		<h2>Development tools</h2>
 		<? if ($model->serializer instanceof Foomo\Services\RPC\Serializer\AMF): ?>
 			Select a configuration entry: <select class="flexConfigEntryList">
-			<? foreach(\Foomo\Flex\DomainConfig::getInstance()->entries as $entryId => $entry): ?>
+			<? foreach(\Foomo\Flash\Module::getCompilerConfig()->entries as $entryId => $entry): ?>
 				<option value="<?= $entryId ?>"><?= $entry['name'] ?></option>
 			<? endforeach; ?>
 			</select>
@@ -41,7 +41,7 @@ if ($model->serializer instanceof Foomo\Services\RPC\Serializer\AMF) {
 				<? elseif($model->serializer instanceof Foomo\Services\RPC\Serializer\AMF): ?>
 					(Actionscript / Zugspitze)
 						<ul>
-							<li><?= $view->link('generate client source code', 'generateASClient', array(), 'This is useful, when you are generating the sources') ?></li>
+							<li><?= $view->link('generate client source code', 'generateASClient', array(), array('title' => 'This is useful, when you are generating the sources')); ?></li>
 							<li><?= $view->link('generate client source code and download tgz', 'getASClientAsTgz') ?></li>
 							<li class="flexSDKLink"><?= $view->link('generate client source code and compile it', 'compileASClient') ?></li>
 							<li class="flexSDKLink"><?= $view->link('generate client source code, compile it and download swc', 'getASClientAsSwc') ?></li>

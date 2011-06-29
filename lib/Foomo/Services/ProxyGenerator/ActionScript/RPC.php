@@ -94,7 +94,7 @@ class RPC extends AbstractGenerator
 	 */
 	public function getSWCFilename()
 	{
-		return \Foomo\Services\Module::getTmpDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.swc';
+		return \Foomo\Services\Module::getTempDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.swc';
 	}
 
 	/**
@@ -102,7 +102,7 @@ class RPC extends AbstractGenerator
 	 */
 	public function getTGZFilename()
 	{
-		return \Foomo\Services\Module::getTmpDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.tgz';
+		return \Foomo\Services\Module::getTempDir() . DIRECTORY_SEPARATOR . str_replace('\\', '', $this->serviceName) . '.tgz';
 	}
 
 	//---------------------------------------------------------------------------------------------

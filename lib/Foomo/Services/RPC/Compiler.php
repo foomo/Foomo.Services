@@ -11,6 +11,7 @@ use Foomo\Services\Reader;
 
 /**
  * tools for rpc client generation
+ * @todo: check who uses this and refactor
  */
 class Compiler {
 	/**
