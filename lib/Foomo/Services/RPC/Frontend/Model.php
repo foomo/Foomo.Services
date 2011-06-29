@@ -33,10 +33,6 @@ class Model
 	 */
 	public $package;
 	/**
-	 * @var string
-	 */
-	public $srcDir;
-	/**
 	 * @var Foomo\Services\ProxyGenerator\RPC\Report
 	 */
 	public $proxyGeneratorReport;

@@ -39,8 +39,7 @@ class Module extends ModuleBase
 	public static function getResources()
 	{
 		return array(
-			\Foomo\Modules\Resource\Module::getResource('Foomo.Flash', self::VERSION),
-			\Foomo\Modules\Resource\Module::getResource('Foomo.Zugspitze', self::VERSION),
+			\Foomo\Modules\Resource\Module::getResource('Foomo', self::VERSION),
 			\Foomo\Modules\Resource\PhpModule::getResource('amf')
 		);
 	}

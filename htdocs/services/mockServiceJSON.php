@@ -8,6 +8,5 @@ Foomo\Session::lockAndLoad();
 RPC::serveClass(
 	Foomo\Session::getClassInstance('Foomo\Services\Mock\Service'),
 	$serializer = new JSON(),
-	$package = 'mockProxy',
-    $srcDir = '/Users/Jan/Desktop'
+	$package = 'mockProxy'
 );

@@ -125,49 +125,5 @@ class Model {
 			header('HTTP/1.1 200 OK');
 			ob_end_flush();
 		}
-		
-	}
-	/**
-	 * serve a class as a service including documentation, AS proxy generation etc.
-	 *
-	 * @param string $className name of the class that shall be run as a service
-	 * @param boolean $persistent whether or not the served object should be persistant
-	 * @param string $asPackage a package name like org.foomo.some.package
-	 * @param string $asSrcDir where to write the sctionscript classes to typically /tmp
-	 * @param boolean $useFlashWorkaround send a 200 http header with a fault instead of a 500
-	 */
-	public static function aaaserveClass($className, $persistent = false, $asPackage = null, $asSrcDir = null, $useFlashWorkaround = true, $serviceInstance = null)
-	{
-		$server = self::getService($className);
-		$server->useFlashWorkaround($useFlashWorkaround);
-		if($serviceInstance) {
-			$server->setServerObject($serviceInstance);
-		} else {
-			$server->setPersistance($persistent);
-		}
-		if($asPackage) {
-			if(empty($asSrcDir)) {
-				$asSrcDir = tempnam(sys_get_temp_dir(), __CLASS__ . '-srcDir-');
-				unlink($asSrcDir);
-				mkdir($asSrcDir);
-			}
-			$compilerSettings = new ServiceSoapASProxyRendererSettings();
-			$compilerSettings->ASSrcDir = $asSrcDir;
-			$compilerSettings->targetPackage = $asPackage;
-			$server->setASProxyCompilerSettings($compilerSettings);
-		}
-		if(\Foomo\Config::getMode() == \Foomo\Config::MODE_DEVELOPMENT) {
-			ini_set('soap.wsdl_cache', '0');
-			$fp = fopen(ini_get('error_log'), 'a+');
-			fwrite($fp, PHP_EOL . '----------------- ' . $className . ' -------------------' . PHP_EOL .  file_get_contents('php://input') . PHP_EOL);
-			fclose($fp);
-			try {
-				$server->serve();
-			} catch (Exception $e) {
-				trigger_error('an error occured see incoming request above ""' . $e->getMessage() . '"', E_USER_ERROR);
-			}
-		} else {
-			$server->serve();
-		}
 	}
 }

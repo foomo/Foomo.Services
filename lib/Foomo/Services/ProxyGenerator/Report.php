@@ -2,7 +2,18 @@
 
 namespace Foomo\Services\ProxyGenerator;
 
-class Report {
+class Report
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @var boolean
+	 */
 	public $success;
+	/**
+	 * @var string
+	 */
 	public $report;
 }

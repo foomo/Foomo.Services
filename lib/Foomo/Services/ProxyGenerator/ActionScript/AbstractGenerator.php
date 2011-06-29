@@ -93,6 +93,18 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 * @var array
 	 */
 	public $packageFolders;
+	/**
+	 * additional external library paths
+	 *
+	 * @var string[]
+	 */
+	public $sourcePaths = array();
+	/**
+	 * additional external library paths
+	 *
+	 * @var string[]
+	 */
+	public $externalLibraryPaths = array();
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Constructor
@@ -308,22 +320,11 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$compc->addSourcePaths(array($this->targetSrcDir));
 		$compc->addIncludeSources(array($this->targetSrcDir));
 		$compc->addSourcePaths($flexConfigEntry->sourcePaths);
+		$compc->addSourcePaths($this->sourcePaths);
 		$compc->addExternalLibraryPaths($flexConfigEntry->externalLibs);
+		$compc->addExternalLibraryPaths($this->externalLibraryPaths);
 
-
-		# add zugspitze swcs
-		$sources = \Foomo\Zugspitze\Vendor::getSources();
-		$zsExternals = array(
-			'org.foomo.zugspitze.core'					=> 'zugspitze_core.swc',
-			'org.foomo.zugspitze.services.core.rpc'		=> 'zugspitze_servicesCoreRpc.swc',
-			'org.foomo.zugspitze.services.core.proxy'	=> 'zugspitze_servicesCoreProxy.swc',
-		);
-		foreach ($zsExternals as $zsKey => $zsValue) {
-			$libraryProject = $sources->getLibraryProject($zsKey);
-			$zsLibrarySwc = $libraryProject->pathname . DIRECTORY_SEPARATOR . 'bin'  . DIRECTORY_SEPARATOR . $zsValue;
-			if (\file_exists($zsLibrarySwc)) $compc->addExternalLibraryPaths(array($zsLibrarySwc));
-		}
-
+		# compile it
 		$compc->compileSwc($this->getSWCFileName());
 
 		if (!file_exists($this->getSWCFileName())) {

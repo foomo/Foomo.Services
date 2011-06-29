@@ -1,9 +1,4 @@
 <?php
 
-namespace Foomo;
-
-Session::lockAndLoad();
-
-Services\SOAP::serveClass(
-	Session::getClassInstance('Foomo\\Services\\Mock\\Service')
-);
+\Foomo\Session::lockAndLoad();
+\Foomo\Services\SOAP::serveClass(\Foomo\Session::getClassInstance('Foomo\\Services\\Mock\\Service'));

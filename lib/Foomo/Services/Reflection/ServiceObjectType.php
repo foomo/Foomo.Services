@@ -159,6 +159,7 @@ class ServiceObjectType
 		// php namespaces
 		if (!\array_key_exists($this->type, $this->standarTypes)) {
 			$parts = ($this->namespace != '\\') ? explode('\\', $this->namespace) : array();
+			// @todo: think of better way to define default package
 			$package = array('org', 'foomo', 'zugspitze', 'services', 'namespaces', 'php');
 			foreach($parts as $part) {
 				$package[] = lcfirst($part);

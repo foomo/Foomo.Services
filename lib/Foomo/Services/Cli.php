@@ -2,35 +2,47 @@
 
 namespace Foomo\Services;
 
-use Foomo\Reflection\PhpDocEntry;
-use Foomo\Services\Reflection\ServiceObjectType;
-use Foomo\Services\Renderer\RendererInterface;
-use Foomo\Services\Reader;
-use ReflectionClass;
-use Foomo\Services\Renderer\PlainDocs;
-
 /**
  * expose a command line "service"
- * 
+ *
  * @author jan
  */
-class Cli {
+class Cli
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * the object to server
-	 * 
+	 *
 	 * @var stdClass
 	 */
 	private $serviceClassInstance;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	private function __construct($serviceClassName)
 	{
 		$this->serviceClassInstance = new $serviceClassName;
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 * @param string $className
+	 */
 	public static function serveClass($className)
 	{
 		$server = new self($className);
 		if(!isset($_SERVER['argv'])) {
-			trigger_error('i am a command line tool', E_USER_ERROR);	
-		} 
+			trigger_error('i am a command line tool', E_USER_ERROR);
+		}
 		if(count($_SERVER['argv']) < 2 || in_array($_SERVER['argv'][1], array('help', '--help', '-help'))) {
 			$server->renderUsage();
 			exit;
@@ -46,20 +58,21 @@ class Cli {
 			echo $ret;
 		}
 	}
+
 	/**
 	 * @internal
 	 */
 	public static function parseArgs($className, $method, $rawArgs)
 	{
-		$classRefl = new ReflectionClass($className);
+		$classRefl = new \ReflectionClass($className);
 		$args = array();
 		foreach($classRefl->getMethods() as $methodRefl) {
 			/* @var $methodRefl ReflectionMethod */
 			if(strtolower($methodRefl->getName()) == strtolower($method)) {
-				$doc = new PhpDocEntry($methodRefl->getDocComment());
+				$doc = new \Foomo\Reflection\PhpDocEntry($methodRefl->getDocComment());
 				$i = 0;
 				foreach($doc->parameters as $parameter) {
-					$type = new ServiceObjectType($parameter->type);
+					$type = new \Foomo\Services\Reflection\ServiceObjectType($parameter->type);
 					if(isset($rawArgs[$i])) {
 						$rawValue = $rawArgs[$i];
 					} else {
@@ -96,10 +109,18 @@ class Cli {
 		}
 		return $args;
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 */
 	private function renderUsage()
 	{
 		echo 'Usage : ' . $_SERVER['argv'][0] . ' operationName argument1 argument2 arrgument...' . PHP_EOL . PHP_EOL;
 		echo ' this program is a cli wrapped model:' . PHP_EOL . PHP_EOL;
-		echo PlainDocs::render(get_class($this->serviceClassInstance));
+		echo \Foomo\Services\Renderer\PlainDocs::render(get_class($this->serviceClassInstance));
 	}
 }

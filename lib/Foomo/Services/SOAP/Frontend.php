@@ -1,11 +1,16 @@
 <?php
 
-
 namespace Foomo\Services\SOAP;
 
-use Foomo\MVC\AbstractApp;
+class Frontend extends \Foomo\MVC\AbstractApp
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
 
-class Frontend extends AbstractApp {
+	/**
+	 * @param stdClass $serviceInstance
+	 */
 	public function __construct($serviceInstance)
 	{
 		parent::__construct(__CLASS__);
