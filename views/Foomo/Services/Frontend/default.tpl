@@ -1,16 +1,10 @@
 <?
-/* @var $model \Foomo\Services\Utils */
-$allServices = \Foomo\Services\Utils::getAllServices();
-\Foomo\HTMLDocument::getInstance()->addStylesheets(array(
-	\Foomo\ROOT_HTTP . '/css/module.css',
-	\Foomo\ROOT_HTTP . '/modules/services/css/module.css'
-));
-		
+/* @var $model Foomo\Services\Frontend\Model */
 ?>
 <h1>Services</h1>
 <div class="toolBoxMenu" style="position:fixed;left:0;bottom:0;top:60px;width:300;overflow: auto;">
     <ul>
-	<? foreach($allServices as $moduleName => $services): ?>
+	<? foreach($model->services as $moduleName => $services): ?>
 		<? if(count($services) > 0): ?>
 			<? $serviceRoot = \Foomo\ROOT_HTTP . '/modules/' . $moduleName . '/services'; ?>
 			<h2 title="<?= $serviceRoot ?>"><?= $moduleName ?></h2>

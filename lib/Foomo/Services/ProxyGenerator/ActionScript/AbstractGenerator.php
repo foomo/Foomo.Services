@@ -102,15 +102,21 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 * @param string $targetPackage
 	 * @param string $targetSrcDir
 	 */
-	public function __construct($targetPackage, $targetSrcDir)
+	public function __construct($targetPackage)
 	{
 		$this->targetPackage = $targetPackage;
-		$this->targetSrcDir = $targetSrcDir;
 	}
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Abstract methods
 	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * get target src dir
+	 *
+	 * @return string
+	 */
+	abstract public function getTargetSrcDir();
 
 	/**
 	 * get swc file name
@@ -144,6 +150,11 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	public function init($serviceName)
 	{
 		$this->serviceName = $serviceName;
+
+		$this->targetSrcDir = $this->getTargetSrcDir();
+		@unlink($this->targetSrcDir);
+		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate();
+
 		$nameParts = explode('\\', $this->serviceName);
 		$this->proxyClassName = $this->serviceName . 'Proxy';
 		if ($this->myPackage != '') {
