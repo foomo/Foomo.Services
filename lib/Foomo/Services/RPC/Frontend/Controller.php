@@ -115,7 +115,7 @@ class Controller
 		@unlink($filename);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FILE, $filename)->tryCreate();
 		file_put_contents($filename, $js);
-		$js = '// http://' . $_SERVER['HTTP_HOST'] . \Foomo\Services\Module::getHtdocsVarUrl() . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $generator->getProxyName() . '.js' . PHP_EOL . $js;
+		$js = '// ' . \Foomo\Utils::getServerUrl() . \Foomo\Services\Module::getHtdocsVarPath() . DIRECTORY_SEPARATOR . 'js' . DIRECTORY_SEPARATOR . $generator->getProxyName() . '.js' . PHP_EOL . $js;
 		echo $js;
 		exit;
 	}
