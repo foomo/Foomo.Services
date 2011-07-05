@@ -85,11 +85,11 @@ class ServiceDescription
 	 */
 	public $documentationUrl;
 	/**
-	 * compile and download - all at once
+	 * service url
 	 *
 	 * @var string
 	 */
-	public $compileAndDownloadUrl;
+	public $url;
 	/**
 	 * is the compiler available or not to provide the compilation of sources and swcs
 	 *

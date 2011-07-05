@@ -125,7 +125,7 @@ class Model
 	{
 		$descr = new ServiceDescription();
 		$descr->documentationUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('default');
-		$descr->compileAndDownloadUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('getASClientAsSwc');
+		$descr->url = MVC::getCurrentUrlHandler()->baseURL;
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
 		$descr->type = ($this->serializer instanceof \Foomo\Services\RPC\Serializer\JSON) ? ServiceDescription::TYPE_RPC_JSON : ServiceDescription::TYPE_RPC_AMF;

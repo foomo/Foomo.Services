@@ -49,16 +49,14 @@ final class Utils {
 		$description->usesRemoteClasses = \Foomo\Services\Utils::getServiceUsesRemoteClasses($description->name);
 		$description->compilerAvailable = \Foomo\Config::getMode() != \Foomo\Config::MODE_PRODUCTION;
 		$versionConstName = get_class($service) . '::VERSION';
-		if(defined($versionConstName)) {
-			$description->version = constant($versionConstName);
-		}
+		if (defined($versionConstName)) $description->version = constant($versionConstName);
 		//$description->recompileUrl = $this->compileProxyUrl;//$baseUrl . '?compile&clearSrcDir';
 		echo serialize($description);
 		// echo serialize(array('package' => $package, 'class' => $service->className));
 	}
 	/**
 	 * @param string $serviceClassName
-	 * 
+	 *
 	 * @return string wsdl
 	 */
 	public static function generateWSDL($serviceClassName)
