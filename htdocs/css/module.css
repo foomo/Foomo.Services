@@ -5,7 +5,8 @@
 	left: 0;
 	bottom: 0;
 	top: 0;
-	width: 350px;
+	width: 349px;
+	border-right: 1px solid #d7d7d7;
 }
 
 #serviceContent {
