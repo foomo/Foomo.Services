@@ -19,12 +19,10 @@
 
 namespace Foomo\Services;
 
-use Foomo\Modules\ModuleBase;
-
 /**
  * services module
  */
-class Module extends ModuleBase
+class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\ToolboxInterface
 {
 	//---------------------------------------------------------------------------------------------
 	// ~ Constants
@@ -59,6 +57,21 @@ class Module extends ModuleBase
 		return array(
 			\Foomo\Modules\Resource\Module::getResource('Foomo', self::VERSION),
 			\Foomo\Modules\Resource\PhpModule::getResource('amf')
+		);
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Toolbox interface methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @internal
+	 * @return array
+	 */
+	public static function getMenu()
+	{
+		return array(
+			\Foomo\Frontend\ToolboxConfig\MenuEntry::create('Root.Modules.Services', 'Services', self::NAME, 'Foomo.Services')
 		);
 	}
 }

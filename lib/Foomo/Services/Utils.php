@@ -73,7 +73,9 @@ class Utils
 	{
 		$serviceUrl = $url .'?explainMachine';
 		if(!($serialized = @file_get_contents($serviceUrl))) {
+			trigger_error(var_export(error_get_last(), true));
 			trigger_error('could not read from ' . $serviceUrl, E_USER_WARNING);
+			return null;
 		}
 		if(($serviceDescription = @unserialize($serialized)) && ($serviceDescription instanceof ServiceDescription)) {
 			 return $serviceDescription;

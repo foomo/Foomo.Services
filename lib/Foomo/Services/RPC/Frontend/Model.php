@@ -124,12 +124,21 @@ class Model
 	public function serveServiceDescription()
 	{
 		$descr = new ServiceDescription();
-		$descr->documentationUrl = MVC::getCurrentUrlHandler()->renderMethodUrl('default');
-		$descr->url = MVC::getCurrentUrlHandler()->baseURL;
+		$descr->url = \Foomo\Utils::getServerUrl() . MVC::getCurrentUrlHandler()->baseURL;
+		$descr->documentationUrl = \Foomo\Utils::getServerUrl() . MVC::getCurrentUrlHandler()->renderMethodUrl('default');
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
-		$descr->type = ($this->serializer instanceof \Foomo\Services\RPC\Serializer\JSON) ? ServiceDescription::TYPE_RPC_JSON : ServiceDescription::TYPE_RPC_AMF;
-		$descr->usesRemoteClasses = Utils::getServiceUsesRemoteClasses($descr->name);
+		switch (true) {
+			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\JSON):
+				$descr->type = ServiceDescription::TYPE_RPC_JSON;
+				break;
+			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\AMF):
+				$descr->type = ServiceDescription::TYPE_RPC_AMF;
+				break;
+			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\PHP):
+				$descr->type = ServiceDescription::TYPE_PHP;
+				break;
+		}
 		$descr->version = @constant($descr->name . '::VERSION');
 		return $descr;
 	}

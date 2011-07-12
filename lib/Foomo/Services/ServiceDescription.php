@@ -40,6 +40,10 @@ class ServiceDescription
 	 */
 	const TYPE_RPC_AMF		= 'serviceTypeRpcAmf';
 	/**
+	 * a php service
+	 */
+	const TYPE_PHP			= 'serviceTypePhp';
+	/**
 	 * a soap service
 	 */
 	const TYPE_SOAP			= 'serviceTypeSoap';
@@ -48,6 +52,24 @@ class ServiceDescription
 	// ~ Variables
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * as what kind of service was it exposed
+	 *
+	 * @var string
+	 */
+	public $type;
+	/**
+	 * service url
+	 *
+	 * @var string
+	 */
+	public $url;
+	/**
+	 * uri, where to find a html documentation
+	 *
+	 * @var string
+	 */
+	public $documentationUrl;
 	/**
 	 * basically the name of the class that was exposed as a service
 	 *
@@ -61,41 +83,11 @@ class ServiceDescription
 	 */
 	public $package;
 	/**
-	 * as what kind of service was it exposed
-	 *
-	 * @var string
-	 */
-	public $type;
-	/**
 	 * version of the server and the generated client
 	 *
 	 * @var float
 	 */
 	public $version = 0.0;
-	/**
-	 * does the client use remote classes
-	 *
-	 * @var boolean
-	 */
-	public $usesRemoteClasses = false;
-	/**
-	 * uri, where to find a html documentation
-	 *
-	 * @var string
-	 */
-	public $documentationUrl;
-	/**
-	 * service url
-	 *
-	 * @var string
-	 */
-	public $url;
-	/**
-	 * is the compiler available or not to provide the compilation of sources and swcs
-	 *
-	 * @var boolean
-	 */
-	public $compilerAvailable;
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Constructor

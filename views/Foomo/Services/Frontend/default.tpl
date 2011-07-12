@@ -6,11 +6,11 @@
 ?>
 
 <div id="serviceMenu">
-	
+
     <div class="innerBox">
-		
+
 	<h1>Services</h1>
-		
+
 	<? foreach($model->services as $moduleName => $services): ?>
 		<? if(count($services) > 0): ?>
 			<? $serviceRoot = \Foomo\ROOT_HTTP . '/modules/' . $moduleName . '/services'; ?>
@@ -27,5 +27,5 @@
 </div>
 <div id="serviceContent">
 	<!--<img src="<? \Foomo\ROOT_HTTP ?>/r/img/trns.gif" width="1" height="1">-->
-	<iframe width="100%" height="100%" name="serviceDisplay" frameborder="0" src="about:blank"></iframe>
+	<iframe width="100%" height="100%" name="serviceDisplay" frameborder="0" src="about:blank" onload="event.target.style.height=(event.target.contentWindow.document.body.scrollHeight + 25) + 'px';"></iframe>
 </div>

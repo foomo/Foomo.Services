@@ -1,19 +1,14 @@
 
 
 #serviceMenu {
-	position: fixed;
-	left: 0;
-	bottom: 0;
-	top: 0;
-	width: 349px;
+	float: left;
+	width: 200px;
 	border-right: 1px solid #d7d7d7;
 }
 
 #serviceContent {
-	position: fixed;
-	bottom: 0;
-	top: 0;
-	right: 0;
-	left: 350px;
-	background-color: #ffffff;
+	float: left;
+	width: 720px;
+	margin-left: 20px;
 }
+
