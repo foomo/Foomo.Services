@@ -50,5 +50,5 @@ class Sample {
 
 ++ Example
 
-<geshi type="php" file="<?= implode(DIRECTORY_SEPARATOR, array(\Foomo\CORE_CONFIG_DIR_MODULES, 'Foomo.Services', 'tests', 'Rad', 'Services', 'Mock', 'Service.php')) ?>">
+<geshi type="php" file="<?= implode(DIRECTORY_SEPARATOR, array(\Foomo\CORE_CONFIG_DIR_MODULES, 'Foomo.Services', 'tests', 'Foomo', 'Services', 'Mock', 'Service.php')) ?>">
 </geshi>

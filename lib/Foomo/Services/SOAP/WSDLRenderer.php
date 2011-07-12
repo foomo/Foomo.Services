@@ -25,8 +25,7 @@ use DOMDocument;
 use DOMComment;
 
 /**
- * @package radact
- * @subpackage services
+ * generate a wsdl for a web service
  */
 final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer {
 	/**

@@ -30,8 +30,8 @@
 					<div class="innerBox">
 						<h2>Proxy</h2>
 						<? if($model->serializer instanceof Foomo\Services\RPC\Serializer\PHP): ?>
-							<b>PHP / Radact:</b> &nbsp; <?= $view->link('Get a PHP client', 'getPHPClient', array(), array('class'=> 'linkButtonYellow')) ?><br />
-							<br />
+							<b>PHP / Foomo:</b> &nbsp; <?= $view->link('Get a PHP client', 'getPHPClient', array(), array('class'=> 'linkButtonYellow')) ?><br>
+							<br>
 						<? elseif($model->serializer instanceof Foomo\Services\RPC\Serializer\JSON): ?>
 							<b>Javascript / JSON:</b> &nbsp; <?= $view->link('Get a jQuery client', 'generateJQueryClient', array(), array('class'=> 'linkButtonYellow')) ?><br />
 							<br />
@@ -93,14 +93,3 @@
 		</div>
 	</div>
 </div>
-
-
-<!--
-	<h2><a name="docsHtml">HTML documentation</a></h2>
-	<p><a href="#docsPlain">go to plaintext docs</a></p>
-
-
-
-	<h2><a name="docsPlain">Plaintext documentation</a></h2>
-	<p><?= $view->link('get only the plaintext docs', 'plainTextDocs') ?></p>
--->
