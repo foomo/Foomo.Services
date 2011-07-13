@@ -95,7 +95,7 @@ class SoapClient extends \Foomo\Config\AbstractConfig
 	public function __construct($createDefault = false)
 	{
 		if ($createDefault) {
-			if (\Rad\Config::getMode() == \Rad\Config::MODE_PRODUCTION) {
+			if (\Foomo\Config::getMode() == \Foomo\Config::MODE_PRODUCTION) {
 				$this->trace = false;
 			}
 		}

@@ -30,7 +30,7 @@
 					<div class="innerBox">
 						<h2>Proxy</h2>
 						<? if($model->serializer instanceof Foomo\Services\RPC\Serializer\PHP): ?>
-							<b>PHP / Radact:</b> &nbsp; <?= $view->link('Get a PHP client', 'getPHPClient', array(), array('class'=> 'linkButtonYellow')) ?><br>
+							<b>PHP / Foomo:</b> &nbsp; <?= $view->link('Get a PHP client', 'getPHPClient', array(), array('class'=> 'linkButtonYellow')) ?><br>
 							<br>
 						<? elseif($model->serializer instanceof Foomo\Services\RPC\Serializer\JSON): ?>
 							<b>Javascript / JSON:</b> &nbsp; <?= $view->link('Get a jQuery client', 'generateJQueryClient', array(), array('class'=> 'linkButtonYellow')) ?><br>

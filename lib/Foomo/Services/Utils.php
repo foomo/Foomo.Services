@@ -46,7 +46,7 @@ class Utils
 	/**
 	 * get all local service descriptions
 	 *
-	 * @return array array('radact' => array($serviceDescriptionInst, ...), 'site' => array())
+	 * @return array
 	 */
 	public static function getAllLocalServiceDescriptions()
 	{
@@ -147,7 +147,7 @@ class Utils
 	 *
 	 * @todo reimplement
 	 * @deprecated needs reimplementation
-	 * @return array array('sitea.com' => array('site' => arrray(), 'radact' => array), 'siteb.com' ) => array())
+	 * @return array array('sitea.com' => array('site' => arrray(), 'foomo' => array), 'siteb.com' ) => array())
 	 */
 	public static function getAllRemoteServiceDescriptions()
 	{
@@ -161,8 +161,8 @@ class Utils
 					trigger_error('could not read from ' . $serviceUrl, E_USER_WARNING);
 				}
 				if(($siteServices = unserialize($serialized)) && is_array($siteServices)) {
-					$ret[$host] = array('radact' => array(), 'site' => array());
-					foreach(array('radact', 'site') as $domain) {
+					$ret[$host] = array('foomo' => array(), 'site' => array());
+					foreach(array('foomo', 'site') as $domain) {
 						foreach($siteServices[$domain] as $serviceUri) {
 							$serviceUrl = $siteUrl . $serviceUri;
 							if(($serviceDescription = self::getServiceDescription($serviceUrl))) {

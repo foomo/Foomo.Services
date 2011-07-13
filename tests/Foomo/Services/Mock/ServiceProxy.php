@@ -8,27 +8,6 @@
  */
 // RPC protocol and value object classes
 
-/**
-
-  List of classes and files
-
-  Foomo\Services\RPC\Serializer\SerializerInterface from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Serializer/SerializerInterface.php
-  Foomo\Services\RPC\Protocol\AbstractHead from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/AbstractHead.php
-  Foomo\Services\RPC\Client from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Client.php
-  Foomo\Services\RPC\Protocol\Call from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Call.php
-  Foomo\Services\RPC\Protocol\Call\Head from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Call/Head.php
-  Foomo\Services\RPC\Protocol\Call\MethodCall from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Call/MethodCall.php
-  Foomo\Services\RPC\Protocol\Reply\MethodReply from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Reply/MethodReply.php
-  Foomo\Services\RPC\Protocol\Reply\Exception from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Reply/Exception.php
-  Foomo\Services\RPC\Protocol\Reply from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Reply.php
-  Foomo\Services\RPC\Protocol\Reply\Head from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Protocol/Reply/Head.php
-  Foomo\Services\RPC\Serializer\PHP from : /private/var/www/jan/modules/services/lib/Rad/Services/RPC/Serializer/PHP.php
-  Foomo\Services\Mock\Exception from : /private/var/www/jan/modules/services/tests/Rad/Services/Mock/Exception.php
-  Foomo\Services\Mock\FunkyStar from : /private/var/www/jan/modules/services/tests/Rad/Services/Mock/FunkyStar.php
-  Foomo\Services\Mock\Message from : /private/var/www/jan/modules/services/tests/Rad/Services/Mock/Message.php
-  Foomo\Services\Mock\FunkyStar from : /private/var/www/jan/modules/services/tests/Rad/Services/Mock/FunkyStar.php
-
- */
 
 namespace Foomo\Services\Mock;
 
