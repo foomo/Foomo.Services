@@ -36,7 +36,7 @@ $rowClass = 'rowA';
 			</tr>
 		<?php if(count($op->parameterDocs)>0): ?>
 			<tr>
-				<td colspan="3" style="border: 0;">
+				<td colspan="3" class="tableInnerHead">
 					<h3>Parameters</h3>
 				</td>
 			</tr>
@@ -59,7 +59,7 @@ $rowClass = 'rowA';
 			</tr>
 		<?php endforeach; ?>
 			<tr>
-				<td colspan="3" style="border: 0;">
+				<td colspan="3" class="tableInnerHead">
 					<h3>Return</h3>
 				</td>
 			</tr>
@@ -83,7 +83,7 @@ $rowClass = 'rowA';
 			</tr>
 		<? if(count($op->throwsTypes) > 0): ?>
 			<tr>
-				<td colspan="3" style="border: 0;">
+				<td colspan="3" class="tableInnerHead">
 					<h3>Throws</h3>
 				</td>
 			</tr>
@@ -96,7 +96,7 @@ $rowClass = 'rowA';
 		<? endif; ?>
 		<? if(count($op->messageTypes) > 0): ?>
 			<tr>
-				<td colspan="3" style="border: 0;">
+				<td colspan="3" class="tableInnerHead">
 					<h3>Service messages</h3>
 				</td>
 			</tr>
@@ -107,9 +107,6 @@ $rowClass = 'rowA';
 			</tr>
 			<? endforeach; ?>
 		<? endif; ?>
-			<tr>
-				<td colspan="3">&nbsp</td>
-			</tr>
 		</table>
 	
 	</div>

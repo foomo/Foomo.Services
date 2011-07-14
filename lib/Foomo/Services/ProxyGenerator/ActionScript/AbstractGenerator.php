@@ -53,6 +53,10 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 */
 	protected $commonClassFiles = array();
 	/**
+	 * @var Foomo\Services\ServiceDescription
+	 */
+	public $serviceDescription;
+	/**
 	 * @var string
 	 */
 	public $targetPackage;
@@ -128,12 +132,12 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @param string $targetPackage
-	 * @param string $targetSrcDir
+	 * @param Foomo\Services\ServiceDescription $serviceDescription
 	 */
-	public function __construct($targetPackage)
+	public function __construct(\Foomo\Services\ServiceDescription $serviceDescription)
 	{
-		$this->targetPackage = $targetPackage;
+		$this->serviceDescription = $serviceDescription;
+		$this->targetPackage = $this->serviceDescription->package;
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -181,7 +185,8 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$this->serviceName = $serviceName;
 
 		$this->targetSrcDir = $this->getTargetSrcDir();
-		@unlink($this->targetSrcDir);
+		\Foomo\CliCall\Rm::create($this->targetSrcDir)->recursive()->execute();
+		if (file_exists($this->targetSrcDir)) throw new \Exception('Could not rm previous target src dir: ' . $this->targetSrcDir);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate();
 
 		$nameParts = explode('\\', $this->serviceName);
