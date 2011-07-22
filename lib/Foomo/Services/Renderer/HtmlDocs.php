@@ -56,6 +56,11 @@ final class HtmlDocs extends AbstractRenderer {
 	}
 	public function renderType(ServiceObjectType $type, $level = 0, $propName = null)
 	{
+		if($level == 0 && !$this->isBaseType($type->type)) {
+			$view = \Foomo\Services\Module::getView($this, self::TEMPLATE_FOLDER . DIRECTORY_SEPARATOR . 'type', array('renderer' => $this, 'type' => $type, 'level' => $level, 'propName' => $propName));
+			$this->typesHtml .= $view->render();
+		}
+		return;
 		if(!($this->isBaseType($type->type) && $level < 1)) {
 			if(!isset($this->types[$type->type])) {
 				$this->types[$type->type] = $type;
