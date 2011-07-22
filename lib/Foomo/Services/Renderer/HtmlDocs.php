@@ -60,32 +60,6 @@ final class HtmlDocs extends AbstractRenderer {
 			$view = \Foomo\Services\Module::getView($this, self::TEMPLATE_FOLDER . DIRECTORY_SEPARATOR . 'type', array('renderer' => $this, 'type' => $type, 'level' => $level, 'propName' => $propName));
 			$this->typesHtml .= $view->render();
 		}
-		return;
-		if(!($this->isBaseType($type->type) && $level < 1)) {
-			if(!isset($this->types[$type->type])) {
-				$this->types[$type->type] = $type;
-			}
-			$level ++;
-			if($this->typeIsInRecursion($type) && $level == 1) {
-				// skipping double type docs on top level
-				return;
-			} else {
-				$view = \Foomo\Services\Module::getView($this, self::TEMPLATE_FOLDER . DIRECTORY_SEPARATOR . 'type', array('renderer' => $this, 'type' => $type, 'level' => $level, 'propName' => $propName));
-				$this->typesHtml .= $view->render();
-				if(!$this->typeIsInRecursion($type) && $level == 1) {
-					if (count($type->props) > 0) {
-						array_push($this->renderedTypes, $type->type);
-					}
-					if(count($type->props) > 0) {
-						$this->indent ++;
-						foreach ($type->props as $propName => $propValue) {
-							$this->renderType($propValue, $level, $propName);
-						}
-					}
-				}
-				$level --;
-			}
-		}
 	}
 	public function typeIsInRecursion(ServiceObjectType $type)
 	{
