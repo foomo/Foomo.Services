@@ -87,6 +87,7 @@ abstract class AbstractRenderer
 		$renderer->renderServiceType($reflection->getServiceType());
 		$types = $reflection->getTypes();
 		$renderedTypes = array();
+		ksort($types);
 		foreach ($types as $type) {
 			$fullType = $type->type;
 			if ($type->isArrayOf) {
@@ -101,6 +102,7 @@ abstract class AbstractRenderer
 		}
 
 		$ops = $reflection->getOperations();
+		ksort($ops);
 		foreach ($ops as $op) {
 			$renderer->renderOperation($op);
 		}
