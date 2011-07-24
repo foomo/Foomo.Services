@@ -43,6 +43,7 @@ class Controller
 	 */
 	public function actionDefault()
 	{
+		$this->auth($this->model->authDomainDev);
 		if (isset($_GET['explainMachine'])) {
 			$this->actionExplainMachine();
 		}
@@ -53,6 +54,7 @@ class Controller
 	 */
 	public function actionGetPHPClient()
 	{
+		$this->auth($this->model->authDomainDev);
 		MVC::abort();
 		header('Content-Type: text/plain;charset=utf-8;');
 		echo \Foomo\Services\ProxyGenerator\PHP\RPC::render(
@@ -68,6 +70,7 @@ class Controller
 	 */
 	public function actionServe($method = null)
 	{
+		$this->auth($this->model->authDomain);
 		$args = array();
 		if (!empty($method)) {
 			$foundMethod = false;
@@ -94,7 +97,7 @@ class Controller
 	 */
 	public function actionGet($method, $parameters)
 	{
-
+		$this->auth($this->model->authDomain);
 	}
 
 	/**
@@ -102,6 +105,7 @@ class Controller
 	 */
 	public function actionGenerateJQueryClient()
 	{
+		$this->auth($this->model->authDomainDev);
 		MVC::abort();
 		$json = new \Foomo\Services\RPC\Serializer\JSON();
 		header('Content-Type: text/javascript');
@@ -125,6 +129,7 @@ class Controller
 	 */
 	public function actionPlainTextDocs()
 	{
+		$this->auth($this->model->authDomainDev);
 		MVC::abort();
 		header('Content-Type: text/plain;charset=utf-8;');
 		echo \Foomo\Services\Renderer\PlainDocs::render($this->model->serviceClassName);
@@ -136,8 +141,17 @@ class Controller
 	 */
 	public function actionExplainMachine()
 	{
+		$this->auth($this->model->authDomainDev);
 		// @todo - move this to a better place
 		echo serialize($this->model->serveServiceDescription());
 		exit;
 	}
+	
+	private function auth($domain)
+	{
+		if(!is_null($domain)) {
+			\Foomo\BasicAuth::auth($this->model->serviceClassName, $domain);
+		}
+	}
+	
 }

@@ -35,17 +35,28 @@ class Frontend extends \Foomo\MVC\AbstractApp
 	//---------------------------------------------------------------------------------------------
 
 	/**
+	 * @internal
+	 * 
 	 * @param stdClass $serviceClassInstance
 	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer
 	 * @param string $package
+	 * @param string $authDomain
+	 * @param string $authDomainDev
 	 */
-	public function __construct($serviceClassInstance, \Foomo\Services\RPC\Serializer\SerializerInterface $serializer, $package)
-	{
+	public function __construct(
+		$serviceClassInstance, 
+		\Foomo\Services\RPC\Serializer\SerializerInterface $serializer,
+		$package,
+		$authDomain = null,
+		$authDomainDev = null
+	) {
 		parent::__construct(__CLASS__);
 
 		$this->model->serviceClassInstance = $serviceClassInstance;
 		$this->model->serviceClassName = get_class($serviceClassInstance);
 		$this->model->serializer = $serializer;
 		$this->model->package = $package;
+		$this->model->authDomain = $authDomain;
+		$this->model->authDomainDev = $authDomainDev;
 	}
 }

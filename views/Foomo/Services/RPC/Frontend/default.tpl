@@ -11,6 +11,7 @@
 
  Foomo\HTMLDocument::getInstance()->addJavascripts(array(
 	\Foomo\ROOT_HTTP . '/js/jquery-1.6.1.min.js',
+	\Foomo\ROOT_HTTP . '/js/jquery.address-1.4.min.js',
 	\Foomo\ROOT_HTTP . '/js/modules.js'
 ))
 
@@ -21,10 +22,10 @@
 
 	<div class="greyBox">
 		<div class="innerBox">
-			<?= $view->link('Service endpoint', 'serve', array(), array('class'=> 'linkButtonYellow')) ?><br />
-			<br />
-			<b>Serializer:</b> <?= get_class($model->serializer) ?><br />
-			<br />
+			<?= $view->link('Service endpoint', 'serve', array(), array('class'=> 'linkButtonYellow')) ?><br>
+			<br>
+			<b>Serializer:</b> <?= get_class($model->serializer) ?><br>
+			<br>
 			<? if(Foomo\Config::getMode() != Foomo\Config::MODE_PRODUCTION): ?>
 				<div class="whiteBox">
 					<div class="innerBox">
@@ -33,22 +34,22 @@
 							<b>PHP / Foomo:</b> &nbsp; <?= $view->link('Get a PHP client', 'getPHPClient', array(), array('class'=> 'linkButtonYellow')) ?><br>
 							<br>
 						<? elseif($model->serializer instanceof Foomo\Services\RPC\Serializer\JSON): ?>
-							<b>Javascript / JSON:</b> &nbsp; <?= $view->link('Get a jQuery client', 'generateJQueryClient', array(), array('class'=> 'linkButtonYellow')) ?><br />
-							<br />
+							<b>Javascript / JSON:</b> &nbsp; <?= $view->link('Get a jQuery client', 'generateJQueryClient', array(), array('class'=> 'linkButtonYellow')) ?><br>
+							<br>
 						<? elseif($model->serializer instanceof Foomo\Services\RPC\Serializer\AMF): ?>
 							<? if (Foomo\Modules\Manager::isEnabled('Foomo.Zugspitze')): ?>
 								<? // @todo make it possible to link to other apps ?>
-								<b>Zugspitze:</b> &nbsp; <a href="<?= Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP ?>/index.php/Foomo/showMVCApp/Foomo.Zugspitze.ProxyGenerator/default" target="_top">Proxy Generator</a><br />
-								<br />
+								<b>Zugspitze:</b> &nbsp; <a href="<?= Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP ?>/index.php/Foomo/showMVCApp/Foomo.Zugspitze.ProxyGenerator/default" target="_top">Proxy Generator</a><br>
+								<br>
 							<? endif; ?>
 							<? if (Foomo\Modules\Manager::isEnabled('Foomo.Zugspitze.Backport')): ?>
 								<? // @todo make it possible to link to other apps ?>
-								<b>Zugspitze Backport:</b> &nbsp; <a href="<?= Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP ?>/index.php/Foomo/showMVCApp/Foomo.Zugspitze.Backport.ProxyGenerator/default" target="_top">Proxy Generator</a><br />
-								<br />
+								<b>Zugspitze Backport:</b> &nbsp; <a href="<?= Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP ?>/index.php/Foomo/showMVCApp/Foomo.Zugspitze.Backport.ProxyGenerator/default" target="_top">Proxy Generator</a><br>
+								<br>
 							<? endif; ?>
 						<? else: ?>
-							No proxy for the current serializer!<br />
-							<br />
+							No proxy for the current serializer!<br>
+							<br>
 						<? endif; ?>
 					</div>
 				</div>
@@ -93,3 +94,20 @@
 		</div>
 	</div>
 </div>
+<a name="lastA">LAST</a>
+<script>
+	
+(new function() {
+	console.log(this);
+	this.urlCallBack = function(event) {
+		var a = $('a[name="' + event.value.substr(1).replace(/\\/g, '\\\\') + '"]');
+		a.parent().parent().children('.toggleOpenIcon').html('-');
+		a.parent().parent().parent().children('.toggleContent').show();
+		$('html, body').scrollTop(
+			a.parent().parent().parent().offset().top
+		);
+	};
+	$.address.init(this.urlCallBack).change(this.urlCallBack);	
+});
+
+</script>

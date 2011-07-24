@@ -31,6 +31,30 @@ use Foomo\Services\RPC\Serializer\AMF;
  */
 class RPC
 {
+	/**
+	 * @var string
+	 */
+	private $authDomain;
+	/**
+	 * @var string
+	 */
+	private $authDomainDev;
+	/**
+	 * me service class instance
+	 * 
+	 * @var stdClass
+	 */
+	private $serviceInstance;
+	/**
+	 * @var string
+	 */
+	private $namespace;
+	/**
+	 *
+	 * @var SerializerInterface
+	 */
+	private $serializer;
+	
 	//---------------------------------------------------------------------------------------------
 	// ~ Static variables
 	//---------------------------------------------------------------------------------------------
@@ -41,6 +65,11 @@ class RPC
 	 */
 	public static $messages = array();
 
+	private function __construct($serviceInstance)
+	{
+		$this->serviceInstance = $serviceInstance;
+	}
+	
 	//---------------------------------------------------------------------------------------------
 	// ~ Public static methods
 	//---------------------------------------------------------------------------------------------
@@ -54,6 +83,7 @@ class RPC
 	 */
 	public static function serveClass($serviceClassInstance, SerializerInterface $serializer, $package=null)
 	{
+		trigger_error('pls refactor me', E_USER_DEPRECATED);
 		echo \Foomo\MVC::run(new RPC\Frontend($serviceClassInstance, $serializer, $package));
 	}
 
@@ -74,4 +104,87 @@ class RPC
 	{
 
 	}
+	/**
+	 * create a RPC service
+	 * 
+	 * @param stdClass $serviceInstance service object
+	 * 
+	 * @return \Foomo\Services\RPC
+	 */
+	public static function create($serviceInstance)
+	{
+		return new self($serviceInstance);
+	}
+	/**
+	 * what namespace to use on the client side
+	 * 
+	 * @param string $namespace client namespace
+	 * 
+	 * @return \Foomo\Services\RPC
+	 */
+	public function clientNamespace($namespace)
+	{
+		$this->namespace = $namespace;
+		return $this;
+	}
+	/**
+	 * what to serialize with - this currently also serves as the base
+	 * to select a client code generator
+	 * 
+	 * @param \Foomo\Services\RPC\Serializer\SerializerInterface $serializer
+	 * 
+	 * @return \Foomo\Services\RPC
+	 */
+	public function serializeWith(SerializerInterface $serializer)
+	{
+		$this->serializer = $serializer;
+		return $this;
+	}
+	/**
+	 * protect service with Foomo\BasicAuth
+	 * 
+	 * @param string $authDomain 
+	 * 
+	 * @return \Foomo\Services\RPC
+	 */
+	public function requestAuth($authDomain = 'default')
+	{
+		$this->authDomain = $authDomain;
+		return $this;
+	}
+	/**
+	 * protect service docs / proxy generation with Foomo\BasicAuth
+	 * 
+	 * @param string $authDomain 
+	 * 
+	 * @return \Foomo\Services\RPC
+	 */
+	public function requestAuthForDev($authDomain = 'default')
+	{
+		$this->authDomainDev = $authDomain;
+		return $this;
+	}
+	
+	
+	
+	/**
+	 * run it
+	 */
+	public function run()
+	{
+		$frontend = new RPC\Frontend(
+			$this->serviceInstance,
+			$this->serializer,
+			$this->namespace,
+			$this->authDomain,
+			$this->authDomainDev
+		);
+		echo \Foomo\MVC::run($frontend);
+	}
 }
+
+/*create($service)
+        ->clientNamespace('org.foomo.foo')
+        ->requireAuthForDocs('foo')
+        ->requireAuth('bar')
+        ->serve()*/

@@ -38,7 +38,7 @@ final class HtmlDocs extends AbstractRenderer {
 	public $serviceClassDocs = '';
 	private $renderedTypes;
 	public $types = array();
-	public $baseTypes = array('float', 'integer', 'boolean', 'string', 'mixed', 'bool', 'int', 'double');
+	public $baseTypes = array('float', 'integer', 'boolean', 'string', 'mixed', 'bool', 'int', 'double', 'array');
 	public function init($serviceName)
 	{
 		$this->serviceName = $serviceName;
@@ -51,7 +51,6 @@ final class HtmlDocs extends AbstractRenderer {
 	 */
 	public function renderServiceType(ServiceObjectType $type)
 	{
-		//$this->out = 'aaaaaaaaaaaaaaa';
 		$this->serviceClassDocs = $type->phpDocEntry->comment;
 	}
 	public function renderType(ServiceObjectType $type, $level = 0, $propName = null)

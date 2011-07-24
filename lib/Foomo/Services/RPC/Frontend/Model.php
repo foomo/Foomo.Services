@@ -53,6 +53,15 @@ class Model
 	 * @var Foomo\Services\ProxyGenerator\RPC\Report
 	 */
 	public $proxyGeneratorReport;
+	/**
+	 * @var string
+	 */
+	public $authDomain;
+	/**
+	 * @var string
+	 */
+	public $authDomainDev;
+	
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
