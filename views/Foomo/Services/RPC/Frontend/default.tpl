@@ -94,9 +94,11 @@
 		</div>
 	</div>
 </div>
-<a name="lastA">LAST</a>
+
 <script>
-	
+
+// open type docs when jumping to the anchor
+
 (new function() {
 	console.log(this);
 	this.urlCallBack = function(event) {
