@@ -301,7 +301,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$ret = 'PACKING SOURCES' . PHP_EOL;
 		if (file_exists($this->getTGZFilename())) {
 			$ret .= 'removing old archive ' . $this->getTGZFileName() . PHP_EOL;
-			@unlink($this->getTgzFileName());
+			unlink($this->getTgzFileName());
 		}
 		$ret .= PHP_EOL . 'packing sources with tar - ';
 		$ret .= \Foomo\CliCall\Tar::create($this->getTGZFilename())
