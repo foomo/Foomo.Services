@@ -183,12 +183,10 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	public function init($serviceName)
 	{
 		$this->serviceName = $serviceName;
-
 		$this->targetSrcDir = $this->getTargetSrcDir();
 		\Foomo\CliCall\Rm::create($this->targetSrcDir)->recursive()->execute();
 		if (file_exists($this->targetSrcDir)) throw new \Exception('Could not rm previous target src dir: ' . $this->targetSrcDir);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate();
-
 		$nameParts = explode('\\', $this->serviceName);
 		$this->proxyClassName = $this->serviceName . 'Proxy';
 		if ($this->myPackage != '') {
@@ -321,10 +319,11 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 */
 	public function compile($configId)
 	{
+
 		$ret = 'COMPILING' . PHP_EOL;
 		if (file_exists($this->getSWCFileName())) {
 			$ret .= 'removing old swc ' . $this->getSWCFileName() . PHP_EOL;
-			@unlink($this->getSWCFileName());
+			unlink($this->getSWCFileName());
 		}
 		$ret .= 'calling Adobe Compc (Flex Component Compiler) see what the compiler reported - ';
 		$compileReport = '';

@@ -182,9 +182,3 @@ class RPC
 		echo \Foomo\MVC::run($frontend);
 	}
 }
-
-/*create($service)
-        ->clientNamespace('org.foomo.foo')
-        ->requireAuthForDocs('foo')
-        ->requireAuth('bar')
-        ->serve()*/
