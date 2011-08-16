@@ -22,13 +22,24 @@ namespace Foomo\Services\SOAP\Frontend;
 use SoapServer;
 use Foomo\Services\SOAP\Utils;
 
-class Model {
-
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class Model
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
 
 	/**
 	 * @var SoapServer
 	 */
 	private $soapServer;
+	/**
+	 * @var string
+	 */
 	public $className;
 	/**
 	 * object that will handle the calls
@@ -36,111 +47,143 @@ class Model {
 	 * @var stdClass
 	 */
 	private $serverObject;
+	/**
+	 * @var string
+	 */
 	private $soapVersion;
+	/**
+	 * @var boolean
+	 */
 	private $requireSSL = false;
+	/**
+	 * @var string
+	 */
 	private $encoding;
+	/**
+	 * @var boolean
+	 */
 	private $flashWorkaround = false;
 	/**
 	 * @var ServiceSoapASProxyRendererSettings
 	 */
-	public  $ASProxyCompilerSettings;
+	public $ASProxyCompilerSettings;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
 
 	public function setServiceInstance($inst)
 	{
 		$this->className = get_class($inst);
 		$this->serverObject = $inst;
 	}
-	public function __get($propName)
-	{
-		switch($propName) {
-			case'soapServer':
-				if(!isset($this->soapServer)) {
-					$this->initializeSoapServer();
-				}
-				return $this->soapServer;
-			default:
-				return null;
-		}
-	}
+
 	public function useFlashWorkaround($useFlashWorkaround = true)
 	{
 		$this->flashWorkaround = $useFlashWorkaround;
 	}
+
 	public function setSoapVersion($version)
 	{
 		$this->soapVersion = $version;
 	}
+
 	public function setEncoding($encoding)
 	{
 		$this->encoding = $encoding;
 	}
+
 	public function getWsdlCacheFilename()
 	{
-		return  \Foomo\Config::getCacheDir() . '/serviceSoap-' . str_replace('\\', '.', $this->className) . '.wsdl';
+		return \Foomo\Config::getCacheDir() . '/serviceSoap-' . str_replace('\\', '.', $this->className) . '.wsdl';
 	}
+
 	public function getEndPoint()
 	{
 		return \Foomo\Utils::getServerUrl($this->requireSSL) . \Foomo\MVC::getCurrentURLHandler()->renderMethodUrl('serve');
 		//return \Foomo\Utils::getServerUrl() . $_SERVER['PHP_SELF'];
 	}
+
 	private function getWsdl()
 	{
 		$cacheFileName = $this->getWsdlCacheFilename();
-		if(!file_exists($cacheFileName)) {
+		if (!file_exists($cacheFileName)) {
 			$this->compileWsdl();
 		}
 		return str_replace('#endPointPlaceHolder#', $this->getEndPoint(), file_get_contents($cacheFileName));
 	}
+
 	private function getClassMap()
 	{
 		$wsdlRenderer = new \Foomo\Services\SOAP\WSDLRenderer();
 		\Foomo\Services\SOAP\WSDLRenderer::render($this->className, $wsdlRenderer);
 		return $wsdlRenderer->getClassMap();
 	}
+
 	public function streamWsdl()
 	{
 		header('Content-Type: text/xml');
 		echo $this->getWsdl();
 	}
+
 	public function compileWsdl()
 	{
 		file_put_contents($this->getWsdlCacheFilename(), Utils::generateWSDL(get_class($this->serverObject)));
 	}
+
 	private function initializeSoapServer()
 	{
 		$options = array(
 			'classmap' => $this->getClassMap()
 		);
-		if($this->encoding) {
+		if ($this->encoding) {
 			$options['encoding'] = $this->encoding;
 		}
-		if($this->soapVersion) {
+		if ($this->soapVersion) {
 			$options['soap_version'] = $this->soapVersion;
 		}
 		$wsdlCachefilename = $this->getWsdlCacheFilename();
-		if(!file_exists($wsdlCachefilename)) {
+		if (!file_exists($wsdlCachefilename)) {
 			$this->getWsdl();
 		}
 		$this->soapServer = new SoapServer($wsdlCachefilename, $options);
-		if(is_object($this->serverObject)) {
+		if (is_object($this->serverObject)) {
 			$this->soapServer->setObject($this->serverObject);
 		} else {
 			$this->soapServer->setClass($this->className);
-			if($this->persistance) {
+			if ($this->persistance) {
 				$this->soapServer->setPersistence($this->persistance);
 			}
 		}
 	}
+
 	public function serve()
 	{
 		$this->initializeSoapServer();
-		if($this->flashWorkaround) {
+		if ($this->flashWorkaround) {
 			ob_start();
 		}
 		$this->soapServer->handle();
-		if($this->flashWorkaround) {
+		if ($this->flashWorkaround) {
 			header('HTTP/1.1 200 OK');
 			ob_end_flush();
+		}
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Magic methods
+	//---------------------------------------------------------------------------------------------
+
+	public function __get($propName)
+	{
+		switch ($propName) {
+			case'soapServer':
+				if (!isset($this->soapServer)) {
+					$this->initializeSoapServer();
+				}
+				return $this->soapServer;
+			default:
+				return null;
 		}
 	}
 }

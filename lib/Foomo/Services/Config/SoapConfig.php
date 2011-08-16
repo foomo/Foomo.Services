@@ -21,6 +21,10 @@ namespace Foomo\Services\Config;
 
 /**
  * configuration for a soap client
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class SoapClient extends \Foomo\Config\AbstractConfig
 {

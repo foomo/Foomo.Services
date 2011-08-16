@@ -19,7 +19,17 @@
 
 namespace Foomo\Services\Types;
 
-abstract class RecordsetResultSorted extends RecordsetResult {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+abstract class RecordsetResultSorted extends RecordsetResult
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * sorting order in which the startIndex and endIndex has to be seen
 	 *

@@ -19,9 +19,25 @@
 
 namespace Foomo\Services\RPC\Status\Persistence;
 
-use Foomo\Config\AbstractConfig;
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class DomainConfig extends \Foomo\Config\AbstractConfig
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
 
-class DomainConfig extends AbstractConfig {
 	const NAME = 'Foomo.Services.StatusPersitor';
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @var string
+	 */
 	public $name;
 }

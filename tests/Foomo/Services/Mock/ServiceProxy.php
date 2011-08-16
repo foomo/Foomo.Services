@@ -11,8 +11,23 @@
 
 namespace Foomo\Services\Mock;
 
-class ServiceProxy extends \Foomo\Services\RPC\Client {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class ServiceProxy extends \Foomo\Services\RPC\Client
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	const VERSION = 1;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * construct a client
 	 *
@@ -27,6 +42,10 @@ class ServiceProxy extends \Foomo\Services\RPC\Client {
 		$serializer = new \Foomo\Services\RPC\Serializer\PHP();
 		parent::__construct($serializer, $targetClass, $endPoint);
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
 
 	/**
 	 * add two numbers
@@ -73,9 +92,12 @@ class ServiceProxy extends \Foomo\Services\RPC\Client {
 		return $this->callServer(self::VERSION, 'iPlusPlus', array());
 	}
 
+	//---------------------------------------------------------------------------------------------
+	// ~ Magic methods
+	//---------------------------------------------------------------------------------------------
+
 	public function __call($name, $arguments)
 	{
 		throw new Exception('function ' . $name . ' does not exist - maybe you need to recompile and update your client', 1);
 	}
-
 }

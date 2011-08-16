@@ -21,6 +21,10 @@ namespace Foomo\Services;
 
 /**
  * provides a directory of available services
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Utils
 {

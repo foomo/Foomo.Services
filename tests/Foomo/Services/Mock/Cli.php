@@ -21,6 +21,10 @@ namespace Foomo\Services\Mock;
 
 /**
  * a mock class to test arg parsing
+ * 
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Cli
 {

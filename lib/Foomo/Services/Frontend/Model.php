@@ -21,6 +21,10 @@ namespace Foomo\Services\Frontend;
 
 /**
  * frontend model
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Model
 {

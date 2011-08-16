@@ -19,102 +19,144 @@
 
 namespace Foomo\Services\Renderer;
 
-use Foomo\Services\Reflection\ServiceObjectType;
-use Foomo\Services\Reflection\ServiceOperation;
 /**
  * plain text docs rendering
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-final class PlainDocs extends AbstractRenderer {
+final class PlainDocs extends AbstractRenderer
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @var integer
+	 */
 	private $indent = 0;
+	/**
+	 * @var string
+	 */
 	private $out = '';
+	/**
+	 * @var string
+	 */
 	private $typesOut = '';
+	/**
+	 * @var string
+	 */
 	private $opsOut;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param string $serviceName
+	 */
 	public function init($serviceName)
 	{
-		$this->out = $serviceName . ' ('. date('Y-m-d H:i:s') .') : ' . PHP_EOL . PHP_EOL;
+		$this->out = $serviceName . ' (' . date('Y-m-d H:i:s') . ') : ' . PHP_EOL . PHP_EOL;
 		$this->indent = 0;
 	}
+
 	/**
 	 * render the service type itself
-	 * 
+	 *
 	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
-	public function renderServiceType(ServiceObjectType $type)
+	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 		$this->out .= $type->phpDocEntry->comment . PHP_EOL;
 	}
-	public function renderType(ServiceObjectType $type, $nested = false)
+
+	/**
+	 *
+	 * @staticvar array $renderedTypes
+	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param boolean $nested
+	 */
+	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type, $nested=false)
 	{
 		static $renderedTypes = array();
-		if(in_array($type->type,$renderedTypes) && $nested || $nested && count($type->props) > 0) {
-			$this->typesOut .= 'see type - '.$type->type.PHP_EOL;
+		if (in_array($type->type, $renderedTypes) && $nested || $nested && count($type->props) > 0) {
+			$this->typesOut .= 'see type - ' . $type->type . PHP_EOL;
 			return;
 		} elseif (count($type->props) > 0) {
 			array_push($renderedTypes, $type->type);
 		}
 		/*
-		if($type->isArrayOf) {
-			$this->typesOut .= 'ArrayOf ';
-		}
-		*/
-		if(count($type->props) > 0) {
-			$this->typesOut .= 'Type '.$type->type;
+		  if($type->isArrayOf) {
+		  $this->typesOut .= 'ArrayOf ';
+		  }
+		 */
+		if (count($type->props) > 0) {
+			$this->typesOut .= 'Type ' . $type->type;
 			$this->typesOut .= '(complex) : ';
-			if(isset($type->phpDocEntry) && !empty($type->phpDocEntry->comment)) {
+			if (isset($type->phpDocEntry) && !empty($type->phpDocEntry->comment)) {
 				$this->typesOut .= $type->phpDocEntry->comment;
 			}
 			$this->typesOut .= PHP_EOL;
-			$this->indent ++;
+			$this->indent++;
 			foreach ($type->props as $propName => $propValue) {
-				$this->typesOut .= str_repeat('  ', ($this->indent+1)).$propName . ' : ';
+				$this->typesOut .= str_repeat('  ', ($this->indent + 1)) . $propName . ' : ';
 				$this->renderType($propValue, true);
 			}
 			$this->typesOut .= PHP_EOL;
-			$this->indent --;
-		} elseif($nested) {
+			$this->indent--;
+		} elseif ($nested) {
 			$this->typesOut .= $type->type;
-			if(!empty($type->phpDocEntry->comment)) {
+			if (!empty($type->phpDocEntry->comment)) {
 				$this->typesOut .= ' - ' . $type->phpDocEntry->comment;
 			}
 			$this->typesOut .= PHP_EOL;
 		}
 	}
-	public function renderOperation(ServiceOperation $op)
+
+	/**
+	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 */
+	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
-		$this->opsOut .= str_repeat('	', $this->indent).'operation '.$op->name.' ('.$op->comment.') '.PHP_EOL;
-		foreach ($op->parameters	as $parmName => $parmType) {
-			$this->opsOut .= str_repeat('  ', ($this->indent+1)).$parmName.' => '.$parmType.PHP_EOL;
+		$this->opsOut .= str_repeat('	', $this->indent) . 'operation ' . $op->name . ' (' . $op->comment . ') ' . PHP_EOL;
+		foreach ($op->parameters as $parmName => $parmType) {
+			$this->opsOut .= str_repeat('  ', ($this->indent + 1)) . $parmName . ' => ' . $parmType . PHP_EOL;
 		}
-		if($op->returnType) {
-			$this->opsOut .= '	returns ' . $op->returnType->type ;
-			if(!empty($op->returnType->comment)) {
-				$this->opsOut .=  ' - ' . $op->returnType->comment;
+		if ($op->returnType) {
+			$this->opsOut .= '	returns ' . $op->returnType->type;
+			if (!empty($op->returnType->comment)) {
+				$this->opsOut .= ' - ' . $op->returnType->comment;
 			}
 			$this->opsOut .= PHP_EOL;
 		}
-		if(count($op->throwsTypes) > 0) {
+		if (count($op->throwsTypes) > 0) {
 			$this->opsOut .= '	throws ' . PHP_EOL;
-			foreach($op->throwsTypes as $throwsType) {
+			foreach ($op->throwsTypes as $throwsType) {
 				$this->opsOut .= '		' . $throwsType->type . PHP_EOL;
 			}
 		}
-		if(count($op->messageTypes) > 0) {
+		if (count($op->messageTypes) > 0) {
 			$this->opsOut .= '	messages' . PHP_EOL;
-			foreach($op->messageTypes as $messageType) {
+			foreach ($op->messageTypes as $messageType) {
 				$this->opsOut .= '		' . $messageType->type . PHP_EOL;
 			}
 		}
 		$this->opsOut .= PHP_EOL;
-
 	}
+
+	/**
+	 * @return string
+	 */
 	public function output()
 	{
-		return 
-			$this->out . PHP_EOL . 
-			'TYPES:' . PHP_EOL . PHP_EOL . 
-			$this->typesOut . PHP_EOL . 
-			'OPERATIONS:' . PHP_EOL . PHP_EOL . 
-			$this->opsOut . PHP_EOL
+		return
+				$this->out . PHP_EOL .
+				'TYPES:' . PHP_EOL . PHP_EOL .
+				$this->typesOut . PHP_EOL .
+				'OPERATIONS:' . PHP_EOL . PHP_EOL .
+				$this->opsOut . PHP_EOL
 		;
 	}
 }

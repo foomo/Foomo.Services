@@ -19,4 +19,11 @@
 
 namespace Foomo\Services\RPC\Protocol\Reply;
 
-class Head extends \Foomo\Services\RPC\Protocol\AbstractHead { }
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class Head extends \Foomo\Services\RPC\Protocol\AbstractHead
+{
+}

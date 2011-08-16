@@ -19,14 +19,19 @@
 
 namespace Foomo\Services\ProxyGenerator\PHP;
 
-use Foomo\Services\Reflection\ServiceObjectType;
-use Foomo\Services\Reflection\ServiceOperation;
-use ReflectionClass;
-
 /**
  * renders php rpc clients
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
+class RPC extends \Foomo\Services\Renderer\AbstractRenderer
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * which class is responsible for serializing
 	 *
@@ -48,7 +53,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 	/**
 	 * all the ops to be exposed
 	 *
-	 * @var ServiceOperation[]
+	 * @var Foomo\Services\Reflection\ServiceOperation[]
 	 */
 	public $operations;
 	/**
@@ -60,9 +65,14 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 	/**
 	 * all the vo classes that should be imported
 	 *
-	 * @var ServiceObjectType
+	 * @var Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $classesToImport = array();
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * get it up
 	 *
@@ -91,6 +101,11 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 		}
 
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * prepare your assets
 	 *
@@ -101,45 +116,39 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 		$this->operations = array();
 		$this->serviceName = $serviceName;
 	}
+
 	/**
 	 * render the service type itself
-	 * 
-	 * @param ServiceObjectType $type
+	 *
+	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
-	public function renderServiceType(ServiceObjectType $type)
+	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 	}
+
 	/**
 	 * render an operateion / method of the services class
 	 *
-	 * @param ServiceOperation $op
+	 * @param Foomo\Services\Reflection\ServiceOperation $op
 	 */
-	public function renderOperation(ServiceOperation $op)
+	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
 		$this->operations[] = $op;
 	}
+
 	/**
 	 * render a Type
 	 *
-	 * @param ServiceObjectType $type
+	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
-	public function renderType(ServiceObjectType $type)
+	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 		if(class_exists($type->type)) {
 			$this->classesToImport[] = $type->type;
 			$this->classesToImport = array_merge($this->classesToImport, $this->getRelatedClasses($type->type));
 		}
 	}
-	private function getRelatedClasses($className)
-	{
-		$ref = new ReflectionClass($className);
-		$ret = $ref->getInterfaceNames();
-		while($ref->getParentClass() instanceof  ReflectionClass) {
-			$ret[] = $ref->getParentClass()->getName();
-			$ref = $ref->getParentClass();
-		}
-		return $ret;
-	}
+
 	/**
 	 * get a lisr of classes to import
 	 *
@@ -154,7 +163,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 			$i++;
 			foreach($stack as $key => $className) {
 				//var_dump($found);
-				$ref = new ReflectionClass($className);
+				$ref = new \ReflectionClass($className);
 				$parentClass = $ref->getParentClass();
 				if($parentClass === false || (is_object($parentClass) && in_array($parentClass->name, $found))) {
 					// echo 'good to add ' . $className . ' ' . PHP_EOL;
@@ -172,6 +181,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 		// var_dump('found', $found);exit;
 		return $found;
 	}
+
 	/**
 	 * return the thing you rendered
 	 *
@@ -180,5 +190,24 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer {
 	public function output()
 	{
 		return \Foomo\Services\Module::getView($this, 'PHPClient', $this)->render();
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param string $className
+	 * @return array
+	 */
+	private function getRelatedClasses($className)
+	{
+		$ref = new \ReflectionClass($className);
+		$ret = $ref->getInterfaceNames();
+		while($ref->getParentClass() instanceof \ReflectionClass) {
+			$ret[] = $ref->getParentClass()->getName();
+			$ref = $ref->getParentClass();
+		}
+		return $ret;
 	}
 }

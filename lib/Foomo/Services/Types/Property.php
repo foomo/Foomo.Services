@@ -23,6 +23,10 @@ namespace Foomo\Services\Types;
  * type to describe generic properties
  *
  * @Foomo\Services\Reflection\RemoteClass(package='org.foomo.services.sharedVo')
+ * 
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Property {
 	/**

@@ -19,6 +19,11 @@
 
 namespace Foomo\Services;
 
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
 class SOAPTest extends \PHPUnit_Framework_TestCase
 {
 	//---------------------------------------------------------------------------------------------
@@ -36,10 +41,12 @@ class SOAPTest extends \PHPUnit_Framework_TestCase
 	// ~ Test methods
 	//---------------------------------------------------------------------------------------------
 
+	/*
 	public function testSimpleCall()
 	{
 		$this->assertEquals(7, $this->getClient()->addNumbers(3,4));
 	}
+	*/
 
 	/*
 	 * @todo: make real test out of it

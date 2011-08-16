@@ -19,9 +19,21 @@
 
 namespace Foomo\Services\RPC\Status;
 
-class Utils {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class Utils
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @todo: implement or remove
+	 */
 	public static function runGarbageCollection()
 	{
-		
 	}
 }

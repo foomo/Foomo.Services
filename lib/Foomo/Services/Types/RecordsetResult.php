@@ -22,8 +22,16 @@ namespace Foomo\Services\Types;
 /**
  * standard paging record set for value objects in services
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-abstract class RecordsetResult {
+abstract class RecordsetResult
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * first record index in the complete result scope
 	 * the very first possible index is 0
@@ -33,7 +41,7 @@ abstract class RecordsetResult {
 	public $startIndex;
 	/**
 	 * index of the last element in items
-	 * 
+	 *
 	 * @var integer
 	 */
 	public $endIndex;
@@ -45,7 +53,7 @@ abstract class RecordsetResult {
 	public $totalRecords;
 	/**
 	 * page size - max records per page
-	 * 
+	 *
 	 * @var integer
 	 */
 	public $pageSize;

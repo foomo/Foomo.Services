@@ -19,10 +19,11 @@
 
 namespace Foomo\Services\RPC\Frontend;
 
-use Foomo\Services\Renderer\RendererInterface;
-use Foomo\Config;
-use Foomo\MVC;
-
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
 class Controller
 {
 	//---------------------------------------------------------------------------------------------
@@ -55,10 +56,14 @@ class Controller
 	public function actionGetPHPClient()
 	{
 		$this->auth($this->model->authDomainDev);
-		MVC::abort();
+		\Foomo\MVC::abort();
 		header('Content-Type: text/plain;charset=utf-8;');
 		echo \Foomo\Services\ProxyGenerator\PHP\RPC::render(
-				$this->model->serviceClassName, new \Foomo\Services\ProxyGenerator\PHP\RPC(MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), 'Foomo\\Services\\RPC\\Serializer\\PHP')
+				$this->model->serviceClassName,
+				new \Foomo\Services\ProxyGenerator\PHP\RPC(
+					\Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'),
+					'Foomo\\Services\\RPC\\Serializer\\PHP'
+				)
 		);
 		exit;
 	}
@@ -106,11 +111,11 @@ class Controller
 	public function actionGenerateJQueryClient()
 	{
 		$this->auth($this->model->authDomainDev);
-		MVC::abort();
+		\Foomo\MVC::abort();
 		$json = new \Foomo\Services\RPC\Serializer\JSON();
 		header('Content-Type: text/javascript');
-		$generator = new \Foomo\Services\ProxyGenerator\JS\JQuery(MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), $this->model->package);
-		$js = \Foomo\Services\ProxyGenerator\JS\JQuery::renderJS($this->model->serviceClassName, MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), $this->model->package);
+		$generator = new \Foomo\Services\ProxyGenerator\JS\JQuery(\Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), $this->model->package);
+		$js = \Foomo\Services\ProxyGenerator\JS\JQuery::renderJS($this->model->serviceClassName, \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), $this->model->package);
 		// @todo add version number to service name
 		$filename = \Foomo\Services\Module::getHtdocsVarDir('js') . DIRECTORY_SEPARATOR . str_replace('.', '', $generator->getProxyName()) . '.js';
 		// @todo: use resource to delete
@@ -130,7 +135,7 @@ class Controller
 	public function actionPlainTextDocs()
 	{
 		$this->auth($this->model->authDomainDev);
-		MVC::abort();
+		\Foomo\MVC::abort();
 		header('Content-Type: text/plain;charset=utf-8;');
 		echo \Foomo\Services\Renderer\PlainDocs::render($this->model->serviceClassName);
 		exit;
@@ -146,12 +151,13 @@ class Controller
 		echo serialize($this->model->serveServiceDescription());
 		exit;
 	}
-	
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
 	private function auth($domain)
 	{
-		if(!is_null($domain)) {
-			\Foomo\BasicAuth::auth($this->model->serviceClassName, $domain);
-		}
+		if (!is_null($domain)) \Foomo\BasicAuth::auth($this->model->serviceClassName, $domain);
 	}
-	
 }

@@ -21,8 +21,10 @@ namespace Foomo\Services;
 
 /**
  * expose a command line "service"
- *
- * @author jan
+ * 
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Cli
 {

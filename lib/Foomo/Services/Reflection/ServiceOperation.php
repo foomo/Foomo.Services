@@ -19,11 +19,10 @@
 
 namespace Foomo\Services\Reflection;
 
-use Foomo\Reflection\PhpDocArg;
-use Exception;
-
 /**
- *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class ServiceOperation
 {
@@ -107,22 +106,22 @@ class ServiceOperation
 		if(!isset($this->parameters[$name])) {
 			$this->parameters[$name] = $type;
 		} else {
-			throw new Exception('parameter "'.$name.'":'.$type.' was already used', self::ERROR_PARAMETER_USED);
+			throw new \Exception('parameter "'.$name.'":'.$type.' was already used', self::ERROR_PARAMETER_USED);
 		}
 	}
-	
+
 	/**
 	 * add parameter docs
 	 *
 	 * @param string $name name of the parameter
 	 * @param Foomo\Reflection\PhpDocArg $type info on the parameter
 	 */
-	public function addParameterDocs($name, PhpDocArg $type)
+	public function addParameterDocs($name, \Foomo\Reflection\PhpDocArg $type)
 	{
 		if(!isset($this->parameterDocs[$name])) {
 			$this->parameterDocs[$name] = $type;
 		} else {
-			throw new Exception('parameter '.$name.'was already used', self::ERROR_PARAMETER_USED);
+			throw new \Exception('parameter '.$name.'was already used', self::ERROR_PARAMETER_USED);
 		}
 	}
 }

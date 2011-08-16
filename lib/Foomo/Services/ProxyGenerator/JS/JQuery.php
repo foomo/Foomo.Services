@@ -19,17 +19,22 @@
 
 namespace Foomo\Services\ProxyGenerator\JS;
 
-use Foomo\Services\Renderer\AbstractRenderer;
-use Foomo\Services\Reflection\ServiceOperation;
-use Foomo\Services\Reflection\ServiceObjectType;
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
 
-class JQuery extends AbstractRenderer {
 	/**
 	 * @var string
 	 */
 	public $name;
 	/**
-	 *
 	 * @var Foomo\Services\Reflection\ServiceObjectType
 	 */
 	public $serviceType;
@@ -37,7 +42,6 @@ class JQuery extends AbstractRenderer {
 	 * @var Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $types = array();
-
 	/**
 	 * @var Foomo\Services\Reflection\ServiceOperation[]
 	 */
@@ -46,27 +50,45 @@ class JQuery extends AbstractRenderer {
 	 * @var string
 	 */
 	public $endPoint = '';
+	/**
+	 * @var string
+	 */
 	public $package = null;
-	public function __construct($endPoint, $package = null) {
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param string $endPoint
+	 * @param string $package
+	 */
+	public function __construct($endPoint, $package=null)
+	{
 		$this->endPoint = $endPoint;
 		$this->package = $package;
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * prepare your assets
 	 *
 	 * @param string $serviceName name of the service class
 	 */
-	public function init($serviceName) 
+	public function init($serviceName)
 	{
 		$this->name = $serviceName;
 	}
 
 	/**
 	 * render the service type itself
-	 * 
+	 *
 	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
-	public function renderServiceType(ServiceObjectType $type) 
+	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 		$this->serviceType = $type;
 	}
@@ -76,7 +98,7 @@ class JQuery extends AbstractRenderer {
 	 *
 	 * @param Foomo\Services\Reflection\ServiceOperation $op
 	 */
-	public function renderOperation(ServiceOperation $op) 
+	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
 		$this->operations[] = $op;
 	}
@@ -86,7 +108,7 @@ class JQuery extends AbstractRenderer {
 	 *
 	 * @param Foomo\Services\Reflection\ServiceObjectType $type
 	 */
-	public function renderType(ServiceObjectType $type) 
+	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 		if(class_exists($type->type)) {
 			$this->types[$type->type] = $type;
@@ -98,25 +120,33 @@ class JQuery extends AbstractRenderer {
 	 *
 	 * @return mixed
 	 */
-	public function output() 
+	public function output()
 	{
 		return \Foomo\Services\Module::getView($this, 'jQuery', $this)->render();
 	}
 
-	public function getArgNames(ServiceOperation $op) {
+	/**
+	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @return array
+	 */
+	public function getArgNames(\Foomo\Services\Reflection\ServiceOperation $op)
+	{
 		$ret = array();
-		foreach($op->parameters as $name => $type) {
-			$ret[] = $name;
-		}
+		foreach($op->parameters as $name => $type) $ret[] = $name;
 		return $ret;
 	}
-	public function opHasComplexArgs(ServiceOperation $op)
+
+	/**
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
+	 * @return boolean
+	 */
+	public function opHasComplexArgs(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
 		foreach($op->parameters as $name => $type) {
 			switch($type) {
 				case 'string':
 				case 'int':
-				case 'integer':	
+				case 'integer':
 				case 'float':
 				case 'bool':
 				case 'boolean':
@@ -127,8 +157,12 @@ class JQuery extends AbstractRenderer {
 					return true;
 			}
 		}
-		
+		return false;
 	}
+
+	/**
+	 * @return string
+	 */
 	public function getProxyName()
 	{
 		if(is_null($this->package)) {
@@ -137,7 +171,12 @@ class JQuery extends AbstractRenderer {
 			return $this->package;
 		}
 	}
-	public function getJsTypeName(ServiceObjectType $type)
+
+	/**
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
+	 * @return string
+	 */
+	public function getJsTypeName(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 		if(class_exists($type->type)) {
 			if(strpos($this->serviceType->namespace, $type->namespace) === 0) {
@@ -150,6 +189,17 @@ class JQuery extends AbstractRenderer {
 			return $type->type;
 		}
 	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param string $className
+	 * @param string $endPoint
+	 * @param string $package
+	 * @return string
+	 */
 	public static function renderJS($className, $endPoint, $package)
 	{
 		$renderer = new self($endPoint, $package);

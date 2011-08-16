@@ -19,10 +19,20 @@
 
 namespace Foomo\Services\Mock;
 
-class DamnArray {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class DamnArray
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * them damn arrays
-	 * 
+	 *
 	 * @var Foomo\Services\Mock\DamnArray
 	 */
 	public $test = array();

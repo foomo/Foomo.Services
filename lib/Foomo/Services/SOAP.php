@@ -21,7 +21,11 @@ namespace Foomo\Services;
 
 /**
  * A soap server
+ * reads a given class and all types referenced
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  * @todo workaround wsdl.cache_path, check caching in general
  */
 class SOAP

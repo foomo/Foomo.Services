@@ -19,6 +19,11 @@
 
 namespace Foomo\Services\ProxyGenerator\ActionScript;
 
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
 class Report extends \Foomo\Services\ProxyGenerator\Report
 {
 	//---------------------------------------------------------------------------------------------

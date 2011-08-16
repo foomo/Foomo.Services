@@ -21,8 +21,17 @@ namespace Foomo\Services\RPC\Protocol\Call;
 
 /**
  * a method call argument
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class MethodArgument {
+class MethodArgument
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * @var string
 	 */

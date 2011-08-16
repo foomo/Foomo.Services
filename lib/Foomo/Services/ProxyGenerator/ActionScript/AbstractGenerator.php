@@ -25,6 +25,10 @@ use Foomo\Flash\ActionScript\ViewHelper;
 /**
  * base class to render actionscript service proxies
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ * @author franklin <franklin@weareinteractive.com>
  */
 abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRenderer
 {

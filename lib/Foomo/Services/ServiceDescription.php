@@ -24,6 +24,9 @@ use Foomo\Config;
 /**
  * describes a service
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class ServiceDescription
 {
@@ -34,19 +37,19 @@ class ServiceDescription
 	/**
 	 * a rpc service JSON for transports
 	 */
-	const TYPE_RPC_JSON		= 'serviceTypeRpcJson';
+	const TYPE_RPC_JSON	= 'serviceTypeRpcJson';
 	/**
 	 * a rpc service using AMF for transports
 	 */
-	const TYPE_RPC_AMF		= 'serviceTypeRpcAmf';
+	const TYPE_RPC_AMF = 'serviceTypeRpcAmf';
 	/**
 	 * a php service
 	 */
-	const TYPE_PHP			= 'serviceTypePhp';
+	const TYPE_PHP = 'serviceTypePhp';
 	/**
 	 * a soap service
 	 */
-	const TYPE_SOAP			= 'serviceTypeSoap';
+	const TYPE_SOAP	= 'serviceTypeSoap';
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Variables
@@ -93,6 +96,9 @@ class ServiceDescription
 	// ~ Constructor
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * 
+	 */
 	public function __construct()
 	{
 		$this->compilerAvailable = Config::getMode() == Config::MODE_DEVELOPMENT;

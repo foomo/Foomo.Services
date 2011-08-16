@@ -23,10 +23,23 @@ use Foomo\Config\AbstractConfig;
 
 /**
  * configuration for a soap client
- * @todo move to Foomo.Services
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class DomainConfig extends AbstractConfig {
+class DomainConfig extends AbstractConfig
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	const NAME = 'Foomo.Services.soapClient';
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * which soap version SOAP_1_1 | SOAP_1_2
 	 *
@@ -53,7 +66,7 @@ class DomainConfig extends AbstractConfig {
 	public $proxyUrl;
 	/**
 	 * how to map remote objects to local types
-	 * 
+	 *
 	 *   array('RemoteType' => 'LocalType', ...)
 	 *
 	 * @var array
@@ -77,6 +90,11 @@ class DomainConfig extends AbstractConfig {
 	 * @var boolean
 	 */
 	public $throwsSoapFault = true;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	public function __construct($createDefault = false)
 	{
 		if ($createDefault) {
@@ -86,6 +104,10 @@ class DomainConfig extends AbstractConfig {
 		}
 	}
 
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	public function setValue($value)
 	{
 		parent::setValue($value);
@@ -94,7 +116,7 @@ class DomainConfig extends AbstractConfig {
 
 	/**
 	 * get a configured soap client
-	 * 
+	 *
 	 * @return SoapClient
 	 */
 	public function getSoapClient()
@@ -144,5 +166,4 @@ class DomainConfig extends AbstractConfig {
 
 		return new \SoapClient($wsdl, $options);
 	}
-
 }

@@ -22,8 +22,16 @@ namespace Foomo\Services\RPC\Protocol\Call;
 /**
  * serializing a method call
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class MethodCall {
+class MethodCall
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * id of the method call
 	 *

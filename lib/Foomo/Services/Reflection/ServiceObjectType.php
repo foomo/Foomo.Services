@@ -26,6 +26,10 @@ use Foomo\AutoLoader;
 
 /**
  * This class is used to reflect Types that will be exposed for usage in services
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class ServiceObjectType
 {
@@ -262,5 +266,4 @@ class ServiceObjectType
 			trigger_error("could not parse annotations for $className: '{$e->getMessage()}'", E_USER_WARNING);
 		}
 	}
-
 }

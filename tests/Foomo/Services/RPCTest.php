@@ -24,6 +24,11 @@ use Foomo\Services\RPC\Protocol\Call\MethodCall;
 use Foomo\Services\RPC\Server;
 use Foomo\Services\Mock\FunkyStar;
 
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
 class RPCTest extends \PHPUnit_Framework_TestCase
 {
 	//---------------------------------------------------------------------------------------------

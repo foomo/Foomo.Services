@@ -19,14 +19,11 @@
 
 namespace Foomo\Services\RPC\Frontend;
 
-use Foomo\MVC;
-use Foomo\Services\ServiceDescription;
-use Foomo\Services\Utils;
-use Foomo\Config;
-use Foomo\Log\Logger;
-use Foomo\Services\RPC\Protocol\Call\MethodCall;
-use Foomo\Services\RPC\Protocol\Call\MethodArgument;
-
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
 class Model
 {
 	//---------------------------------------------------------------------------------------------
@@ -61,7 +58,7 @@ class Model
 	 * @var string
 	 */
 	public $authDomainDev;
-	
+
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
@@ -90,7 +87,7 @@ class Model
 					}
 				}
 			}
-			$methodCall = new MethodCall;
+			$methodCall = new \Foomo\Services\RPC\Protocol\Call\MethodCall();
 			$methodCall->method = $method;
 			$methodCall->arguments = $arguments;
 			$reply = \Foomo\Services\RPC\Server::callMethod($this->serviceClassInstance, $methodCall, $this->serializer);
@@ -111,7 +108,7 @@ class Model
 			$ret = \Foomo\Services\RPC\Server::run($this->serviceClassInstance, $this->serializer, $call);
 		}
 
-		Logger::doneProcessing();
+		\Foomo\Log\Logger::doneProcessing();
 
 		// check the buffer
 		$contents = ob_get_clean();
@@ -123,7 +120,6 @@ class Model
 		header('Content-Length: ' . strlen($ret));
 		// gzipped output
 		ob_start('ob_gzhandler');
-		// \Foomo\Utils::appendToPhpErrorLog(PHP_EOL .  '----------------------------------------' . PHP_EOL . $ret);
 		echo $ret;
 	}
 
@@ -132,20 +128,20 @@ class Model
 	 */
 	public function serveServiceDescription()
 	{
-		$descr = new ServiceDescription();
-		$descr->url = \Foomo\Utils::getServerUrl() . MVC::getCurrentUrlHandler()->baseURL;
-		$descr->documentationUrl = \Foomo\Utils::getServerUrl() . MVC::getCurrentUrlHandler()->renderMethodUrl('default');
+		$descr = new \Foomo\Services\ServiceDescription();
+		$descr->url = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->baseURL;
+		$descr->documentationUrl = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('default');
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
 		switch (true) {
 			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\JSON):
-				$descr->type = ServiceDescription::TYPE_RPC_JSON;
+				$descr->type = \Foomo\Services\ServiceDescription::TYPE_RPC_JSON;
 				break;
 			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\AMF):
-				$descr->type = ServiceDescription::TYPE_RPC_AMF;
+				$descr->type = \Foomo\Services\ServiceDescription::TYPE_RPC_AMF;
 				break;
 			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\PHP):
-				$descr->type = ServiceDescription::TYPE_PHP;
+				$descr->type = \Foomo\Services\ServiceDescription::TYPE_PHP;
 				break;
 		}
 		$descr->version = @constant($descr->name . '::VERSION');

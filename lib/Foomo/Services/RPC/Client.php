@@ -19,17 +19,23 @@
 
 namespace Foomo\Services\RPC;
 
-use Foomo\Services\RPC\Serializer\SerializerInterface;
-
 /**
  * a little client to perform RPC calls
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class Client {
+class Client
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * my serializer
 	 *
-	 * @var RPCSerializerInterface
+	 * @var Foomo\Services\RPC\Serializer\SerializerInterface
 	 */
 	protected $serializer;
 	/**
@@ -51,38 +57,38 @@ class Client {
 	 */
 	private $cookies = array();
 	/**
-	 * the currently returned reply - see 
-	 * 
+	 * the currently returned reply - see
+	 *
 	 * @var Foomo\Services\RPC\Protocol\Reply\MethodReply
 	 */
 	public $currentReply;
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Constructor
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * construct a client
 	 *
-	 * @param RPCSerializerInterface $serializer
+	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer
 	 * @param string $targetClass name of the class to talk to
 	 * @param string $endPoint uri of the service
 	 */
-	public function __construct(SerializerInterface $serializer, $targetClass, $endPoint)
+	public function __construct(\Foomo\Services\RPC\Serializer\SerializerInterface $serializer, $targetClass, $endPoint)
 	{
 		$this->serializer = $serializer;
 		$this->targetClass = $targetClass;
 		$this->endPoint = $endPoint;
 	}
-	protected function callServer($clientVersion, $name, $arguments)
-	{
-		$serialized = $this->serializer->serialize($this->getRequestForSimpleCall($clientVersion, $name, $arguments));
-		$reply = $this->serializer->unserialize($rawReply = $this->post($serialized));
-		/* @var $reply RPCCallReply */
-		$methodReply = $reply->methodReplies[0];
-		$this->currentReply = $methodReply;
-		/* @var $methodReply RPCCallMethodReply */
-		if(isset($methodReply->exception)) {
-			throw $methodReply->exception;
-		}
-		return $methodReply->value;
-	}
 
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @param array $methodCalls
+	 * @return boolean
+	 */
 	public function parallelCall($methodCalls)
 	{
 		$clientVersion = constant(get_called_class() . '::VERSION');
@@ -111,6 +117,70 @@ class Client {
 		return $ret;
 	}
 
+	/**
+	 * drop the session
+	 */
+	public function deleteCookies()
+	{
+		$this->cookies = array();
+	}
+
+	/**
+	 * explictly set a cookie file
+	 *
+	 * @param array $filename array('cookieName' => 'value')
+	 */
+	public function setCookies($cookies)
+	{
+		$this->cookies = $cookies;
+	}
+
+	/**
+	 * get the current cookiefile
+	 *
+	 * @return string filename
+	 */
+	public function getCookies()
+	{
+		return $this->cookies;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Protected methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 * @param string $clientVersion
+	 * @param string $name
+	 * @param array $arguments
+	 * @return mixed
+	 */
+	protected function callServer($clientVersion, $name, $arguments)
+	{
+		$serialized = $this->serializer->serialize($this->getRequestForSimpleCall($clientVersion, $name, $arguments));
+		$reply = $this->serializer->unserialize($rawReply = $this->post($serialized));
+		/* @var $reply RPCCallReply */
+		$methodReply = $reply->methodReplies[0];
+		$this->currentReply = $methodReply;
+		/* @var $methodReply RPCCallMethodReply */
+		if(isset($methodReply->exception)) {
+			throw $methodReply->exception;
+		}
+		return $methodReply->value;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Private methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 * @param string $clientVersion
+	 * @param string $name
+	 * @param array $arguments
+	 * @return Foomo\Services\RPC\Protocol\Call
+	 */
 	private function getRequestForSimpleCall($clientVersion, $name, $arguments)
 	{
 		$request = new Protocol\Call();
@@ -125,41 +195,7 @@ class Client {
 		$request->calls[] = $methodCall;
 		return $request;
 	}
-	/**
-	 * it is all so magic ...
-	 *
-	 * @param string $name
-	 * @param array $arguments
-	 */
-	public function __call($name, $arguments)
-	{
-		return $this->callServer(null, $name, $arguments);
-	}
-	/**
-	 * drop the session
-	 */
-	public function deleteCookies()
-	{
-		$this->cookies = array();
-	}
-	/**
-	 * explictly set a cookie file
-	 *
-	 * @param array $filename array('cookieName' => 'value')
-	 */
-	public function setCookies($cookies)
-	{
-		$this->cookies = $cookies;
-	}
-	/**
-	 * get the current cookiefile
-	 *
-	 * @return string filename
-	 */
-	public function getCookies()
-	{
-		return $this->cookies;
-	}
+
 	/**
 	 * another stupid post implementation
 	 *
@@ -184,6 +220,11 @@ class Client {
 		}
 	}
 
+	/**
+	 * @param string $result
+	 * @param resource $ch
+	 * @return array
+	 */
 	private function extractData($result, $ch)
 	{
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -192,6 +233,10 @@ class Client {
 		return array('body' => $body, 'cookies' => $this->extractSetCookies($header), 'header' => $header);
 	}
 
+	/**
+	 * @param mixed $data
+	 * @return resource a cURL handle on success, false on errors.
+	 */
 	private function getHandleForPost($data)
 	{
 		$ch = curl_init();
@@ -216,6 +261,11 @@ class Client {
 
 		return $ch;
 	}
+
+	/**
+	 * @param array $dataArray
+	 * @return array
+	 */
 	private function multiPost($dataArray)
 	{
 
@@ -249,6 +299,11 @@ class Client {
         curl_multi_close($mh);
         return $bodies;
 	}
+
+	/**
+	 * @param string $headers
+	 * @return string
+	 */
 	private function extractSetCookies($headers)
 	{
 		$cookies = array();
@@ -263,5 +318,20 @@ class Client {
 			}
 		}
 		return $cookies;
+	}
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Magic methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * it is all so magic ...
+	 *
+	 * @param string $name
+	 * @param array $arguments
+	 */
+	public function __call($name, $arguments)
+	{
+		return $this->callServer(null, $name, $arguments);
 	}
 }

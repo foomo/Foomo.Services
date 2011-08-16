@@ -22,7 +22,9 @@ namespace Foomo\Services\Mock;
 use Foomo\Services\RPC;
 
 /**
- * awesome mock service
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Service
 {
@@ -116,7 +118,7 @@ class Service
 
 	/**
 	 * test that damn array
-	 * 
+	 *
 	 * @return Foomo\Services\Mock\DamnArray
 	 */
 	public function getThatDamnArrayArray()
@@ -125,7 +127,7 @@ class Service
 	}
 	/**
 	 * get a funky star
-	 * 
+	 *
 	 * @return Foomo\Services\Mock\FunkyStar
 	 */
 	public function getAFunkyStar()

@@ -24,10 +24,11 @@ use Foomo\Services\RPC\Serializer\PHP;
 use Foomo\Services\RPC\Serializer\AMF;
 
 /**
- * Me so restless today ...
- *
- * serve shit good old ugly rpc style
  * currently the proxies are bound to serializers - that might change in the future
+ * 
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class RPC
 {
@@ -41,7 +42,7 @@ class RPC
 	private $authDomainDev;
 	/**
 	 * me service class instance
-	 * 
+	 *
 	 * @var stdClass
 	 */
 	private $serviceInstance;
@@ -54,7 +55,7 @@ class RPC
 	 * @var SerializerInterface
 	 */
 	private $serializer;
-	
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Static variables
 	//---------------------------------------------------------------------------------------------
@@ -69,7 +70,7 @@ class RPC
 	{
 		$this->serviceInstance = $serviceInstance;
 	}
-	
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Public static methods
 	//---------------------------------------------------------------------------------------------
@@ -77,6 +78,7 @@ class RPC
 	/**
 	 * serve a class as a service
 	 *
+	 * @deprecated user RPC::create()
 	 * @param stdClass $serviceClassInstance object that provides the services functionality
 	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer name of the class that handles the service wrapping, marshalling ...
 	 * @param string $package package of a proxy
@@ -106,9 +108,9 @@ class RPC
 	}
 	/**
 	 * create a RPC service
-	 * 
+	 *
 	 * @param stdClass $serviceInstance service object
-	 * 
+	 *
 	 * @return \Foomo\Services\RPC
 	 */
 	public static function create($serviceInstance)
@@ -117,9 +119,9 @@ class RPC
 	}
 	/**
 	 * what namespace to use on the client side
-	 * 
+	 *
 	 * @param string $namespace client namespace
-	 * 
+	 *
 	 * @return \Foomo\Services\RPC
 	 */
 	public function clientNamespace($namespace)
@@ -130,9 +132,9 @@ class RPC
 	/**
 	 * what to serialize with - this currently also serves as the base
 	 * to select a client code generator
-	 * 
+	 *
 	 * @param \Foomo\Services\RPC\Serializer\SerializerInterface $serializer
-	 * 
+	 *
 	 * @return \Foomo\Services\RPC
 	 */
 	public function serializeWith(SerializerInterface $serializer)
@@ -142,9 +144,9 @@ class RPC
 	}
 	/**
 	 * protect service with Foomo\BasicAuth
-	 * 
-	 * @param string $authDomain 
-	 * 
+	 *
+	 * @param string $authDomain
+	 *
 	 * @return \Foomo\Services\RPC
 	 */
 	public function requestAuth($authDomain = 'default')
@@ -154,9 +156,9 @@ class RPC
 	}
 	/**
 	 * protect service docs / proxy generation with Foomo\BasicAuth
-	 * 
-	 * @param string $authDomain 
-	 * 
+	 *
+	 * @param string $authDomain
+	 *
 	 * @return \Foomo\Services\RPC
 	 */
 	public function requestAuthForDev($authDomain = 'default')
@@ -164,9 +166,9 @@ class RPC
 		$this->authDomainDev = $authDomain;
 		return $this;
 	}
-	
-	
-	
+
+
+
 	/**
 	 * run it
 	 */

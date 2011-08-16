@@ -22,6 +22,9 @@ namespace Foomo\Services\RPC\Serializer;
 /**
  * AMF (un)serializer
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class AMF implements SerializerInterface
 {
@@ -50,6 +53,9 @@ class AMF implements SerializerInterface
 	// ~ Constructor
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 *
+	 */
     public function __construct()
     {
 		$amf3 = false;

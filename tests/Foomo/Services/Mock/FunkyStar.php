@@ -22,6 +22,10 @@ namespace Foomo\Services\Mock;
 /**
  * that is a complex mock object
  * it is not really useful
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class FunkyStar
 {

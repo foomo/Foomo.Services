@@ -23,10 +23,20 @@ use Foomo\Services\SOAP;
 use Foomo\Services\ServiceDescription;
 use Foomo\Services\Reflection;
 use Foomo\Services\Renderer\HtmlDocs;
+
 /**
  * utility class, which provides all the extended documentation, interface and proxy generation functionality for the SoapServer
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-final class Utils {
+final class Utils
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * explains the service for a machine - the zugspitz scaffold generator is using this wrapper
 	 *

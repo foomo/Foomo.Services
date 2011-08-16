@@ -19,19 +19,47 @@
 
 namespace Foomo\Services\RPC\Serializer;
 
-class JSON implements SerializerInterface {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class JSON implements SerializerInterface
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 *
+	 * @param string $call
+	 * @return string
+	 */
 	public function serialize($call)
 	{
 		return json_encode($call);
 	}
+
+	/**
+	 * @param string $serialized
+	 * @return string
+	 */
 	public function unserialize($serialized)
 	{
 		return json_decode($serialized);
 	}
+
+	/**
+	 * @return string
+	 */
 	public function getContentMime()
 	{
 		return 'application/x-json';
 	}
+
+	/**
+	 * @return boolean
+	 */
 	public function supportsTypes()
 	{
 		return false;

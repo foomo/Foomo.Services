@@ -19,23 +19,28 @@
 
 namespace Foomo\Services\RPC\Serializer;
 
-class PHP implements SerializerInterface {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class PHP implements SerializerInterface
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
-	 * serialize
-	 *
 	 * @param mixed $var
-	 * 
 	 * @return string serialized data
 	 */
 	public function serialize($call)
 	{
 		return \serialize($call);
 	}
+
 	/**
-	 * unserialize
-	 *
 	 * @param string $serialized
-	 * 
 	 * @return mixed unserialized call
 	 */
 	public function unserialize($serialized)
@@ -46,11 +51,19 @@ class PHP implements SerializerInterface {
 	    }
 		return $ret;
 	}
+
+	/**
+	 * @todo check, if this is right
+	 * @return string
+	 */
 	public function getContentMime()
 	{
-		//@todo check, if this is right
 		return 'text/plain';
 	}
+
+	/**
+	 * @return boolean
+	 */
 	public function supportsTypes()
 	{
 		return true;

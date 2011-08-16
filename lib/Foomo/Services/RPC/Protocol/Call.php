@@ -19,7 +19,17 @@
 
 namespace Foomo\Services\RPC\Protocol;
 
-class Call {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class Call
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * envelope / header style data
 	 *

@@ -20,10 +20,16 @@
 namespace Foomo\Services\Types;
 
 /**
- * documents operation success
- *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class OperationSuccess {
+class OperationSuccess
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Constants
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * general success code
 	 *
@@ -50,9 +56,14 @@ class OperationSuccess {
 	 * general failure message
 	 */
 	const MESSAGE_FAILURE = 'operation failed';
+
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * unix style error code - 0 means success
-	 * 
+	 *
 	 * @var integer
 	 */
 	public $code;
@@ -69,7 +80,7 @@ class OperationSuccess {
 	 */
 	public $messageKey;
 	/**
-	 * cut the crap, thats all I want to know
+	 * basic opertion result info
 	 *
 	 * @var boolean
 	 */

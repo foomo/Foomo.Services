@@ -23,8 +23,16 @@ namespace Foomo\Services\Reflection;
  * gives meta information, when generating service proxy clients, so that a
  * local class / value object can be mapped to a remote one
  *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class RemoteClass extends \Annotation {
+class RemoteClass extends \Annotation
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * if there is an existing class on the actionscript client class add the name of it here - the client is on the remote side
 	 * @example org.foomo.bla.Blubb

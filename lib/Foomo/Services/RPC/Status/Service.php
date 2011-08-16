@@ -19,7 +19,22 @@
 
 namespace Foomo\Services\RPC\Status;
 
-class Service {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+class Service
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @todo: implement or remove
+	 * @param integer $id
+	 * @return array
+	 */
 	public function getStatusMessages($id)
 	{
 		$ret = array();

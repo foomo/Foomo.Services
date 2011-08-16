@@ -21,8 +21,17 @@ namespace Foomo\Services\RPC\Protocol\Reply;
 
 /**
  * reply to a method call
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class MethodReply {
+class MethodReply
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * id of the method call
 	 *
@@ -43,10 +52,10 @@ class MethodReply {
 	public $exception;
 	/**
 	 * messages from the server
-	 * 
+	 *
 	 *   possibly many of them
 	 *   possibly many types
-	 * 
+	 *
 	 * @var array
 	 */
 	public $messages;

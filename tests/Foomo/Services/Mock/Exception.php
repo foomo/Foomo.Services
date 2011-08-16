@@ -21,6 +21,10 @@ namespace Foomo\Services\Mock;
 
 /**
  * a mock exception
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class Exception extends \Exception {
 	//---------------------------------------------------------------------------------------------

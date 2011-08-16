@@ -19,7 +19,17 @@
 
 namespace Foomo\Services\RPC\Protocol;
 
-abstract class AbstractHead {
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
+abstract class AbstractHead
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * id of the call
 	 *

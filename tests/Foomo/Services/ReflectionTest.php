@@ -20,7 +20,9 @@
 namespace Foomo\Services;
 
 /**
- *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
 class ReflectionTest extends \PHPUnit_Framework_TestCase
 {

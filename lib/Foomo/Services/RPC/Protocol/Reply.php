@@ -21,8 +21,17 @@ namespace Foomo\Services\RPC\Protocol;
 
 /**
  * reply for a rpc call
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class Reply {
+class Reply
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Variables
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * head of the call
 	 *

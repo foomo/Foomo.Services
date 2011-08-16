@@ -19,6 +19,11 @@
 
 namespace Foomo\Services\RPC;
 
+/**
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
+ */
 class Frontend extends \Foomo\MVC\AbstractApp
 {
 	//---------------------------------------------------------------------------------------------
@@ -36,7 +41,7 @@ class Frontend extends \Foomo\MVC\AbstractApp
 
 	/**
 	 * @internal
-	 * 
+	 *
 	 * @param stdClass $serviceClassInstance
 	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer
 	 * @param string $package
@@ -44,7 +49,7 @@ class Frontend extends \Foomo\MVC\AbstractApp
 	 * @param string $authDomainDev
 	 */
 	public function __construct(
-		$serviceClassInstance, 
+		$serviceClassInstance,
 		\Foomo\Services\RPC\Serializer\SerializerInterface $serializer,
 		$package,
 		$authDomain = null,

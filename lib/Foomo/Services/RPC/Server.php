@@ -19,7 +19,6 @@
 
 namespace Foomo\Services\RPC;
 
-use Exception;
 use ReflectionClass;
 use Foomo\Utils;
 use Foomo\Timer;
@@ -37,8 +36,17 @@ use Foomo\Services\RPC;
 
 /**
  * handle a service call
+ *
+ * @link www.foomo.org
+ * @license www.gnu.org/licenses/lgpl.txt
+ * @author jan <jan@bestbytes.de>
  */
-class Server {
+class Server
+{
+	//---------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	//---------------------------------------------------------------------------------------------
+
 	/**
 	 * serve a RPC service call
 	 *
@@ -51,7 +59,7 @@ class Server {
 	public static function run($serviceClassInstance, SerializerInterface $serializer, $input) {
 		// is the serviceClassInstance an Object
 		if(!is_object($serviceClassInstance)) {
-			throw new Exception('$serviceClassInstance must be an object');
+			throw new \Exception('$serviceClassInstance must be an object');
 		}
 
 		// unserialize the incoming call with the given serializer and check if it is a RPCCallMethodCall
@@ -64,18 +72,18 @@ class Server {
 				'---------------------- unserialized $call ----------------------' . PHP_EOL .
 				serialize($call) . PHP_EOL
 			);
-			throw new Exception('the given $input turned out not to be a RPCCall after it was deserialized with ' . get_class($serializer));
+			throw new \Exception('the given $input turned out not to be a RPCCall after it was deserialized with ' . get_class($serializer));
 		}
 
 		// checking if the exposed class is being called
 		if(!($serviceClassInstance instanceof $call->head->className)) {
-			throw new Exception('$serviceClassInstance must be an instance of ' . $call->head->className);
+			throw new \Exception('$serviceClassInstance must be an instance of ' . $call->head->className);
 		}
 
 		//compare client and service versions
 		$serviceClassVersion = constant(get_class($serviceClassInstance).'::VERSION');
 		if($call->head->classVersion != $serviceClassVersion) {
-			throw new Exception('wrong client version ' . $call->head->classVersion . ' expected ' . $serviceClassVersion . ' and got called with ' . $call->head->classVersion);
+			throw new \Exception('wrong client version ' . $call->head->classVersion . ' expected ' . $serviceClassVersion . ' and got called with ' . $call->head->classVersion);
 		}
 
 		// set up the reply
@@ -93,6 +101,14 @@ class Server {
 		// trigger_error(urlencode($ret));
 		return $ret;
 	}
+
+	/**
+	 *
+	 * @param type $serviceClassInstance
+	 * @param Foomo\Services\RPC\Call\MethodCall $methodCall
+	 * @param SerializerInterface $serializer
+	 * @return MethodReply
+	 */
 	public static function callMethod($serviceClassInstance, Call\MethodCall $methodCall,  SerializerInterface $serializer)
 	{
 		RPC::$messages = array();
@@ -107,7 +123,7 @@ class Server {
 			$callNotice = get_class($serviceClassInstance) . '->' . $methodCall->method . '() with ' . count($methodCall->arguments) . ' args';
 			Timer::addMarker($callNotice);
 			Logger::transactionBegin($transactionName = 'RPC service call ' . get_class($serviceClassInstance) . '->' . $methodCall->method);
-			
+
 			if(!$serializer->supportsTypes()) {
 				// @todo depending upon the serializer data must be casted
 				// i.e. json does not support types => cast from hash to object
@@ -115,7 +131,7 @@ class Server {
 			}
 			$reply->value = Proxy::call($serviceClassInstance, $methodCall->method, $methodCall->arguments);
 			Logger::transactionComplete($transactionName);
-		} catch(Exception $e) {
+		} catch(\Exception $e) {
 			// is it an exception, that was expected i.e. phpDocumented
 			// look up the method documentation
 			$ref = new ReflectionClass($serviceClassInstance);
@@ -147,7 +163,7 @@ class Server {
 					// ensure that nothing leaks in production
 					$reply->exception->code = '1';
 				}
-				trigger_error( 
+				trigger_error(
 					__METHOD__ . ' an unexpected exception was thrown, when I tried to call ' . $callNotice . ' :: type : ' . get_class($e) . ' message : ' . $e->getMessage() . PHP_EOL .
 					' stack trace: ' . PHP_EOL . $e->getTraceAsString() . PHP_EOL
 					, E_USER_WARNING
