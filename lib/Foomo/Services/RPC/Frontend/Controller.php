@@ -156,6 +156,9 @@ class Controller
 	// ~ Private methods
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * @param string $domain
+	 */
 	private function auth($domain)
 	{
 		if (!is_null($domain)) \Foomo\BasicAuth::auth($this->model->serviceClassName, $domain);

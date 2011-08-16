@@ -25,7 +25,7 @@ use Foomo\Services\RPC\Serializer\AMF;
 
 /**
  * currently the proxies are bound to serializers - that might change in the future
- * 
+ *
  * @link www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
  * @author jan <jan@bestbytes.de>
@@ -85,7 +85,7 @@ class RPC
 	 */
 	public static function serveClass($serviceClassInstance, SerializerInterface $serializer, $package=null)
 	{
-		trigger_error('pls refactor me', E_USER_DEPRECATED);
+		trigger_error('Please refactor the service\'s enpoint.php for ' . get_class($serviceClassInstance), E_USER_DEPRECATED);
 		echo \Foomo\MVC::run(new RPC\Frontend($serviceClassInstance, $serializer, $package));
 	}
 
@@ -149,7 +149,7 @@ class RPC
 	 *
 	 * @return \Foomo\Services\RPC
 	 */
-	public function requestAuth($authDomain = 'default')
+	public function requestAuth($authDomain='default')
 	{
 		$this->authDomain = $authDomain;
 		return $this;
@@ -161,7 +161,7 @@ class RPC
 	 *
 	 * @return \Foomo\Services\RPC
 	 */
-	public function requestAuthForDev($authDomain = 'default')
+	public function requestAuthForDev($authDomain='default')
 	{
 		$this->authDomainDev = $authDomain;
 		return $this;
