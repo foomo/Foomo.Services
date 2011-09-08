@@ -57,7 +57,7 @@ class Exception extends \Exception
 	 * @param string $msg [optional]
 	 * @param integer $code [optional]
 	 */
-	public function __construct($msg, $code)
+	public function __construct($msg='', $code=500)
 	{
 		parent::__construct($msg, $code);
 		$this->code = $this->getCode();
