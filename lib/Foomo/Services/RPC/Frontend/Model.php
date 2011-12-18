@@ -117,7 +117,8 @@ class Model
 		}
 		// Content header
 		header('Content-Type: ' . $this->serializer->getContentMime());
-		header('Content-Length: ' . strlen($ret));
+		// causes trouble with gzipping
+		// header('Content-Length: ' . strlen($ret));
 		// gzipped output
 		ob_start('ob_gzhandler');
 		echo $ret;
