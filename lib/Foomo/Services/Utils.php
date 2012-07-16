@@ -255,7 +255,7 @@ class Utils
 					}
 				} else {
 					$dot = substr($current->getFilename(),0,1);
-					if($dot != '.' && $current->isDir() && !$current->isDot() &&$current->getFilename() != '') {
+					if($dot != '.' && $current->isDir() && !$current->isDot() && $current->getFilename() != '' && substr($current->getFilename(),0,1) != '.') {
 						$results = array_merge($results, self::getServices($moduleName, $path . '/' . $current->getFilename()));
 					}
 				}

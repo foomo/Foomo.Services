@@ -18,8 +18,64 @@
 */
 
 (function( window ) {
+	var mixinStub = function(operation, arguments) {
+		operation.data = {
+			endPoint: window.<?= $model->getProxyName() ?>.endPoint,
+			server: window.<?= $model->getProxyName() ?>.server,
+			arguments: arguments,
+			complete: false,
+			pending: false,
+			result: null,
+			exception: null,
+			error: [],
+			messages: [],
+			ajax: null
+		};
+		operation.server = function(server) {
+			this.data.server = server;
+			return this;
+		};
+		operation.endPoint = function(endPoint) {
+			this.data.endPoint = endPoint;
+			return this;
+		};
+	};
+	
+	var transport = function(operation, url, postData) {
+		var errorHandler = function(error) {
+			operation.data.success = false;
+			operation.data.error = error;
+			if(operation.data._errorCallback) {
+				operation.data._errorCallback(operation);
+			}
+		};
+		operation.data.ajax = $.ajax({
+			dataType: 'JSON',
+			url: url,
+			type: postData === null?'GET':'POST',
+			data: postData,
+			success: function(data) {
+				if(data !== null) {
+					operation.data.result = data.value;
+					operation.data.exception = data.exception;
+					operation.data.messages = data.messages;
+					if(operation.data.exception !== null && typeof operation.data._errorCallback == "function") {
+						errorHandler(data);
+					} else if(!operation.data.exception) {
+						operation.data.success = true;
+						operation.data._successCallback(operation);
+					}
+				} else {
+					errorHandler('transport threw up');
+				}
+				operation.data.pending = false;				
+			},
+			error: errorHandler
+		});
+		return operation;
+	};
 	// if you do not like "<?= $model->getProxyName() ?>" as a name change,
-	// then change the $package parameter for RPC::serveClass()
+	// then call ->clientNamespace('WhatEver.You.Like') on the server
 <?
 	$package = 'window';
 	foreach (array_slice(explode('.', $model->getProxyName()), 0, -1) as $value) {
@@ -28,69 +84,8 @@
 	}
 ?>
 	window.<?= $model->getProxyName() ?> = {
-		server: '<?= Foomo\Utils::getServerUrl() ?>',
-		endPoint: '<?= $model->endPoint ?>',
-		/*
-			note to self - this is javascript - there is no typing, thus the
-			objects may not make sense or should become a json schema ...
-
-		objects: {
-<?
-	$iTypes = 0;
-	foreach($model->types as $type):
-		$iTypes ++;
-		/* @var $type Foomo\Services\Reflection\ServiceObjectType */
-		if(!empty($type->phpDocEntry->comment)):
-			foreach(explode(PHP_EOL, $type->phpDocEntry->comment) as $line):
-?>
-			// <?= $line ?>
-
-<?
-			endforeach;
-		endif;
-?>
-			<?= $model->getJsTypeName($type) ?>: {
-<?
-	$iProp = 0;
-	foreach($type->props as $name => $prop):
-		$iProp ++;
-		/* @var $prop Foomo\Services\Reflection\ServiceObjectType */
-		foreach(explode(PHP_EOL, $prop->phpDocEntry->comment) as $line):
-?>
-				// <?= $line ?>
-
-<?
-		endforeach;
-?>
-				// <?= $model->getJsTypeName(new Foomo\Services\Reflection\ServiceObjectType($prop->type)) ?>
-
-				<?= $name ?> : <?
-					switch($prop->type) {
-						case 'integer':
-						case 'int':
-							echo '0';
-							break;
-						case 'string':
-							echo "'string'";
-							break;
-						case 'boolean':
-						case 'bool':
-							echo 'true';
-							break;
-						case 'float':
-							echo '0.0';
-							break;
-						default:
-							echo 'null';
-					}
-				?><?= ($iProp<count($type->props))?',':'' ?>
-
-<? endforeach; ?>
-			}<?= ($iTypes<count($model->types)?',':'') ?>
-
-<? endforeach; ?>
-		},
-		*/
+		server: '', // '<?= Foomo\Utils::getServerUrl() ?>'  it is better not to add your server here ;)
+		endPoint: '<?= $model->endPoint ?>', 
 		operations: {
 <?
 	$iOps = 0;
@@ -118,37 +113,13 @@
 <? endif; ?>
 			  */
 			<?= $op->name ?> : function(<?= implode(', ', $argNames) ?>) {
-				return new this._<?= $op->name ?>(<?= implode(', ', $argNames) ?>);
-			},
-			_<?= $op->name ?> : function(<?= implode(', ', $argNames) ?>) {
-				this.data = {
-					endPoint: <?= $model->getProxyName() ?>.endPoint,
-					arguments: {
-<?
-	$iArgs = 0;
-	foreach($argNames as $argName):
-		$iArgs ++;
-?>
-						<?= $argName ?> : <?= $argName ?><?= ($iArgs < count($argNames)?',':'') ?>
-
-<? endforeach; ?>
-					},
-					complete: false,
-					pending: false,
-					result: null,
-					exception: null,
-					errors: [],
-					messages: [],
-					ajax: null
-				};
-				this.execute = function(successCallback) {
-					this.successCallback = successCallback;
-					var me = this;
-					this.data.ajax = $.ajax({
-						dataType: 'JSON',
+				return new function(<?= implode(', ', $argNames) ?>) {
+					mixinStub( this, { <? $iArgs = 0; foreach($argNames as $argName): $iArgs ++; ?> <?= $argName ?> : <?= $argName ?><?= ($iArgs < count($argNames)?',':'') ?> <? endforeach; ?> });
+					this.execute = function(successCallback) {
+						this.data._successCallback = successCallback;
+						var url = this.data.server + this.data.endPoint + '/<?= $op->name ?>'<?= (count($argNames)>0 && !$model->opHasComplexArgs($op))?'':';' . PHP_EOL ?>
 <? if($model->opHasComplexArgs($op)): ?>
-						url:  window.<?= $model->getProxyName() ?>.server + this.data.endPoint + '/<?= $op->name ?>',
-						data: {
+						var postData = {
 <?
 	$iArgs = 0;
 	foreach($argNames as $argName):
@@ -157,41 +128,19 @@
 							<?= $argName ?> : this.data.arguments.<?= $argName ?><?= ($iArgs < count($argNames)?',':'') ?>
 
 <? endforeach; ?>
-						},
-						type: 'POST',
+						};
+<? elseif(count($argNames) > 0): ?>
+<? foreach($argNames as $argName): ?> + '/' + escape(this.data.arguments.<?=  $argName   ?>)<? endforeach; ?>;
 <? else: ?>
-						url: window.<?= $model->getProxyName() ?>.server + this.data.endPoint + '/<?= $op->name ?>'<? foreach($argNames as $argName): ?> + '/' + escape(this.data.arguments.<?=  $argName   ?>)<? endforeach; ?>,
 <? endif; ?>
-						success: function(data) {
-							me.data.result = data.value;
-							me.data.exception = data.exception;
-							me.data.messages = data.messages;
-							if(me.data.exception) {
-								me._handleError();
-							} else {
-								me.data.success = true;
-								me.successCallback(me);
-							}
-						},
-						error: function(data) {
-							me._handleError();
-						}
-
-					});
+						return transport(this, url<?= $model->opHasComplexArgs($op)?', postData':'' ?>);
+					};
+					this.error = function(errorCallback) {
+						this.data._errorCallback = errorCallback;
+						return this;
+					};
 					return this;
-				};
-				this._handleError = function(){
-					this.data.success = false;
-					if(this.errorCallback) {
-						this.errorCallback(this);
-					}
-				},
-				this.error = function(errorCallback) {
-					this.errorCallback = errorCallback;
-					return this;
-				};
-				return this;
-
+				}(<?= implode(', ', $argNames) ?>);
 			}<?= ($iOps<count($model->operations)?',':'') ?>
 
 <? endforeach ?>

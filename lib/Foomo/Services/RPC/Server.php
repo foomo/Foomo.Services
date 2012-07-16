@@ -155,7 +155,7 @@ class Server
 			} else {
 				// unexpected exception
 				$reply->exception = new ReplyException('an error occured on the server', '1', 'serverError');
-				if(Config::getMode() == Config::MODE_DEVELOPMENT) {
+				if(in_array(Config::getMode(), array(Config::MODE_DEVELOPMENT, Config::MODE_TEST))) {
 					// be verbose in dev and debug
 					$reply->exception->code = $e->getCode();
 					$reply->exception->message = $e->getMessage();

@@ -70,7 +70,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
 	public function testCookiePassingMultiServerInstance()
 	{
-		$endpointTemplate = \Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP . '/modules/services/services/mockServicePhp%id%.php/Foomo.Services.RPC/serve';
+		$endpointTemplate = \Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP . '/modules/' . Module::NAME . '/services/mock/mockServicePhp%id%.php/Foomo.Services.RPC/serve';
 
 		// those two ones have the same session instance on the server
 		$proxyA = new \Foomo\Services\Mock\ServiceProxy(\str_replace('%id%', 'A', $endpointTemplate));

@@ -2,8 +2,10 @@
 /* @var $model ServiceHtmlRenderer */
 $model = $model;
 ?>
-
-<?php echo $model->opsHtml ?>
+<h2><?= $model->serviceName ?></h2>
+<p><?= htmlentities($model->serviceClassDocs) ?></p>
+<h2>Operations</h2>
+<?= $model->opsHtml ?>
 <br>
 <h2>Types</h2>
-<?php echo $model->typesHtml ?>
+<?= $model->typesHtml ?>

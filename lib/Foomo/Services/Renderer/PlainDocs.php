@@ -93,7 +93,7 @@ final class PlainDocs extends AbstractRenderer
 		  }
 		 */
 		if (count($type->props) > 0) {
-			$this->typesOut .= 'Type ' . $type->type;
+			$this->typesOut .= 'type ' . $type->type;
 			$this->typesOut .= '(complex) : ';
 			if (isset($type->phpDocEntry) && !empty($type->phpDocEntry->comment)) {
 				$this->typesOut .= $type->phpDocEntry->comment;
