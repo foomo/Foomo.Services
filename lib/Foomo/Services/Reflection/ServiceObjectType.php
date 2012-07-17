@@ -146,7 +146,21 @@ class ServiceObjectType
 			$this->type = $type;
 		}
 	}
-
+	/**
+	 * load reflection from here if you need it very often in one call
+	 * 
+	 * @param string $type
+	 * 
+	 * @return self
+	 */
+	public static function getCachedType($type)
+	{
+		static $cache = array();
+		if(!isset($cache[$type])) {
+			$cache[$type] = new self($type);
+		}
+		return $cache[$type];
+	}
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
