@@ -117,10 +117,8 @@ class Controller
 		$generator = new \Foomo\Services\ProxyGenerator\JS\JQuery(\Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), $this->model->package);
 		$js = \Foomo\Services\ProxyGenerator\JS\JQuery::renderJS($this->model->serviceClassName, \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'), $this->model->package);
 		// @todo add version number to service name
-		$filename = \Foomo\Services\Module::getHtdocsVarDir('js') . DIRECTORY_SEPARATOR . str_replace('.', '', $generator->getProxyName()) . '.js';
+		$filename = \Foomo\Services\Module::getHtdocsVarDir('js') . DIRECTORY_SEPARATOR . $generator->getProxyName() . '.js';
 		// @todo: use resource to delete
-		// @todo: better endpoint integration
-		// @todo: minify
 		@unlink($filename);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FILE, $filename)->tryCreate();
 		file_put_contents($filename, $js);
