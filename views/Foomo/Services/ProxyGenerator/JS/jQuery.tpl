@@ -50,10 +50,11 @@
 			}
 		};
 		operation.data.ajax = $.ajax({
-			dataType: 'JSON',
+			dataType: 'json',
 			url: url,
 			type: postData === null?'GET':'POST',
-			data: postData,
+			data: JSON.stringify(postData),
+			
 			success: function(data) {
 				if(data !== null) {
 					operation.data.result = data.value;

@@ -76,14 +76,23 @@ class Model
 			// get some reflection
 			$methodRefl = new \ReflectionMethod($this->serviceClassInstance, $method);
 			$parameters = $methodRefl->getParameters();
-			if (count($arguments) < count($parameters) && !empty($_POST)) {
+			if (count($arguments) < count($parameters)) {
+				$alternativeParameters = $this->serializer->unserialize(file_get_contents('php://input'));
 				$parameters = array_slice($parameters, count($arguments));
 				foreach ($parameters as $parm) {
 					/* @var $parm \ReflectionParameter */
-					if (isset($_POST[$parm->getName()])) {
-						$arguments[] = $_POST[$parm->getName()];
-					} else {
-						break;
+					if(is_object($alternativeParameters)) {
+						if (isset($alternativeParameters->{$parm->getName()})) {
+							$arguments[] = $alternativeParameters->{$parm->getName()};
+						} else {
+							break;
+						}
+					} elseif (is_array($alternativeParameters)) {
+						if (isset($alternativeParameters[$parm->getName()])) {
+							$arguments[] = $alternativeParameters[$parm->getName()];
+						} else {
+							break;
+						}
 					}
 				}
 			}
