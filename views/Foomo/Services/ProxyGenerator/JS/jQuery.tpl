@@ -131,7 +131,7 @@
 <? endforeach; ?>
 						};
 <? elseif(count($argNames) > 0): ?>
-<? foreach($argNames as $argName): ?> + '/' + escape(this.data.arguments.<?=  $argName   ?>)<? endforeach; ?>;
+<? foreach($argNames as $argName): ?> + '/' + encodeURIComponent(this.data.arguments.<?=  $argName   ?>)<? endforeach; ?>;
 <? else: ?>
 <? endif; ?>
 						return transport(this, url<?= $model->opHasComplexArgs($op)?', postData':'' ?>);
