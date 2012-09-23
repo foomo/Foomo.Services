@@ -139,8 +139,7 @@ class ServiceObjectType
 			$parts = explode('\\', $this->type);
 			$this->namespace = implode('\\', array_slice($parts, 0, count($parts)-1) );
 		}
-		$exists = AutoLoader::loadClass($type, false, true);
-		if ($exists) {
+		if (\class_exists($type)) {
 			$this->readClass($this->type);
 		} else {
 			$this->type = $type;
@@ -148,9 +147,9 @@ class ServiceObjectType
 	}
 	/**
 	 * load reflection from here if you need it very often in one call
-	 * 
+	 *
 	 * @param string $type
-	 * 
+	 *
 	 * @return self
 	 */
 	public static function getCachedType($type)
