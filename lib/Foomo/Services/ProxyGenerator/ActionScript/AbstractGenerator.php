@@ -308,10 +308,14 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 			unlink($this->getTgzFileName());
 		}
 		$ret .= PHP_EOL . 'packing sources with tar - ';
-		$ret .= \Foomo\CliCall\Tar::create($this->getTGZFilename())
-			->moveIntoDirectory($this->targetSrcDir)
+		$ret .= \Foomo\CliCall\Tar::create()
+			->createArchive()
+			->compress()
+			->file()
+			->addArguments(array($this->getTGZFilename()))
+			->directory($this->targetSrcDir)
 			->addDirectoryFiles()
-			->createTgz()
+			->execute()
 			->report
 		;
 		return $ret;
