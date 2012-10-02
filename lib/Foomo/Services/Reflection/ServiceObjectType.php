@@ -136,7 +136,7 @@ class ServiceObjectType
 		}
 		$this->type = $type;
 		if (strpos($this->type, '\\') !== false) {
-			$parts = explode('\\', $this->type);
+			$parts = explode('\\', trim($this->type, '\\'));
 			$this->namespace = implode('\\', array_slice($parts, 0, count($parts)-1) );
 		}
 		if (\class_exists($type)) {

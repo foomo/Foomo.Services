@@ -189,10 +189,10 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$this->serviceName = $serviceName;
 		$this->targetSrcDir = $this->getTargetSrcDir();
 		\Foomo\CliCall\Rm::create($this->targetSrcDir)->recursive()->execute();
-		if (file_exists($this->targetSrcDir)) throw new \Exception('Could not rm previous target src dir: ' . $this->targetSrcDir);
+		if (file_exists($this->targetSrcDir)) trigger_error('Could not rm previous target src dir: ' . $this->targetSrcDir, \E_USER_ERROR);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate();
-		$nameParts = explode('\\', $this->serviceName);
-		$this->proxyClassName = $this->serviceName . 'Proxy';
+		$parts = \explode('\\', ltrim($this->serviceName, '\\'));
+		$this->proxyClassName =  $parts[count($parts) - 1] . 'Proxy';
 		if ($this->myPackage != '') {
 			$this->myPackage = $this->targetPackage . '.' . strtolower(substr(PHPUtils::getASType($this->serviceName), 0, 1)) . substr(PHPUtils::getASType($this->serviceName), 1);
 		} else {
