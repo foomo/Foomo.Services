@@ -264,7 +264,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 */
 	public function getVORemoteAliasName(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
-		return str_replace('\\', '.', $type->type);
+		return str_replace('\\', '.', ltrim($type->type, '\\'));
 	}
 
 	/**
