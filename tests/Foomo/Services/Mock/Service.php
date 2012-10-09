@@ -95,9 +95,9 @@ class Service
 	 * @serviceMessage string another message
 	 * @serviceStatus string a simple status update message
 	 *
-	 * @param Foomo\Services\Mock\FunkyStar $star
+	 * @param FunkyStar $star
 	 *
-	 * @return Foomo\Services\Mock\FunkyStar[]
+	 * @return \Foomo\Services\Mock\FunkyStar[]
 	 */
 	public function getSomeFunkyStars($star)
 	{

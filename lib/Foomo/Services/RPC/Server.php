@@ -138,10 +138,10 @@ class Server
 			$methods = $ref->getMethods();
 			$throwTypes = array();
 			foreach ($methods as $method) {
-				/* @var $method ReflectionMethod */
+				/* @var $method \ReflectionMethod */
 				$methodName = $method->getName();
 				if($methodName == $methodCall->method) {
-					$phpDoc = new PhpDocEntry($method->getDocComment());
+					$phpDoc = new PhpDocEntry($method->getDocComment(), $method->getDeclaringClass()->getNamespaceName());
 					foreach($phpDoc->throws as $throwType) {
 						$throwTypes[] = $throwType->type;
 					}

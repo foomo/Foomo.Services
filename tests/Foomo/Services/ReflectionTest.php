@@ -33,7 +33,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
 	/**
 	 * my reader
 	 *
-	 * @var ServiceReader
+	 * @var Reflection
 	 */
 	private $reader;
 
@@ -43,7 +43,7 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$this->reader = new Reflection('Foomo\Services\Mock\Service');
+		$this->reader = new Reflection('Foomo\\Services\\Mock\\Service');
 	}
 
 	//---------------------------------------------------------------------------------------------
@@ -75,9 +75,11 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
 		$expectedTypes = array(
 			'integer',
 			'boolean',
+			'string',
 			'Foomo\Services\Mock\Exception',
 			'Foomo\Services\Mock\FunkyStar',
-			'Foomo\Services\Mock\Message'
+			'Foomo\Services\Mock\Message',
+			'Foomo\Services\Mock\DamnArray'
 		);
 		$types = array();
 		foreach($this->reader->getTypes() as $type) {
@@ -85,9 +87,15 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
 			$types[] = $type->type;
 		}
 		$types = array_unique($types);
+		// test from both sides
 		foreach($expectedTypes as $expectedType) {
 			if(!in_array($expectedType, $types)) {
 				$this->fail('missing type ' . $expectedType);
+			}
+		}
+		foreach($types as $type) {
+			if(!in_array($type, $expectedTypes)) {
+				$this->fail('unexpected type :' . $type);
 			}
 		}
 	}

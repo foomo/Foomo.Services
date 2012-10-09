@@ -19,7 +19,6 @@
 
 namespace Foomo\Services;
 
-use Foomo\Services\Renderer\RendererInterface;
 use ReflectionClass;
 use Foomo\Reflection\PhpDocEntry;
 use Foomo\Reflection\PhpDocArg;
@@ -117,9 +116,9 @@ class Reflection
 		$ref = new ReflectionClass($className);
 		$methods = $ref->getMethods();
 		foreach ($methods as $method) {
-			/* @var $method ReflectionMethod */
+			/* @var $method \ReflectionMethod */
 			$methodName = $method->getName();
-			$phpDoc = new PhpDocEntry($method->getDocComment());
+			$phpDoc = new PhpDocEntry($method->getDocComment(), $method->getDeclaringClass()->getNamespaceName());
 			//echo $methodName . ' >' . $phpDoc->wsdlGen . '<, ';
 			if ($method->isStatic() || !$method->isPublic() || strpos($methodName, '__') === 0 || $phpDoc->wsdlGen === 'ignore' || $phpDoc->serviceGen === 'ignore') {
 				//echo 'skipping ' . $methodName;

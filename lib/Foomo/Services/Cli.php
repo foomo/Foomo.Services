@@ -86,9 +86,9 @@ class Cli
 		$classRefl = new \ReflectionClass($className);
 		$args = array();
 		foreach($classRefl->getMethods() as $methodRefl) {
-			/* @var $methodRefl ReflectionMethod */
+			/* @var $methodRefl \ReflectionMethod */
 			if(strtolower($methodRefl->getName()) == strtolower($method)) {
-				$doc = new \Foomo\Reflection\PhpDocEntry($methodRefl->getDocComment());
+				$doc = new \Foomo\Reflection\PhpDocEntry($methodRefl->getDocComment(), $methodRefl->getDeclaringClass()->getNamespaceName());
 				$i = 0;
 				foreach($doc->parameters as $parameter) {
 					$type = new \Foomo\Services\Reflection\ServiceObjectType($parameter->type);

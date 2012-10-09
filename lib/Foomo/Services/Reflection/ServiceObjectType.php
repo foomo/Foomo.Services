@@ -249,7 +249,7 @@ class ServiceObjectType
 			if(!$classComment = $ref->getDocComment()) {
 				$classComment = '';
 			}
-			$this->phpDocEntry = new PhpDocEntry($classComment);
+			$this->phpDocEntry = new PhpDocEntry($classComment, $ref->getNamespaceName());
 
 			foreach ($this->phpDocEntry->properties as $propDoc) {
 				/* @var $propDoc PhpDocProperty */
@@ -261,8 +261,9 @@ class ServiceObjectType
 
 			$props = $ref->getProperties();
 			foreach ( $props as $prop) {
+				/* @var $prop \ReflectionProperty */
 				if($prop->isPublic() && !$prop->isStatic()) {
-					$phpDoc = new PhpDocEntry($prop->getDocComment());
+					$phpDoc = new PhpDocEntry($prop->getDocComment(), $prop->getDeclaringClass()->getNamespaceName());
 					if($phpDoc->wsdlGen == 'ignore' || $phpDoc->serviceGen == 'ignore') {
 						continue;
 					}
