@@ -189,10 +189,10 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$this->serviceName = $serviceName;
 		$this->targetSrcDir = $this->getTargetSrcDir();
 		\Foomo\CliCall\Rm::create($this->targetSrcDir)->recursive()->execute();
-		if (file_exists($this->targetSrcDir)) throw new \Exception('Could not rm previous target src dir: ' . $this->targetSrcDir);
+		if (file_exists($this->targetSrcDir)) trigger_error('Could not rm previous target src dir: ' . $this->targetSrcDir, \E_USER_ERROR);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate();
-		$nameParts = explode('\\', $this->serviceName);
-		$this->proxyClassName = $this->serviceName . 'Proxy';
+		$parts = \explode('\\', ltrim($this->serviceName, '\\'));
+		$this->proxyClassName =  $parts[count($parts) - 1] . 'Proxy';
 		if ($this->myPackage != '') {
 			$this->myPackage = $this->targetPackage . '.' . strtolower(substr(PHPUtils::getASType($this->serviceName), 0, 1)) . substr(PHPUtils::getASType($this->serviceName), 1);
 		} else {
@@ -264,7 +264,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 */
 	public function getVORemoteAliasName(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
-		return str_replace('\\', '.', $type->type);
+		return str_replace('\\', '.', ltrim($type->type, '\\'));
 	}
 
 	/**
@@ -308,10 +308,14 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 			unlink($this->getTgzFileName());
 		}
 		$ret .= PHP_EOL . 'packing sources with tar - ';
-		$ret .= \Foomo\CliCall\Tar::create($this->getTGZFilename())
-			->moveIntoDirectory($this->targetSrcDir)
+		$ret .= \Foomo\CliCall\Tar::create()
+			->createArchive()
+			->compress()
+			->file()
+			->addArguments(array($this->getTGZFilename()))
+			->directory($this->targetSrcDir)
 			->addDirectoryFiles()
-			->createTgz()
+			->execute()
 			->report
 		;
 		return $ret;
