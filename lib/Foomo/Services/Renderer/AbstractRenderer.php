@@ -45,21 +45,21 @@ abstract class AbstractRenderer
 	/**
 	 * render the service type itself
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	abstract public function renderServiceType(ServiceObjectType $type);
 
 	/**
 	 * render an operation / method of the services class
 	 *
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	abstract public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op);
 
 	/**
 	 * render a Type
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	abstract public function renderType(ServiceObjectType $type);
 
@@ -101,7 +101,7 @@ abstract class AbstractRenderer
 				continue;
 			}
 			$renderedTypes[] = $fullType;
-			/* @var $type Foomo\Services\Reflection\ServiceObjectType */
+			/* @var $type \Foomo\Services\Reflection\ServiceObjectType */
 			$renderer->renderType($type);
 		}
 
