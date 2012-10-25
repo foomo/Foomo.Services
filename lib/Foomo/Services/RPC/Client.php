@@ -86,7 +86,7 @@ class Client
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @param array $methodCalls
+	 * @param \Foomo\Services\RPC\Protocol\Call\MethodCall[] $methodCalls
 	 * @return boolean
 	 */
 	public function parallelCall($methodCalls)

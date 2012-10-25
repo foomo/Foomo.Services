@@ -93,7 +93,7 @@ class ServiceObjectType
 	/**
 	 * array of class properties
 	 *
-	 * @var Foomo\Reflection\PhpDocEntry[]
+	 * @var \Foomo\Reflection\PhpDocEntry[]
 	 */
 	public $props = array();
 	/**
@@ -109,7 +109,7 @@ class ServiceObjectType
 	 */
 	public $isArrayOf = false;
 	/**
-	 * @var Foomo\Reflection\PhpDocEntry
+	 * @var \Foomo\Reflection\PhpDocEntry
 	 */
 	public $phpDocEntry;
 	/**

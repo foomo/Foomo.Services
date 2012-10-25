@@ -35,13 +35,13 @@ class Reply
 	/**
 	 * head of the call
 	 *
-	 * @var Foomo\Services\RPC\Protocol\Reply\Head
+	 * @var Reply\Head
 	 */
 	public $head;
 	/**
 	 * all the calls
 	 *
-	 * @var Foomo\Services\RPC\Protocol\Reply\MethodReply[]
+	 * @var Reply\MethodReply[]
 	 */
 	public $methodReplies = array();
 }

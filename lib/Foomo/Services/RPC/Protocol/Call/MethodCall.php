@@ -47,7 +47,7 @@ class MethodCall
 	/**
 	 * the method call arguments
 	 *
-	 * @var Foomo\Services\RPC\Protocol\Call\MethodArgument[]
+	 * @var \Foomo\Services\RPC\Protocol\Call\MethodArgument[]
 	 */
 	public $arguments;
 }

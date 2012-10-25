@@ -33,13 +33,13 @@ class Call
 	/**
 	 * envelope / header style data
 	 *
-	 * @var Foomo\Services\RPC\Protocol\Call\Head
+	 * @var Call\Head
 	 */
 	public $head;
 	/**
 	 * (multiple) method calls
 	 *
-	 * @var Foomo\Services\RPC\Protocol\Call\MethodCall[]
+	 * @var Call\MethodCall[]
 	 */
 	public $calls = array();
 }
