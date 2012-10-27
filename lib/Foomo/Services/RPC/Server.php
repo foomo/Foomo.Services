@@ -104,8 +104,8 @@ class Server
 
 	/**
 	 *
-	 * @param type $serviceClassInstance
-	 * @param Foomo\Services\RPC\Call\MethodCall $methodCall
+	 * @param stdClass $serviceClassInstance
+	 * @param \Foomo\Services\RPC\Call\MethodCall $methodCall
 	 * @param SerializerInterface $serializer
 	 * @return MethodReply
 	 */
@@ -129,7 +129,14 @@ class Server
 				// i.e. json does not support types => cast from hash to object
 				// based on reflection
 			}
-			$reply->value = Proxy::call($serviceClassInstance, $methodCall->method, $methodCall->arguments);
+            $useArgs = array();
+            foreach($methodCall->arguments as $arg) {
+                if($arg instanceof \Foomo\Services\RPC\Protocol\Call\MethodArgument) {
+                    $arg = $arg->value;
+                }
+                $useArgs[] = $arg;
+            }
+			$reply->value = Proxy::call($serviceClassInstance, $methodCall->method, $useArgs);
 			Logger::transactionComplete($transactionName);
 		} catch(\Exception $e) {
 			// is it an exception, that was expected i.e. phpDocumented

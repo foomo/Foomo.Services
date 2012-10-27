@@ -33,7 +33,7 @@ class Controller
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @var Foomo\Services\Frontend\Model
+	 * @var \Foomo\Services\Frontend\Model
 	 */
 	public $model;
 

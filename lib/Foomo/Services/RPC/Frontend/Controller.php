@@ -31,7 +31,7 @@ class Controller
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @var Foomo\Services\RPC\Frontend\Model
+	 * @var \Foomo\Services\RPC\Frontend\Model
 	 */
 	public $model;
 
@@ -97,8 +97,8 @@ class Controller
 	/**
 	 * @todo http GET support and let the browser cache things too ...
 	 *
-	 * @param type $method
-	 * @param type $parameters
+	 * @param string $method
+	 * @param mixed $parameters
 	 */
 	public function actionGet($method, $parameters)
 	{

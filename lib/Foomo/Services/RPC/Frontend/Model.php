@@ -39,7 +39,7 @@ class Model
 	 */
 	public $serviceClassInstance;
 	/**
-	 * @var Foomo\Services\RPC\Serializer\SerializerInterface
+	 * @var \Foomo\Services\RPC\Serializer\SerializerInterface
 	 */
 	public $serializer;
 	/**
@@ -47,7 +47,7 @@ class Model
 	 */
 	public $package;
 	/**
-	 * @var Foomo\Services\ProxyGenerator\RPC\Report
+	 * @var \Foomo\Services\ProxyGenerator\RPC\Report
 	 */
 	public $proxyGeneratorReport;
 	/**
@@ -108,7 +108,10 @@ class Model
 				$call = $GLOBALS['HTTP_RAW_POST_DATA'];
 			} else if (isset($_POST['call'])) {
 				$call = $_POST['call'];
-			} else {
+			} else  {
+                $call = file_get_contents('php://input');
+            }
+            if(empty($call)) {
 				$error = __METHOD__ . ' HTTP_RAW_POST_DATA or $_POST[\'call\'] must be set';
 				echo $error;
 				trigger_error($error . var_export($_POST, true), E_USER_ERROR);
@@ -134,7 +137,7 @@ class Model
 	}
 
 	/**
-	 * @return Foomo\Services\ServiceDescription
+	 * @return \Foomo\Services\ServiceDescription
 	 */
 	public function serveServiceDescription()
 	{
