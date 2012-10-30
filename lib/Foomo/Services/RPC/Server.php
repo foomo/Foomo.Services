@@ -130,11 +130,24 @@ class Server
 				// based on reflection
 			}
             $useArgs = array();
+            $sortArgs = false;
+            // this is a security measure for regression to older clients, that do not conform the protocol correctly
             foreach($methodCall->arguments as $arg) {
                 if($arg instanceof \Foomo\Services\RPC\Protocol\Call\MethodArgument) {
-                    $arg = $arg->value;
+                    /* @var $arg \Foomo\Services\RPC\Protocol\Call\MethodArgument */
+                    $sortArgs = true;
+                    $useArgs[$arg->name] = $arg->value;
+                } else {
+                    $useArgs[] = $arg;
                 }
-                $useArgs[] = $arg;
+            }
+            if($sortArgs) {
+                $sortedArgs = array();
+                $methodReflection = new \ReflectionMethod($serviceClassInstance, $methodCall->method);
+                foreach($methodReflection->getParameters() as $reflParameter) {
+                    $sortedArgs[] = $useArgs[$reflParameter->getName()];
+                }
+                $useArgs = $sortedArgs;
             }
 			$reply->value = Proxy::call($serviceClassInstance, $methodCall->method, $useArgs);
 			Logger::transactionComplete($transactionName);

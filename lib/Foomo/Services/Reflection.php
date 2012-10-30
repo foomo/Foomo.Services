@@ -41,7 +41,7 @@ class Reflection
 	/**
 	 * service type
 	 *
-	 * @var Foomo\Services\Reflection\ServiceObjectType
+	 * @var \Foomo\Services\Reflection\ServiceObjectType
 	 */
 	private $serviceType;
 	/**
@@ -79,7 +79,7 @@ class Reflection
 	/**
 	 * get all types used in service
 	 *
-	 * @return Foomo\Services\Reflection\ServiceObjectType[]
+	 * @return \Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public function getTypes()
 	{
@@ -89,7 +89,7 @@ class Reflection
 	/**
 	 * get the operations on this service
 	 *
-	 * @return Foomo\Services\Reflection\ServiceOperation[]
+	 * @return \Foomo\Services\Reflection\ServiceOperation[]
 	 */
 	public function getOperations()
 	{
@@ -99,7 +99,7 @@ class Reflection
 	/**
 	 * the service itself
 	 *
-	 * @return Foomo\Services\Reflection\ServiceObjectType
+	 * @return \Foomo\Services\Reflection\ServiceObjectType
 	 */
 	public function getServiceType()
 	{
@@ -156,13 +156,13 @@ class Reflection
 	/**
 	 * register and return atype
 	 *
-	 * @param Foomo\Reflection\PhpDocArg $arg
+	 * @param \Foomo\Reflection\PhpDocArg $arg
 	 *
-	 * @return Foomo\Reflection\PhpDocArg
+	 * @return \Foomo\Reflection\PhpDocArg
 	 */
 	private function registerType(PhpDocArg $arg)
 	{
-		/* @var $parm Foomo\Reflection\PhpDocArg */
+		/* @var $parm \Foomo\Reflection\PhpDocArg */
 		if (!isset($this->types[$arg->type])) {
 			$newType = new ServiceObjectType($arg->type);
 			$this->types[$arg->type] = $newType;

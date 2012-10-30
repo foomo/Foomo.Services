@@ -50,31 +50,31 @@ class ServiceOperation
 	/**
 	 * docs for every parameter
 	 *
-	 * @var Foomo\Reflection\PhpDocArg[]
+	 * @var \Foomo\Reflection\PhpDocArg[]
 	 */
 	public $parameterDocs = array();
 	/**
 	 * what will be returned from the operation
 	 *
-	 * @var Foomo\Reflection\PhpDocArg
+	 * @var \Foomo\Reflection\PhpDocArg
 	 */
 	public $returnType;
 	/**
 	 * what exceptions will be thrown
 	 *
-	 * @var Foomo\Reflection\PhpDocArg[]
+	 * @var \Foomo\Reflection\PhpDocArg[]
 	 */
 	public $throwsTypes;
 	/**
 	 * messages that can be send from this method
 	 *
-	 * @var Foomo\Reflection\PhpDocArg[]
+	 * @var \Foomo\Reflection\PhpDocArg[]
 	 */
 	public $messageTypes;
 	/**
 	 * comment comment
 	 *
-	 * @var sring
+	 * @var string
 	 */
 	public $comment;
 
@@ -114,7 +114,7 @@ class ServiceOperation
 	 * add parameter docs
 	 *
 	 * @param string $name name of the parameter
-	 * @param Foomo\Reflection\PhpDocArg $type info on the parameter
+	 * @param \Foomo\Reflection\PhpDocArg $type info on the parameter
 	 */
 	public function addParameterDocs($name, \Foomo\Reflection\PhpDocArg $type)
 	{
