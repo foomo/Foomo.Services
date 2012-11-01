@@ -20,8 +20,6 @@
 namespace Foomo\Services;
 
 use Foomo\Services\RPC\Serializer\SerializerInterface;
-use Foomo\Services\RPC\Serializer\PHP;
-use Foomo\Services\RPC\Serializer\AMF;
 
 /**
  * currently the proxies are bound to serializers - that might change in the future
@@ -62,7 +60,7 @@ class RPC
 
 	/**
 	 *
-	 * @var messages for the current call
+	 * @var mixed[] for the current call
 	 */
 	public static $messages = array();
 
@@ -80,7 +78,7 @@ class RPC
 	 *
 	 * @deprecated user RPC::create()
 	 * @param stdClass $serviceClassInstance object that provides the services functionality
-	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer name of the class that handles the service wrapping, marshalling ...
+	 * @param \Foomo\Services\RPC\Serializer\SerializerInterface $serializer name of the class that handles the service wrapping, marshalling ...
 	 * @param string $package package of a proxy
 	 */
 	public static function serveClass($serviceClassInstance, SerializerInterface $serializer, $package=null)
@@ -97,15 +95,6 @@ class RPC
 		self::$messages[] = $message;
 	}
 
-	/**
-	 * @todo what's that supposed to do?
-	 *
-	 * @param type $statusUpdate
-	 */
-	public static function addStatusUpdate($statusUpdate)
-	{
-
-	}
 	/**
 	 * create a RPC service
 	 *
@@ -142,6 +131,7 @@ class RPC
 		$this->serializer = $serializer;
 		return $this;
 	}
+
 	/**
 	 * protect service with Foomo\BasicAuth
 	 *
