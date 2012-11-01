@@ -111,7 +111,6 @@ class Service
 			$retStar = new FunkyStar();
 			$retStar->test = $starSeed;
 			$ret[] = $retStar;
-			RPC::addStatusUpdate('added another star ' . count($ret) . ' / ' . count($starSeeds) );
 		}
 		return $ret;
 	}
