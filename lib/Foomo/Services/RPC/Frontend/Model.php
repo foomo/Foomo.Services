@@ -146,17 +146,7 @@ class Model
 		$descr->documentationUrl = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('default');
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
-		switch (true) {
-			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\JSON):
-				$descr->type = \Foomo\Services\ServiceDescription::TYPE_RPC_JSON;
-				break;
-			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\AMF):
-				$descr->type = \Foomo\Services\ServiceDescription::TYPE_RPC_AMF;
-				break;
-			case ($this->serializer instanceof \Foomo\Services\RPC\Serializer\PHP):
-				$descr->type = \Foomo\Services\ServiceDescription::TYPE_PHP;
-				break;
-		}
+        $descr->type = $this->serializer->getType();
 		$descr->version = @constant($descr->name . '::VERSION');
 		return $descr;
 	}

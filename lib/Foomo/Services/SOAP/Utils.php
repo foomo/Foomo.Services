@@ -51,7 +51,7 @@ final class Utils
 		}
 		$baseUrl = $_SERVER['PHP_SELF'];
 		$description = new ServiceDescription();
-		$description->type = ServiceDescription::TYPE_SOAP;
+		$description->type = 'serviceTypeSoap';
 		//$description->downloadUrl = $this->ASProxyClientSWCUrl;//$baseUrl . '?getASProxySWC';
 		$description->documentationUrl = $baseUrl . '?explain';
 		$description->package = $package;

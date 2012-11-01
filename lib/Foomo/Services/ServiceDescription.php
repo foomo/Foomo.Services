@@ -35,21 +35,10 @@ class ServiceDescription
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * a rpc service JSON for transports
-	 */
-	const TYPE_RPC_JSON	= 'serviceTypeRpcJson';
-	/**
 	 * a rpc service using AMF for transports
+     * @deprecated use Foomo\Services\RPC\Serializer\AMF::TYPE instead
 	 */
 	const TYPE_RPC_AMF = 'serviceTypeRpcAmf';
-	/**
-	 * a php service
-	 */
-	const TYPE_PHP = 'serviceTypePhp';
-	/**
-	 * a soap service
-	 */
-	const TYPE_SOAP	= 'serviceTypeSoap';
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Variables

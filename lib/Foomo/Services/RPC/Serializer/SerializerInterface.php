@@ -24,6 +24,12 @@ namespace Foomo\Services\RPC\Serializer;
  *
  */
 interface SerializerInterface {
+    /**
+     * your type for service descriptions
+     *
+     * @return string
+     */
+    public function getType();
 	/**
 	 * serialize
 	 *

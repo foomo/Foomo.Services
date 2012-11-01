@@ -26,10 +26,14 @@ namespace Foomo\Services\RPC\Serializer;
  */
 class PHP implements SerializerInterface
 {
+    const TYPE = 'serviceTypePhp';
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
-
+    public function getType()
+    {
+        return self::TYPE;
+    }
 	/**
 	 * @param mixed $var
 	 * @return string serialized data

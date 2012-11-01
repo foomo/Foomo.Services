@@ -71,7 +71,7 @@ class Utils
 	 * load a service description
 	 *
 	 * @param string $url
-	 * @return Foomo\Services\ServiceDescription
+	 * @return \Foomo\Services\ServiceDescription
 	 */
 	public static function getServiceDescription($url)
 	{

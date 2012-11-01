@@ -26,10 +26,14 @@ namespace Foomo\Services\RPC\Serializer;
  */
 class JSON implements SerializerInterface
 {
+    const TYPE = 'serviceTypeRpcJson';
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
-
+    public function getType()
+    {
+        return self::TYPE;
+    }
 	/**
 	 *
 	 * @param string $call
