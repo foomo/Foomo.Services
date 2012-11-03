@@ -75,6 +75,7 @@ class Controller
 	 */
 	public function actionServe($method = null)
 	{
+        \Foomo\MVC::abort();
 		$this->auth($this->model->authDomain);
 		$args = array();
 		if (!empty($method)) {
@@ -91,7 +92,6 @@ class Controller
 			}
 		}
 		$this->model->serve($method, $args);
-		exit;
 	}
 
 	/**
