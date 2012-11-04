@@ -111,17 +111,19 @@ class Server
 	 */
 	public static function callMethod($serviceClassInstance, Call\MethodCall $methodCall,  SerializerInterface $serializer)
 	{
+        $callNotice = get_class($serviceClassInstance) . '->' . $methodCall->method . '() with ' . count($methodCall->arguments) . ' args';
+        Timer::start($callNotice);
+
 		RPC::$messages = array();
 		$reply = new MethodReply;
 		$reply->id = $methodCall->id;
+
 		try {
 			// try to call the given method with the given parameters
 			if(!method_exists($serviceClassInstance, $methodCall->method)) {
 				throw new ReplyException('method ' . $methodCall->method .' does not exist on ' . get_class($serviceClassInstance), 1, 'methodDoesNotExist');
 			}
 			//$reply->value = call_user_func_array(array($serviceClassInstance, $methodCall->method), $methodCall->arguments);
-			$callNotice = get_class($serviceClassInstance) . '->' . $methodCall->method . '() with ' . count($methodCall->arguments) . ' args';
-			Timer::addMarker($callNotice);
 			Logger::transactionBegin($transactionName = 'RPC service call ' . get_class($serviceClassInstance) . '->' . $methodCall->method);
 
 			if(!$serializer->supportsTypes()) {
@@ -193,6 +195,7 @@ class Server
 			}
 		}
 		$reply->messages = RPC::$messages;
+        Timer::stop($callNotice);
 		return $reply;
 	}
 }
