@@ -93,11 +93,11 @@ class ServiceObjectType
 	/**
 	 * array of class properties
 	 *
-	 * @var \Foomo\Reflection\PhpDocEntry[]
+	 * @var \Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $props = array();
 	/**
-	 * array of class constants unfourtunately just a hash name => value - no comments are availabe
+	 * array of class constants unfortunately just a hash name => value - no comments are available
 	 *
 	 * @var array
 	 */
@@ -218,6 +218,8 @@ class ServiceObjectType
 	 * @param string $propName
 	 * @param string $propType
 	 * @param PhpDocEntry $phpDocEntry
+	 *
+	 * @throws \Exception
 	 */
 	private function setProp($propName, $propType = 'unknown', PhpDocEntry $phpDocEntry=null)
 	{
