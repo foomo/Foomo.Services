@@ -109,6 +109,12 @@ class ServiceObjectType
 	 */
 	public $isArrayOf = false;
 	/**
+	 * is it a subclass of Exception
+	 *
+	 * @var bool
+	 */
+	public $isException = false;
+	/**
 	 * @var \Foomo\Reflection\PhpDocEntry
 	 */
 	public $phpDocEntry;
@@ -244,7 +250,7 @@ class ServiceObjectType
 	{
 		try {
 			$ref = new ReflectionAnnotatedClass($className);
-
+			$this->isException = $ref->isSubclassOf('Exception');
 			$this->annotations = $ref->getAnnotations();
 
 			if(!$classComment = $ref->getDocComment()) {
