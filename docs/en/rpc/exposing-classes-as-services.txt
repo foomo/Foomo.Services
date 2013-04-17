@@ -2,6 +2,6 @@ Any php class can be exposed as a RPC service
 
 <geshi 
 	type="php" 
-	file="<?= implode(DIRECTORY_SEPARATOR, array(\Foomo\CORE_CONFIG_DIR_MODULES, 'Foomo.Services', 'htdocs' ,'services', 'mockService.php')) ?>"
+	file="<?= implode(DIRECTORY_SEPARATOR, array(\Foomo\CORE_CONFIG_DIR_MODULES, 'Foomo.Services', 'htdocs' ,'services', '.mock', 'mockService.php')) ?>"
 >
 </geshi>

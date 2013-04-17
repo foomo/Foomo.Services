@@ -28,13 +28,6 @@ class ServiceProxy extends \Foomo\Services\RPC\Client
 	// ~ Constructor
 	//---------------------------------------------------------------------------------------------
 
-	/**
-	 * construct a client
-	 *
-	 * @param RPCSerializerInterface $serializer
-	 * @param string $targetClass name of the class to talk to
-	 * @param string $endPoint uri of the service
-	 */
 	public function __construct()
 	{
 		$endPoint = \Foomo\Utils::getServerUrl() . \Foomo\ROOT_HTTP . '/modules/' . \Foomo\Services\Module::NAME . '/services/.mock/mockService.php/Foomo.Services.RPC/serve';

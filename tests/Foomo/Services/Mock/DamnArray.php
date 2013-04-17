@@ -33,7 +33,7 @@ class DamnArray
 	/**
 	 * them damn arrays
 	 *
-	 * @var Foomo\Services\Mock\DamnArray
+	 * @var \Foomo\Services\Mock\DamnArray
 	 */
 	public $test = array();
 }

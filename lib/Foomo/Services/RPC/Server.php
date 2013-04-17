@@ -51,7 +51,7 @@ class Server
 	 * serve a RPC service call
 	 *
 	 * @param stdClass $serviceClassInstance instance of the class which is supposed to handle the call
-	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer
+	 * @param \Foomo\Services\RPC\Serializer\SerializerInterface $serializer
 	 * @param string $input
 	 *
 	 * @return string serialized Foomo\Services\RPC\Protocol\Reply
@@ -105,8 +105,9 @@ class Server
 	/**
 	 *
 	 * @param stdClass $serviceClassInstance
-	 * @param \Foomo\Services\RPC\Call\MethodCall $methodCall
+	 * @param \Foomo\Services\RPC\Protocol\Call\MethodCall $methodCall
 	 * @param SerializerInterface $serializer
+	 *
 	 * @return MethodReply
 	 */
 	public static function callMethod($serviceClassInstance, Call\MethodCall $methodCall,  SerializerInterface $serializer)

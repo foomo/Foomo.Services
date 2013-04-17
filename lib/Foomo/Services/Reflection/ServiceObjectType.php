@@ -93,11 +93,11 @@ class ServiceObjectType
 	/**
 	 * array of class properties
 	 *
-	 * @var \Foomo\Reflection\PhpDocEntry[]
+	 * @var \Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $props = array();
 	/**
-	 * array of class constants unfourtunately just a hash name => value - no comments are availabe
+	 * array of class constants unfortunately just a hash name => value - no comments are available
 	 *
 	 * @var array
 	 */
@@ -108,6 +108,12 @@ class ServiceObjectType
 	 * @var boolean
 	 */
 	public $isArrayOf = false;
+	/**
+	 * is it a subclass of Exception
+	 *
+	 * @var bool
+	 */
+	public $isException = false;
 	/**
 	 * @var \Foomo\Reflection\PhpDocEntry
 	 */
@@ -213,6 +219,8 @@ class ServiceObjectType
 	 * @param string $propName
 	 * @param string $propType
 	 * @param PhpDocEntry $phpDocEntry
+	 *
+	 * @throws \Exception
 	 */
 	private function setProp($propName, $propType = 'unknown', PhpDocEntry $phpDocEntry)
 	{
@@ -244,7 +252,7 @@ class ServiceObjectType
 	{
 		try {
 			$ref = new ReflectionAnnotatedClass($className);
-
+			$this->isException = $ref->isSubclassOf('Exception');
 			$this->annotations = $ref->getAnnotations();
 
 			if(!$classComment = $ref->getDocComment()) {

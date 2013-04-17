@@ -78,7 +78,8 @@ class Service
 	 * generate an exception
 	 *
 	 * @return boolean it will pop an exception anyways
-	 * @throws Foomo\Services\Mock\Exception
+	 *
+	 * @throws \Foomo\Services\Mock\Exception
 	 */
 	public function makeException()
 	{
@@ -118,7 +119,7 @@ class Service
 	/**
 	 * test that damn array
 	 *
-	 * @return Foomo\Services\Mock\DamnArray
+	 * @return \Foomo\Services\Mock\DamnArray
 	 */
 	public function getThatDamnArrayArray()
 	{
@@ -127,7 +128,7 @@ class Service
 	/**
 	 * get a funky star
 	 *
-	 * @return Foomo\Services\Mock\FunkyStar
+	 * @return \Foomo\Services\Mock\FunkyStar
 	 */
 	public function getAFunkyStar()
 	{
