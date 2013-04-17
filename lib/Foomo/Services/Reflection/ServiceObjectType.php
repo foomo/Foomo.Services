@@ -128,7 +128,6 @@ class ServiceObjectType
 	 */
 	public function __construct($type)
 	{
-		self::$cache[$type] = $this;
 		$this->plainType = $type;
 		if (substr($type, strlen($type)-2) == '[]') {
 			$type = substr($type,0,strlen($type)-2);
@@ -154,11 +153,7 @@ class ServiceObjectType
 	 */
 	public static function getCachedType($type)
 	{
-		static $cache = array();
-		if(!isset($cache[$type])) {
-			$cache[$type] = new self($type);
-		}
-		return $cache[$type];
+		return new self($type);
 	}
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
@@ -219,19 +214,26 @@ class ServiceObjectType
 	 * @param string $propType
 	 * @param PhpDocEntry $phpDocEntry
 	 */
-	private function setProp($propName, $propType = 'unknown', PhpDocEntry $phpDocEntry=null)
+	private function setProp($propName, $propType = 'unknown', PhpDocEntry $phpDocEntry)
 	{
-		if(!isset($this->props[$propName])) {
-			if(isset(self::$cache[$propType])) {
-				$this->props[$propName] = clone self::$cache[$propType];
-				$this->props[$propName]->phpDocEntry = $phpDocEntry;
-			} else {
-				$type =  new ServiceObjectType($propType);
-				$this->props[$propName] = clone $type;
-				$this->props[$propName]->phpDocEntry = $phpDocEntry;
+		static $waitingList = array();
+		if(!isset($waitingList[$propType])) {
+			$waitingList[$propType] = array();
+			$type = new ServiceObjectType($propType);
+			$type->phpDocEntry = $phpDocEntry;
+			$this->props[$propName] = $type;
+			foreach($waitingList[$propType] as $waitingListItem) {
+				$clone = clone $type;
+				$clone->phpDocEntry = $waitingListItem['phpDocEntry'];
+				$waitingListItem['object']->props[$waitingListItem['propName']] = $clone;
 			}
+			unset($waitingList[$propType]);
 		} else {
-			throw new Exception('property with name' . $propName . ' was already set');
+			$waitingList[$propType][] = array(
+				'object' => $this,
+				'propName' => $propName,
+				'phpDocEntry' => $phpDocEntry
+			);
 		}
 	}
 
@@ -249,6 +251,7 @@ class ServiceObjectType
 				$classComment = '';
 			}
 			$this->phpDocEntry = new PhpDocEntry($classComment, $ref->getNamespaceName());
+			//
 
 			foreach ($this->phpDocEntry->properties as $propDoc) {
 				/* @var $propDoc PhpDocProperty */
@@ -259,7 +262,7 @@ class ServiceObjectType
 			$this->constants = $ref->getConstants();
 
 			$props = $ref->getProperties();
-			foreach ( $props as $prop) {
+			foreach($props as $prop) {
 				/* @var $prop \ReflectionProperty */
 				if($prop->isPublic() && !$prop->isStatic()) {
 					$phpDoc = new PhpDocEntry($prop->getDocComment(), $prop->getDeclaringClass()->getNamespaceName());

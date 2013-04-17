@@ -19,6 +19,8 @@
 
 namespace Foomo\Services;
 
+use Foomo\Services\Reflection\ServiceObjectType;
+
 /**
  * @link www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
@@ -147,5 +149,13 @@ class ReflectionTest extends \PHPUnit_Framework_TestCase
 		sort($expectedOps);
 		sort($ops);
 		$this->assertEquals($expectedOps, $ops);
+	}
+
+	public function testNestedServiceObjectTypeDocComments()
+	{
+		$type = new ServiceObjectType(__NAMESPACE__ . '\\Mock\\Nest');
+		$this->assertEquals('a mock object to test nested reflection of doc comments', $type->phpDocEntry->comment, 'failed at top level doc comment');
+		$this->assertEquals('a birds nest', $type->props['bird']->props['nest']->phpDocEntry->comment, 'failed at the nest of the bird');
+		$this->assertEquals('an eggs nest', $type->props['bird']->props['egg']->props['nest']->phpDocEntry->comment, 'failed at the nest of the egg');
 	}
 }

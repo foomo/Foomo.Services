@@ -41,7 +41,11 @@ class AMFTest extends \PHPUnit_Framework_TestCase
 
 	public function setUp()
 	{
-		$this->serializer = new RPC\Serializer\AMF;
+		if(!function_exists('amf_encode') && !class_exists('Zend_Amf_Parse_InputStream')) {
+			$this->markTestSkipped('nothing to amf encode');
+		} else {
+			$this->serializer = new RPC\Serializer\AMF;
+		}
    	}
 
 	//---------------------------------------------------------------------------------------------
