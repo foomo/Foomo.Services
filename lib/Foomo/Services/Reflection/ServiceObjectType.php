@@ -144,7 +144,7 @@ class ServiceObjectType
 			$parts = explode('\\', trim($this->type, '\\'));
 			$this->namespace = implode('\\', array_slice($parts, 0, count($parts)-1) );
 		}
-		if (\class_exists($type)) {
+		if (\class_exists($type) || interface_exists($type)) {
 			$this->readClass($this->type);
 		} else {
 			$this->type = $type;
@@ -255,7 +255,8 @@ class ServiceObjectType
 			$this->isException = $ref->isSubclassOf('Exception');
 			$this->annotations = $ref->getAnnotations();
 
-			if(!$classComment = $ref->getDocComment()) {
+			$classComment = $ref->getDocComment();
+			if(is_null($classComment)) {
 				$classComment = '';
 			}
 			$this->phpDocEntry = new PhpDocEntry($classComment, $ref->getNamespaceName());
