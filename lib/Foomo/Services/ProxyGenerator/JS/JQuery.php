@@ -35,15 +35,15 @@ class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
 	 */
 	public $name;
 	/**
-	 * @var Foomo\Services\Reflection\ServiceObjectType
+	 * @var \Foomo\Services\Reflection\ServiceObjectType
 	 */
 	public $serviceType;
 	/**
-	 * @var Foomo\Services\Reflection\ServiceObjectType[]
+	 * @var \Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $types = array();
 	/**
-	 * @var Foomo\Services\Reflection\ServiceOperation[]
+	 * @var \Foomo\Services\Reflection\ServiceOperation[]
 	 */
 	public $operations = array();
 	/**
@@ -86,7 +86,7 @@ class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * render the service type itself
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -96,7 +96,7 @@ class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * render an operation / method of the services class
 	 *
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
@@ -106,7 +106,7 @@ class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * render a Type
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -126,7 +126,7 @@ class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 * @return array
 	 */
 	public function getArgNames(\Foomo\Services\Reflection\ServiceOperation $op)
