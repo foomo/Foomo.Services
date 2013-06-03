@@ -159,7 +159,11 @@ class ServiceObjectType
 	 */
 	public static function getCachedType($type)
 	{
-		return new self($type);
+		static $cache = array();
+		if(!isset($cache[$type])) {
+			$cache[$type] = new self($type);
+		}
+		return $cache[$type];
 	}
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
