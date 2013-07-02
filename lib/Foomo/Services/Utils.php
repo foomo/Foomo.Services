@@ -265,4 +265,35 @@ class Utils
 		}
 		return $results;
 	}
+	public static function buildAllLocalServices()
+	{
+		$report = array();
+		$localServices = self::getAllLocalServiceDescriptions();
+		foreach($localServices as $module => $serviceDescriptions) {
+			if(count($serviceDescriptions) > 0) {
+				$report[] = 'building services for module ' . $module;
+				foreach($serviceDescriptions as $serviceDescription) {
+					/* @var $serviceDescription ServiceDescription */
+					if(!empty($serviceDescription->compilationUrl)) {
+						$report[] = 'calling ' . $serviceDescription->compilationUrl;
+						$parts = parse_url($serviceDescription->compilationUrl);
+						$urlWithCredentials = $parts['scheme'] . '://' . urlencode($_SERVER['PHP_AUTH_USER']) . ':' . urlencode($_SERVER['PHP_AUTH_PW']) . '@' . $parts['host'] . $parts['path'];
+						file_get_contents($urlWithCredentials);
+					}
+				}
+			}
+		}
+		return $report;
+	}
+	public static function cleanAllLocalServices()
+	{
+		$report[] = 'cleaning json service proxies';
+		foreach(new \DirectoryIterator(\Foomo\Services\Module::getHtdocsVarDir('js')) as $fileInfo) {
+			if($fileInfo->isFile() && substr($fileInfo->getFilename(), -3) == '.js') {
+				$report[] = 'removing ' . $fileInfo->getPathname();
+				unlink($fileInfo->getPathname());
+			}
+		}
+		return $report;
+	}
 }

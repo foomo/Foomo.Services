@@ -110,6 +110,7 @@ class Controller
 	 */
 	public function actionGenerateJQueryClient()
 	{
+		\Foomo\Frontend::auth();
 		$this->auth($this->model->authDomainDev);
 		\Foomo\MVC::abort();
 		$json = new \Foomo\Services\RPC\Serializer\JSON();

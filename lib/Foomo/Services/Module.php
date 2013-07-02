@@ -18,6 +18,7 @@
  */
 
 namespace Foomo\Services;
+use Foomo\Modules\MakeResult;
 
 /**
  * @link www.foomo.org
@@ -76,4 +77,22 @@ class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\Toolbo
 			\Foomo\Frontend\ToolboxConfig\MenuEntry::create('Root.Modules.Services', 'Services', self::NAME, 'Foomo.Services')
 		);
 	}
+	public static function make($target, MakeResult $result)
+	{
+		switch($target) {
+			case 'all':
+				foreach(Utils::buildAllLocalServices() as $line) {
+					$result->addEntry($line);
+				}
+				break;
+			case 'clean':
+				foreach(Utils::cleanAllLocalServices() as $line) {
+					$result->addEntry($line);
+				}
+				break;
+			default:
+				$result->addEntry('nothing to make here for target ' . $target);
+		}
+	}
+
 }

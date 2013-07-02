@@ -63,6 +63,12 @@ class ServiceDescription
 	 */
 	public $documentationUrl;
 	/**
+	 * uri to compile
+	 *
+	 * @var string
+	 */
+	public $compilationUrl;
+	/**
 	 * basically the name of the class that was exposed as a service
 	 *
 	 * @var string
@@ -90,6 +96,6 @@ class ServiceDescription
 	 */
 	public function __construct()
 	{
-		$this->compilerAvailable = Config::getMode() == Config::MODE_DEVELOPMENT;
+		$this->compilerAvailable = true;
 	}
 }

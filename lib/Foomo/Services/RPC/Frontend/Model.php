@@ -18,6 +18,7 @@
  */
 
 namespace Foomo\Services\RPC\Frontend;
+use Foomo\Services\RPC\Serializer\JSON;
 
 /**
  * @link www.foomo.org
@@ -144,6 +145,11 @@ class Model
 		$descr = new \Foomo\Services\ServiceDescription();
 		$descr->url = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->baseURL;
 		$descr->documentationUrl = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('default');
+		switch($this->serializer->getType()) {
+			case JSON::TYPE:
+				$descr->compilationUrl = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('generateJQueryClient');
+				break;
+		}
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
         $descr->type = $this->serializer->getType();
