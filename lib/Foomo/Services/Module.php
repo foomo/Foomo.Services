@@ -30,7 +30,7 @@ class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\Toolbo
 	//---------------------------------------------------------------------------------------------
 	// ~ Constants
 	//---------------------------------------------------------------------------------------------
-
+	const VERSION = '0.3.0';
 	const NAME = 'Foomo.Services';
 
 	//---------------------------------------------------------------------------------------------
@@ -58,8 +58,8 @@ class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\Toolbo
 	public static function getResources()
 	{
 		return array(
-			\Foomo\Modules\Resource\Module::getResource('Foomo', self::VERSION),
-			\Foomo\Modules\Resource\PhpModule::getResource('amf')
+			\Foomo\Modules\Resource\Module::getResource('Foomo', '0.3.*'),
+			\Foomo\Modules\Resource\PhpModule::getResource('amf')->isNiceToHave(true)
 		);
 	}
 
