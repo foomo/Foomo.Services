@@ -20,6 +20,7 @@
 namespace Foomo\Services\Reflection;
 
 use Exception;
+use Foomo\Config;
 use Foomo\Reflection\PhpDocEntry;
 use ReflectionAnnotatedClass;
 use Foomo\AutoLoader;
@@ -33,6 +34,11 @@ use Foomo\AutoLoader;
  */
 class ServiceObjectType
 {
+	/**
+	 * @internal
+	 * @var bool
+	 */
+	static $seriouslyCacheInDevAndTestMode = false;
 	//---------------------------------------------------------------------------------------------
 	// ~ Constants
 	//---------------------------------------------------------------------------------------------
@@ -161,10 +167,27 @@ class ServiceObjectType
 	{
 		static $cache = array();
 		if(!isset($cache[$type])) {
-			$cache[$type] = new self($type);
+			if(Config::isProductionMode() || self::$seriouslyCacheInDevAndTestMode) {
+				$cache[$type] = \Foomo\Cache\Proxy::call(__CLASS__, 'getSeriouslyCachedType', array($type));
+			} else {
+				$cache[$type] = self::getSeriouslyCachedType($type);
+			}
 		}
 		return $cache[$type];
 	}
+
+	/**
+	 * @param string $type
+	 *
+	 * @return ServiceObjectType
+	 *
+	 * @Foomo\Cache\CacheResourceDescription("dependencies"="Foomo\AutoLoader::cachedGetClassMap")
+	 */
+	public static function getSeriouslyCachedType($type)
+	{
+		return new self($type);
+	}
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
