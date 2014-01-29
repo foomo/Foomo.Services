@@ -160,6 +160,11 @@ class Server
 			$ref = new ReflectionClass($serviceClassInstance);
 			$methods = $ref->getMethods();
 			$throwTypes = array();
+			if(\Foomo\Config::isProductionMode()) {
+				if(isset($e->xdebug_message)) {
+					unset($e->xdebug_message);
+				}
+			}
 			foreach ($methods as $method) {
 				/* @var $method \ReflectionMethod */
 				$methodName = $method->getName();
