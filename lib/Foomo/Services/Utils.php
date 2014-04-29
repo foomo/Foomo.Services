@@ -75,18 +75,23 @@ class Utils
 	 */
 	public static function getServiceDescription($url)
 	{
-		$serviceUrl = $url .'?explainMachine';
-		if(!($serialized = @file_get_contents($serviceUrl))) {
-			trigger_error(var_export(error_get_last(), true));
-			trigger_error('could not read from ' . $serviceUrl, E_USER_WARNING);
-			return null;
+		static $cache = array();
+		$key = md5($url);
+		if(!isset($cache[$key])) {
+			$serviceUrl = $url .'?explainMachine';
+			if(!($serialized = @file_get_contents($serviceUrl))) {
+				trigger_error(var_export(error_get_last(), true));
+				trigger_error('could not read from ' . $serviceUrl, E_USER_WARNING);
+				$cache[$key] = null;
+			}
+			if(($serviceDescription = @unserialize($serialized)) && ($serviceDescription instanceof ServiceDescription)) {
+				$cache[$key] = $serviceDescription;
+			} else {
+				trigger_error('could not unserialize service description from ' . $serviceUrl);
+				$cache[$key] = null;
+			}
 		}
-		if(($serviceDescription = @unserialize($serialized)) && ($serviceDescription instanceof ServiceDescription)) {
-			 return $serviceDescription;
-		} else {
-			trigger_error('could not unserialize service description from ' . $serviceUrl);
-			return null;
-		}
+		return $cache[$key];
 	}
 
 	/**
