@@ -271,7 +271,13 @@ class ServiceObjectType
 			);
 		}
 	}
-
+	/**
+	 * @return bool
+	 */
+	public function isComplex()
+	{
+		return class_exists(substr($this->plainType, 0, $this->isArrayOf ? -2: strlen($this->plainType)));
+	}
 	/**
 	 * @param string $className
 	 */
