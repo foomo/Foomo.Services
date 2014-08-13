@@ -28,12 +28,18 @@ namespace Foomo\Services\Mock;
  */
 class Nest
 {
+	const TREE_TYPE_SPRUCE = 'spruce';
+	const TEST_FLOAT = 1.2;
+	const TEST_BOOL = true;
+	const TEST_INT = 123;
+	const TEST_ESCAPE_STRING = "\"FOO\nOK";
+	const TREE_TYPE_OAK = 'oak';
 	/**
 	 * name of my tree
 	 *
 	 * @var string
 	 */
-	public $treeType = 'Fichte';
+	public $treeType = self::TREE_TYPE_SPRUCE;
 	/**
 	 * a pretty sleepy one
 	 *
