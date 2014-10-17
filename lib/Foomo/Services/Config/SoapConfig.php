@@ -134,11 +134,15 @@ class SoapClient extends \Foomo\Config\AbstractConfig
 		// wsdl
 		$wsdl = $this->wsdlUrl;
 
-		// basic auth
-		$endpointUrl = parse_url($this->endPointUrl);
-		if (!empty($endpointUrl['user']) && !empty($endpointUrl['pass'])) {
-			$options['login'] = $endpointUrl['user'];
-			$options['password'] = $endpointUrl['pass'];
+		//Set SOAP location and basic auth
+		if (!empty($this->endPointUrl)) {
+ 			$options['location'] = $this->endPointUrl;
+ 			// basic auth
+			$endpointUrl = parse_url($this->endPointUrl);
+			if (!empty($endpointUrl['user']) && !empty($endpointUrl['pass'])) {
+				$options['login'] = $endpointUrl['user'];
+				$options['password'] = $endpointUrl['pass'];
+			}
 		}
 
 		// proxy
