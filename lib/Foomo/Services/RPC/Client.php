@@ -35,7 +35,7 @@ class Client
 	/**
 	 * my serializer
 	 *
-	 * @var Foomo\Services\RPC\Serializer\SerializerInterface
+	 * @var \Foomo\Services\RPC\Serializer\SerializerInterface
 	 */
 	protected $serializer;
 	/**
@@ -59,7 +59,7 @@ class Client
 	/**
 	 * the currently returned reply - see
 	 *
-	 * @var Foomo\Services\RPC\Protocol\Reply\MethodReply
+	 * @var \Foomo\Services\RPC\Protocol\Reply\MethodReply
 	 */
 	public $currentReply;
 
@@ -70,7 +70,7 @@ class Client
 	/**
 	 * construct a client
 	 *
-	 * @param Foomo\Services\RPC\Serializer\SerializerInterface $serializer
+	 * @param \Foomo\Services\RPC\Serializer\SerializerInterface $serializer
 	 * @param string $targetClass name of the class to talk to
 	 * @param string $endPoint uri of the service
 	 */
@@ -150,11 +150,11 @@ class Client
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 *
 	 * @param string $clientVersion
 	 * @param string $name
 	 * @param array $arguments
 	 * @return mixed
+	 * @throws
 	 */
 	protected function callServer($clientVersion, $name, $arguments)
 	{
@@ -179,7 +179,7 @@ class Client
 	 * @param string $clientVersion
 	 * @param string $name
 	 * @param array $arguments
-	 * @return Foomo\Services\RPC\Protocol\Call
+	 * @return \Foomo\Services\RPC\Protocol\Call
 	 */
 	private function getRequestForSimpleCall($clientVersion, $name, $arguments)
 	{
@@ -329,6 +329,7 @@ class Client
 	 *
 	 * @param string $name
 	 * @param array $arguments
+	 * @return mixed
 	 */
 	public function __call($name, $arguments)
 	{

@@ -19,12 +19,14 @@
 
 namespace Foomo\Services\Frontend;
 
+use Foomo\Services\Utils;
+
 /**
  * frontend model
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Model
 {
@@ -43,6 +45,6 @@ class Model
 
 	public function __construct()
 	{
-		$this->services = \Foomo\Services\Utils::getAllServices();
+		$this->services = Utils::getAllServices();
 	}
 }

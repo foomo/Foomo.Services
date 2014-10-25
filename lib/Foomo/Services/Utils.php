@@ -19,12 +19,14 @@
 
 namespace Foomo\Services;
 
+use Foomo\Modules\Manager;
+
 /**
  * provides a directory of available services
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Utils
 {
@@ -40,7 +42,7 @@ class Utils
 	public static function getAllServices()
 	{
 		$allServices = array();
-		foreach(\Foomo\Modules\Manager::getEnabledModules() as $enabledModuleName) {
+		foreach (Manager::getEnabledModules() as $enabledModuleName) {
 			$services = self::getServices($enabledModuleName);
 			$allServices[$enabledModuleName] = $services;
 		}
@@ -56,10 +58,10 @@ class Utils
 	{
 		$localServices = self::getAllServices();
 		$ret = array();
-		foreach($localServices as $domain => $serviceUris) {
+		foreach ($localServices as $domain => $serviceUris) {
 			$ret[$domain] = array();
-			foreach($serviceUris as $serviceUri) {
-				if(($serviceDescription = self::getServiceDescription(\Foomo\Utils::getServerUrl(false, true) . $serviceUri))) {
+			foreach ($serviceUris as $serviceUri) {
+				if (($serviceDescription = self::getServiceDescription(\Foomo\Utils::getServerUrl(false, true) . $serviceUri))) {
 					$ret[$domain][] = $serviceDescription;
 				}
 			}
@@ -77,14 +79,14 @@ class Utils
 	{
 		static $cache = array();
 		$key = md5($url);
-		if(!isset($cache[$key])) {
-			$serviceUrl = $url .'?explainMachine';
-			if(!($serialized = @file_get_contents($serviceUrl))) {
+		if (!isset($cache[$key])) {
+			$serviceUrl = $url . '?explainMachine';
+			if (!($serialized = @file_get_contents($serviceUrl))) {
 				trigger_error(var_export(error_get_last(), true));
 				trigger_error('could not read from ' . $serviceUrl, E_USER_WARNING);
 				$cache[$key] = null;
 			}
-			if(($serviceDescription = @unserialize($serialized)) && ($serviceDescription instanceof ServiceDescription)) {
+			if (($serviceDescription = @unserialize($serialized)) && ($serviceDescription instanceof ServiceDescription)) {
 				$cache[$key] = $serviceDescription;
 			} else {
 				trigger_error('could not unserialize service description from ' . $serviceUrl);
@@ -97,18 +99,19 @@ class Utils
 	/**
 	 * map a host to a service url
 	 *
-	 * @todo reimplement
+	 * @todo       reimplement
 	 * @deprecated needs reimplementation
 	 * @param string $host the blank host
+	 * @return string
 	 */
 	public static function getServiceToolsUrl($host)
 	{
 		$siteUrls = self::getRemoteServiceSites();
 		$scheme = 'http://';
-		foreach($siteUrls as $siteUrl) {
+		foreach ($siteUrls as $siteUrl) {
 			$siteHost = parse_url($siteUrl, PHP_URL_HOST);
-			if($siteHost == $host) {
-				$scheme = parse_url($siteUrl, PHP_URL_SCHEME) .'://';
+			if ($siteHost == $host) {
+				$scheme = parse_url($siteUrl, PHP_URL_SCHEME) . '://';
 				break;
 			}
 		}
@@ -124,11 +127,11 @@ class Utils
 	 */
 	public static function getRemoteServiceUrlWithCredentials($host)
 	{
-		if($host == $_SERVER['HTTP_HOST']) {
+		if ($host == $_SERVER['HTTP_HOST']) {
 			return \Foomo\Utils::getServerUrl(false, true);
 		}
-		foreach(self::getRemoteServiceSites() as $remoteSite) {
-			if(parse_url($remoteSite, PHP_URL_HOST) == $host) {
+		foreach (self::getRemoteServiceSites() as $remoteSite) {
+			if (parse_url($remoteSite, PHP_URL_HOST) == $host) {
 				return $remoteSite;
 			}
 		}
@@ -143,11 +146,11 @@ class Utils
 	 */
 	public static function getRemoteServiceUrl($host)
 	{
-		if($host == $_SERVER['HTTP_HOST']) {
+		if ($host == $_SERVER['HTTP_HOST']) {
 			return \Foomo\Utils::getServerUrl();
 		}
-		foreach(self::getRemoteServiceSites() as $remoteSite) {
-			if(parse_url($remoteSite, PHP_URL_HOST) == $host) {
+		foreach (self::getRemoteServiceSites() as $remoteSite) {
+			if (parse_url($remoteSite, PHP_URL_HOST) == $host) {
 				return parse_url($remoteSite, PHP_URL_SCHEME) . '://' . parse_url($remoteSite, PHP_URL_HOST);
 			}
 		}
@@ -156,7 +159,7 @@ class Utils
 	/**
 	 * check all remote service sites defined in the comma separated list \Foomo\EXTERNAL_SERVICE_SITES and returns the in an array
 	 *
-	 * @todo reimplement
+	 * @todo       reimplement
 	 * @deprecated needs reimplementation
 	 * @return array array('sitea.com' => array('site' => arrray(), 'foomo' => array), 'siteb.com' ) => array())
 	 */
@@ -164,19 +167,19 @@ class Utils
 	{
 		$ret = array();
 		$siteUrls = self::getRemoteServiceSites();
-		if(count($siteUrls) > 0) {
+		if (count($siteUrls) > 0) {
 			foreach ($siteUrls as $siteUrl) {
 				$serviceUrl = $siteUrl . '/r/modules/services/index.php?class=serviceTools&action=getAvailableServices';
 				$host = parse_url($siteUrl, PHP_URL_HOST);
-				if(!($serialized = @file_get_contents($serviceUrl))) {
+				if (!($serialized = @file_get_contents($serviceUrl))) {
 					trigger_error('could not read from ' . $serviceUrl, E_USER_WARNING);
 				}
-				if(($siteServices = unserialize($serialized)) && is_array($siteServices)) {
+				if (($siteServices = unserialize($serialized)) && is_array($siteServices)) {
 					$ret[$host] = array('foomo' => array(), 'site' => array());
-					foreach(array('foomo', 'site') as $domain) {
-						foreach($siteServices[$domain] as $serviceUri) {
+					foreach (array('foomo', 'site') as $domain) {
+						foreach ($siteServices[$domain] as $serviceUri) {
 							$serviceUrl = $siteUrl . $serviceUri;
-							if(($serviceDescription = self::getServiceDescription($serviceUrl))) {
+							if (($serviceDescription = self::getServiceDescription($serviceUrl))) {
 								$ret[$host][$domain][] = $serviceDescription;
 							}
 						}
@@ -197,12 +200,12 @@ class Utils
 	public static function getServiceUsesRemoteClasses($serviceName)
 	{
 		$reader = new Reflection($serviceName);
-		foreach($reader->getTypes() as $serviceObjectType) {
+		foreach ($reader->getTypes() as $serviceObjectType) {
 			/* @var $serviceObjectType Reflection\ServiceObjectType */
-			foreach($serviceObjectType->annotations as $annotation) {
+			foreach ($serviceObjectType->annotations as $annotation) {
 				/* @var $annotation Reflection\RemoteClass */
-				if(!empty($annotation->name)) {
-					 return true;
+				if (!empty($annotation->name)) {
+					return true;
 				}
 			}
 		}
@@ -216,18 +219,18 @@ class Utils
 	/**
 	 * get the remote service sites in an array
 	 *
-	 * @todo reimplement
+	 * @todo       reimplement
 	 * @deprecated needs reimplementation
 	 * @return array
 	 */
 	private static function getRemoteServiceSites()
 	{
 		static $ret;
-		if(!$ret) {
-		 	$ret = array();
-			if(defined('\Foomo\EXTERNAL_SERVICE_SITES')) {
+		if (!$ret) {
+			$ret = array();
+			if (defined('\Foomo\EXTERNAL_SERVICE_SITES')) {
 				$siteUrls = explode(', ', \Foomo\EXTERNAL_SERVICE_SITES);
-				foreach($siteUrls as $siteUrl) {
+				foreach ($siteUrls as $siteUrl) {
 					$ret[] = trim($siteUrl);
 				}
 			}
@@ -244,23 +247,23 @@ class Utils
 	 */
 	private static function getServices($moduleName, $path = null)
 	{
-		if(is_null($path)) {
+		if (is_null($path)) {
 			$path = \Foomo\CORE_CONFIG_DIR_MODULES . DIRECTORY_SEPARATOR . $moduleName . DIRECTORY_SEPARATOR . 'htdocs' . DIRECTORY_SEPARATOR . 'services';
 		}
 		$results = array();
-		if(is_dir($path)) {
+		if (is_dir($path)) {
 			$directoryIterator = new \DirectoryIterator($path);
-			while($directoryIterator->valid()) {
+			while ($directoryIterator->valid()) {
 				$current = $directoryIterator->current();
-				if(!$current->isDot() && $current->isFile()) {
-					$suffix = substr($current->getFilename(), strlen($current->getFilename())-4);
-					if($suffix === '.php') {
+				if (!$current->isDot() && $current->isFile()) {
+					$suffix = substr($current->getFilename(), strlen($current->getFilename()) - 4);
+					if ($suffix === '.php') {
 						$serviceFilename = $path . '/' . $current->getFilename();
-						$results[] = \Foomo\ROOT_HTTP . '/modules/' . $moduleName . '/services/' . substr($serviceFilename, strlen($path)+1);
+						$results[] = \Foomo\ROOT_HTTP . '/modules/' . $moduleName . '/services/' . substr($serviceFilename, strlen($path) + 1);
 					}
 				} else {
-					$dot = substr($current->getFilename(),0,1);
-					if($dot != '.' && $current->isDir() && !$current->isDot() && $current->getFilename() != '' && substr($current->getFilename(),0,1) != '.') {
+					$dot = substr($current->getFilename(), 0, 1);
+					if ($dot != '.' && $current->isDir() && !$current->isDot() && $current->getFilename() != '' && substr($current->getFilename(), 0, 1) != '.') {
 						$results = array_merge($results, self::getServices($moduleName, $path . '/' . $current->getFilename()));
 					}
 				}
@@ -270,25 +273,25 @@ class Utils
 		}
 		return $results;
 	}
+
 	public static function buildAllLocalServices()
 	{
 		$report = array();
 		$localServices = self::getAllLocalServiceDescriptions();
-		foreach($localServices as $module => $serviceDescriptions) {
-			if(count($serviceDescriptions) > 0) {
+		foreach ($localServices as $module => $serviceDescriptions) {
+			if (count($serviceDescriptions) > 0) {
 				$report[] = 'building services for module ' . $module;
-				foreach($serviceDescriptions as $serviceDescription) {
+				foreach ($serviceDescriptions as $serviceDescription) {
 					/* @var $serviceDescription ServiceDescription */
-					if(!empty($serviceDescription->compilationUrl)) {
+					if (!empty($serviceDescription->compilationUrl)) {
 						$report[] = 'calling ' . $serviceDescription->compilationUrl;
 						$parts = parse_url($serviceDescription->compilationUrl);
 						$urlWithCredentials =
 							$parts['scheme'] . '://' .
 							urlencode($_SERVER['PHP_AUTH_USER']) . ':' . urlencode($_SERVER['PHP_AUTH_PW']) . '@' .
 							$parts['host'] .
-							(isset($parts['port'])?':' . $parts['port']:'') .
-							$parts['path']
-						;
+							(isset($parts['port']) ? ':' . $parts['port'] : '') .
+							$parts['path'];
 						file_get_contents($urlWithCredentials);
 					}
 				}
@@ -296,11 +299,12 @@ class Utils
 		}
 		return $report;
 	}
+
 	public static function cleanAllLocalServices()
 	{
 		$report[] = 'cleaning json service proxies';
-		foreach(new \DirectoryIterator(\Foomo\Services\Module::getHtdocsVarDir('js')) as $fileInfo) {
-			if($fileInfo->isFile() && substr($fileInfo->getFilename(), -3) == '.js') {
+		foreach (new \DirectoryIterator(Module::getHtdocsVarDir('js')) as $fileInfo) {
+			if ($fileInfo->isFile() && substr($fileInfo->getFilename(), -3) == '.js') {
 				$report[] = 'removing ' . $fileInfo->getPathname();
 				unlink($fileInfo->getPathname());
 			}

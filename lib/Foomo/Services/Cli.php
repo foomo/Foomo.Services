@@ -19,12 +19,14 @@
 
 namespace Foomo\Services;
 
+use Foomo\Services\Renderer\PlainDocs;
+
 /**
  * expose a command line "service"
- * 
- * @link www.foomo.org
+ *
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Cli
 {
@@ -35,7 +37,7 @@ class Cli
 	/**
 	 * the object to server
 	 *
-	 * @var stdClass
+	 * @var mixed
 	 */
 	private $serviceClassInstance;
 
@@ -43,6 +45,9 @@ class Cli
 	// ~ Constructor
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * @param string $serviceClassName
+	 */
 	private function __construct($serviceClassName)
 	{
 		$this->serviceClassInstance = new $serviceClassName;
@@ -59,10 +64,10 @@ class Cli
 	public static function serveClass($className)
 	{
 		$server = new self($className);
-		if(!isset($_SERVER['argv'])) {
+		if (!isset($_SERVER['argv'])) {
 			trigger_error('i am a command line tool', E_USER_ERROR);
 		}
-		if(count($_SERVER['argv']) < 2 || in_array($_SERVER['argv'][1], array('help', '--help', '-help'))) {
+		if (count($_SERVER['argv']) < 2 || in_array($_SERVER['argv'][1], array('help', '--help', '-help'))) {
 			$server->renderUsage();
 			exit;
 		}
@@ -71,7 +76,7 @@ class Cli
 		//echo 'executing command ' . $method . PHP_EOL;
 		//echo 'parsed arguments : ' . PHP_EOL;
 		$ret = call_user_func_array(array($server->serviceClassInstance, $method), $args);
-		if(!is_scalar($ret)) {
+		if (!is_scalar($ret)) {
 			echo json_encode($ret) . PHP_EOL;
 		} else {
 			echo $ret;
@@ -80,25 +85,29 @@ class Cli
 
 	/**
 	 * @internal
+	 * @param string $className
+	 * @param string $method
+	 * @param array $rawArgs
+	 * @return array
 	 */
 	public static function parseArgs($className, $method, $rawArgs)
 	{
 		$classRefl = new \ReflectionClass($className);
 		$args = array();
-		foreach($classRefl->getMethods() as $methodRefl) {
+		foreach ($classRefl->getMethods() as $methodRefl) {
 			/* @var $methodRefl \ReflectionMethod */
-			if(strtolower($methodRefl->getName()) == strtolower($method)) {
+			if (strtolower($methodRefl->getName()) == strtolower($method)) {
 				$doc = new \Foomo\Reflection\PhpDocEntry($methodRefl->getDocComment(), $methodRefl->getDeclaringClass()->getNamespaceName());
 				$i = 0;
-				foreach($doc->parameters as $parameter) {
+				foreach ($doc->parameters as $parameter) {
 					$type = new \Foomo\Services\Reflection\ServiceObjectType($parameter->type);
-					if(isset($rawArgs[$i])) {
+					if (isset($rawArgs[$i])) {
 						$rawValue = $rawArgs[$i];
 					} else {
 						$rawValue = null;
 					}
-					if(!$type->isArrayOf && in_array($type->type, array('string', 'integer', 'int', 'uint', 'long', 'double', 'float', 'boolean' ))) {
-						switch($type->type) {
+					if (!$type->isArrayOf && in_array($type->type, array('string', 'integer', 'int', 'uint', 'long', 'double', 'float', 'boolean'))) {
+						switch ($type->type) {
 							case 'boolean':
 								$args[] = (boolean) $rawValue;
 								break;
@@ -116,13 +125,13 @@ class Cli
 								$args[] = $rawValue;
 						}
 					} else {
-						if($type->isArrayOf || $type->type == 'array') {
+						if ($type->isArrayOf || $type->type == 'array') {
 							$args[] = (array) json_decode($rawValue);
 						} else {
 							$args[] = json_decode($rawValue);
 						}
 					}
-					$i ++;
+					$i++;
 				}
 			}
 		}
@@ -140,6 +149,6 @@ class Cli
 	{
 		echo 'Usage : ' . $_SERVER['argv'][0] . ' operationName argument1 argument2 arrgument...' . PHP_EOL . PHP_EOL;
 		echo ' this program is a cli wrapped model:' . PHP_EOL . PHP_EOL;
-		echo \Foomo\Services\Renderer\PlainDocs::render(get_class($this->serviceClassInstance));
+		echo PlainDocs::render(get_class($this->serviceClassInstance));
 	}
 }

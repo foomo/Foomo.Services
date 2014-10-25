@@ -20,9 +20,9 @@
 namespace Foomo\Services\RPC\Status\Persistence;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class DomainConfig extends \Foomo\Config\AbstractConfig
 {

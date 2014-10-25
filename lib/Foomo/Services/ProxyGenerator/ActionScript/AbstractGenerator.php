@@ -20,15 +20,15 @@
 namespace Foomo\Services\ProxyGenerator\ActionScript;
 
 use Foomo\Flash\ActionScript\PHPUtils;
-use Foomo\Flash\ActionScript\ViewHelper;
+use Foomo\Services\Reflection\ServiceOperation;
 
 /**
  * base class to render actionscript service proxies
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
- * @author franklin <franklin@weareinteractive.com>
+ * @author  jan <jan@bestbytes.de>
+ * @author  franklin <franklin@weareinteractive.com>
  */
 abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRenderer
 {
@@ -57,7 +57,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 */
 	protected $commonClassFiles = array();
 	/**
-	 * @var Foomo\Services\ServiceDescription
+	 * @var \Foomo\Services\ServiceDescription
 	 */
 	public $serviceDescription;
 	/**
@@ -67,7 +67,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	/**
 	 * the class to be rendered as a data class in the DataClass Template
 	 *
-	 * @var Foomo\Services\Reflection\ServiceObjectType
+	 * @var \Foomo\Services\Reflection\ServiceObjectType
 	 */
 	public $currentDataClass;
 	/**
@@ -85,7 +85,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	/**
 	 * complex types
 	 *
-	 * @var Foomo\Services\Reflection\ServiceObjectType[]
+	 * @var \Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $complexTypes;
 	/**
@@ -136,7 +136,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @param Foomo\Services\ServiceDescription $serviceDescription
+	 * @param \Foomo\Services\ServiceDescription $serviceDescription
 	 */
 	public function __construct(\Foomo\Services\ServiceDescription $serviceDescription)
 	{
@@ -173,7 +173,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 * get a (specific) template
 	 *
 	 * @param string $template base name of the template
-	 * @return Foomo\View
+	 * @return \Foomo\View
 	 */
 	abstract protected function getView($template);
 
@@ -192,7 +192,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		if (file_exists($this->targetSrcDir)) trigger_error('Could not rm previous target src dir: ' . $this->targetSrcDir, \E_USER_ERROR);
 		\Foomo\Modules\Resource\Fs::getAbsoluteResource(\Foomo\Modules\Resource\Fs::TYPE_FOLDER, $this->targetSrcDir)->tryCreate();
 		$parts = \explode('\\', ltrim($this->serviceName, '\\'));
-		$this->proxyClassName =  $parts[count($parts) - 1] . 'Proxy';
+		$this->proxyClassName = $parts[count($parts) - 1] . 'Proxy';
 		if ($this->myPackage != '') {
 			$this->myPackage = $this->targetPackage . '.' . strtolower(substr(PHPUtils::getASType($this->serviceName), 0, 1)) . substr(PHPUtils::getASType($this->serviceName), 1);
 		} else {
@@ -221,14 +221,14 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	/**
 	 * render the service type itself
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -236,7 +236,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
@@ -259,7 +259,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	/**
 	 * for remote class alias registration
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 * @return string
 	 */
 	public function getVORemoteAliasName(\Foomo\Services\Reflection\ServiceObjectType $type)
@@ -270,7 +270,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	/**
 	 * get the class name for a value object
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 * @return string
 	 */
 	public function getVOClassName(\Foomo\Services\Reflection\ServiceObjectType $type)
@@ -316,14 +316,14 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 			->directory($this->targetSrcDir)
 			->addDirectoryFiles()
 			->execute()
-			->report
-		;
+			->report;
 		return $ret;
 	}
 
 	/**
 	 * @param string $configId Flex config id to use
 	 * @return string
+	 * @throws \Exception
 	 */
 	public function compile($configId)
 	{
@@ -336,10 +336,8 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 		$ret .= 'calling Adobe Compc (Flex Component Compiler) see what the compiler reported - ';
 		$compileReport = '';
 
-
 		$externalLibs = array();
 		$sourcePaths = array();
-
 
 		# get flex config
 		$flexConfigEntry = \Foomo\Flash\Module::getCompilerConfig()->getEntry($configId);
@@ -358,19 +356,19 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 
 		if (!file_exists($this->getSWCFileName())) {
 			throw new \Exception(
-					'Adobe Compc (Flex Component Compiler) failed to create the swc.' . PHP_EOL .
-					PHP_EOL .
-					'This typically means, that there are incomplete phpDoc comments for your service classes method' . PHP_EOL .
-					'parameters and / or return values and / or the corresponding value objects.' . PHP_EOL .
-					'The resulting action script will have errors like' . PHP_EOL .
-					PHP_EOL .
-					'// missing type declaration' . PHP_EOL .
-					'public var lastResult:;' . PHP_EOL .
-					PHP_EOL .
-					'see also what the flex compiler put to stdErr' . PHP_EOL .
-					PHP_EOL .
-					$compc->report,
-					1
+				'Adobe Compc (Flex Component Compiler) failed to create the swc.' . PHP_EOL .
+				PHP_EOL .
+				'This typically means, that there are incomplete phpDoc comments for your service classes method' . PHP_EOL .
+				'parameters and / or return values and / or the corresponding value objects.' . PHP_EOL .
+				'The resulting action script will have errors like' . PHP_EOL .
+				PHP_EOL .
+				'// missing type declaration' . PHP_EOL .
+				'public var lastResult:;' . PHP_EOL .
+				PHP_EOL .
+				'see also what the flex compiler put to stdErr' . PHP_EOL .
+				PHP_EOL .
+				$compc->report,
+				1
 			);
 		} else {
 			$ret .= $compc->report;
@@ -455,7 +453,7 @@ abstract class AbstractGenerator extends \Foomo\Services\Renderer\AbstractRender
 	 * write the classes to the file system, tar them and if possible create a swc
 	 *
 	 * @return string a report of what was done
-	 * @throws Exception with a text report, of what went wrong
+	 * @throws \Exception with a text report, of what went wrong
 	 */
 	protected function export()
 	{

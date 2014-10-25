@@ -20,22 +20,32 @@
 namespace Foomo\Services\RPC\Serializer;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class PHP implements SerializerInterface
 {
-    const TYPE = 'serviceTypePhp';
+	// --------------------------------------------------------------------------------------------
+	// ~ Constants
+	// --------------------------------------------------------------------------------------------
+
+	const TYPE = 'serviceTypePhp';
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
-    public function getType()
-    {
-        return self::TYPE;
-    }
+
 	/**
-	 * @param mixed $var
+	 * @return string
+	 */
+	public function getType()
+	{
+		return self::TYPE;
+	}
+
+	/**
+	 * @param mixed $call
 	 * @return string serialized data
 	 */
 	public function serialize($call)
@@ -49,10 +59,10 @@ class PHP implements SerializerInterface
 	 */
 	public function unserialize($serialized)
 	{
-	    $ret = @\unserialize($serialized);
-	    if($ret === false) {
-		   	trigger_error(__METHOD__ . ' could not unserialize data >>>' . $serialized . '<<<', \E_USER_WARNING);
-	    }
+		$ret = @\unserialize($serialized);
+		if ($ret === false) {
+			trigger_error(__METHOD__ . ' could not unserialize data >>>' . $serialized . '<<<', \E_USER_WARNING);
+		}
 		return $ret;
 	}
 

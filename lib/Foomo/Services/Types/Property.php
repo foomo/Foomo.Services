@@ -23,12 +23,17 @@ namespace Foomo\Services\Types;
  * type to describe generic properties
  *
  * @Foomo\Services\Reflection\RemoteClass(package='org.foomo.services.sharedVo')
- * 
- * @link www.foomo.org
+ *
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
-class Property {
+class Property
+{
+	// --------------------------------------------------------------------------------------------
+	// ~ Variables
+	// --------------------------------------------------------------------------------------------
+
 	/**
 	 * name of the property
 	 *
@@ -41,17 +46,21 @@ class Property {
 	 * @var mixed
 	 */
 	public $value;
+
+	// --------------------------------------------------------------------------------------------
+	// ~ Public static methods
+	// --------------------------------------------------------------------------------------------
+
 	/**
 	 * helper function to translate a hash
 	 *
 	 * @param array $sourceHash
-	 *
-	 * @return Foomo\Services\Types\Property[]
+	 * @return Property[]
 	 */
 	public static function castHashToServicePropertyArray($sourceHash)
 	{
 		$ret = array();
-		foreach($sourceHash as $key => $value) {
+		foreach ($sourceHash as $key => $value) {
 			$prop = new self();
 			$prop->name = $key;
 			$prop->value = $value;
@@ -59,16 +68,17 @@ class Property {
 		}
 		return $ret;
 	}
+
 	/**
 	 * transform back to a hash
 	 *
-	 * @param Foomo\Services\Types\Property[] $servicePropertyArray
+	 * @param Property[] $servicePropertyArray
 	 * @return array a regular hash
 	 */
 	public static function castToHash($servicePropertyArray)
 	{
 		$ret = array();
-		foreach($servicePropertyArray as $serviceProp) {
+		foreach ($servicePropertyArray as $serviceProp) {
 			$ret[$serviceProp->name] = $serviceProp->value;
 		}
 		return $ret;

@@ -20,9 +20,9 @@
 namespace Foomo\Services\SOAP;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Frontend extends \Foomo\MVC\AbstractApp
 {
@@ -31,7 +31,7 @@ class Frontend extends \Foomo\MVC\AbstractApp
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @param stdClass $serviceInstance
+	 * @param mixed $serviceInstance
 	 */
 	public function __construct($serviceInstance)
 	{

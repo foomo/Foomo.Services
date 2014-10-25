@@ -53,7 +53,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * all the ops to be exposed
 	 *
-	 * @var Foomo\Services\Reflection\ServiceOperation[]
+	 * @var \Foomo\Services\Reflection\ServiceOperation[]
 	 */
 	public $operations;
 	/**
@@ -65,7 +65,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * all the vo classes that should be imported
 	 *
-	 * @var Foomo\Services\Reflection\ServiceObjectType[]
+	 * @var \Foomo\Services\Reflection\ServiceObjectType[]
 	 */
 	public $classesToImport = array();
 
@@ -120,7 +120,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * render the service type itself
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -129,7 +129,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * render an operateion / method of the services class
 	 *
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
@@ -139,7 +139,7 @@ class RPC extends \Foomo\Services\Renderer\AbstractRenderer
 	/**
 	 * render a Type
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{

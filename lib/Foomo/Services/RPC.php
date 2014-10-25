@@ -98,7 +98,7 @@ class RPC
 	/**
 	 * create a RPC service
 	 *
-	 * @param stdClass $serviceInstance service object
+	 * @param mixed $serviceInstance service object
 	 *
 	 * @return \Foomo\Services\RPC
 	 */

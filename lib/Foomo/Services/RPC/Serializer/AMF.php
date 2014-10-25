@@ -22,18 +22,18 @@ namespace Foomo\Services\RPC\Serializer;
 /**
  * AMF (un)serializer
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class AMF implements SerializerInterface
 {
-    const TYPE = 'serviceTypeRpcAmf';
 	//---------------------------------------------------------------------------------------------
 	// ~ Constants
 	//---------------------------------------------------------------------------------------------
 
-	const BACK_END_AMF_EXT = 0;
+	const TYPE              = 'serviceTypeRpcAmf';
+	const BACK_END_AMF_EXT  = 0;
 	const BACK_END_ZEND_AMF = 1;
 
 	//---------------------------------------------------------------------------------------------
@@ -44,11 +44,11 @@ class AMF implements SerializerInterface
 	 *
 	 * @var string
 	 */
-    private $encodingFlags;
+	private $encodingFlags;
 	/**
 	 * @var int
 	 */
-    private $backEnd;
+	private $backEnd;
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Constructor
@@ -57,8 +57,8 @@ class AMF implements SerializerInterface
 	/**
 	 *
 	 */
-    public function __construct()
-    {
+	public function __construct()
+	{
 		$amf3 = false;
 		$this->encodingFlags = (pack("d", 1) ? 2 : 0) | ($amf3 ? 1 : 0);
 		if (!function_exists('amf_encode')) {
@@ -66,18 +66,19 @@ class AMF implements SerializerInterface
 		} else {
 			$this->backEnd = self::BACK_END_AMF_EXT;
 		}
-    }
+	}
 
+	//---------------------------------------------------------------------------------------------
+	// ~ Public methods
+	//---------------------------------------------------------------------------------------------
 
-
-    //---------------------------------------------------------------------------------------------
-    // ~ Public methods
-    //---------------------------------------------------------------------------------------------
-
-    public function getType()
-    {
-        return self::TYPE;
-    }
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return self::TYPE;
+	}
 
 	/**
 	 * serialize
@@ -88,7 +89,7 @@ class AMF implements SerializerInterface
 	public function serialize($call)
 	{
 
-		if($this->backEnd == self::BACK_END_AMF_EXT) {
+		if ($this->backEnd == self::BACK_END_AMF_EXT) {
 			return amf_encode($call, $this->encodingFlags, __CLASS__ . '::callBackEncode');
 		} else {
 			$outStream = new \Zend_Amf_Parse_OutputStream();
@@ -106,7 +107,7 @@ class AMF implements SerializerInterface
 	 */
 	public function unserialize($serialized)
 	{
-		if($this->backEnd == self::BACK_END_AMF_EXT) {
+		if ($this->backEnd == self::BACK_END_AMF_EXT) {
 			return amf_decode($serialized, $this->encodingFlags, 0, __CLASS__ . '::callBackDecode');
 		} else {
 			$inputStream = new \Zend_Amf_Parse_InputStream($serialized);
@@ -117,7 +118,7 @@ class AMF implements SerializerInterface
 
 	/**
 	 *
-	 * @param int $arg
+	 * @param int    $arg
 	 * @param string $event
 	 * @return array
 	 */
@@ -125,9 +126,9 @@ class AMF implements SerializerInterface
 	{
 		$args = func_get_args();
 		//trigger_error(__METHOD__ . var_export($args, true));
-		switch($event) {
+		switch ($event) {
 			case 1: // AMFE_MAP
-				if(is_object($arg) && strpos(get_class($arg), '\\') !== false) {
+				if (is_object($arg) && strpos(get_class($arg), '\\') !== false) {
 					$classname = str_replace('\\', '.', get_class($arg));
 					return array(
 						$arg,      // value
@@ -140,18 +141,18 @@ class AMF implements SerializerInterface
 
 	/**
 	 *
-	 * @param int $event
+	 * @param int    $event
 	 * @param string $arg
 	 * @return stdClass
 	 */
 	public static function callBackDecode($event, $arg)
 	{
-		switch($event) {
+		switch ($event) {
 			case 1: // AMFE_MAP
 				if (strpos($arg, '.') !== false) {
 					//trigger_error(__FUNCTION__ . $event . ' ========> ' . $arg);
 					$ret = str_replace('.', '\\', $arg);
-					if(class_exists($ret)) {
+					if (class_exists($ret)) {
 						return new $ret;
 					}
 				}

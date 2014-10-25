@@ -24,9 +24,9 @@ use Foomo\Config;
 /**
  * describes a service
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class ServiceDescription
 {
@@ -36,7 +36,8 @@ class ServiceDescription
 
 	/**
 	 * a rpc service using AMF for transports
-     * @deprecated use Foomo\Services\RPC\Serializer\AMF::TYPE instead
+	 *
+	 * @deprecated use Foomo\Services\RPC\Serializer\AMF::TYPE instead
 	 */
 	const TYPE_RPC_AMF = 'serviceTypeRpcAmf';
 
@@ -92,7 +93,7 @@ class ServiceDescription
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * 
+	 *
 	 */
 	public function __construct()
 	{

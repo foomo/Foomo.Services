@@ -22,6 +22,7 @@ namespace Foomo\Services\Reflection;
 use Exception;
 use Foomo\Config;
 use Foomo\Reflection\PhpDocEntry;
+use Foomo\Reflection\PhpDocProperty;
 use ReflectionAnnotatedClass;
 use Foomo\AutoLoader;
 
@@ -34,11 +35,6 @@ use Foomo\AutoLoader;
  */
 class ServiceObjectType
 {
-	/**
-	 * @internal
-	 * @var bool
-	 */
-	static $seriouslyCacheInDevAndTestMode = false;
 	//---------------------------------------------------------------------------------------------
 	// ~ Constants
 	//---------------------------------------------------------------------------------------------
@@ -51,6 +47,12 @@ class ServiceObjectType
 	//---------------------------------------------------------------------------------------------
 	// ~ Static variables
 	//---------------------------------------------------------------------------------------------
+
+	/**
+	 * @internal
+	 * @var bool
+	 */
+	static $seriouslyCacheInDevAndTestMode = false;
 
 	/**
 	 * type => ServiceObjectType

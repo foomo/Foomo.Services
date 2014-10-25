@@ -20,9 +20,9 @@
 namespace Foomo\Services\RPC\Frontend;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Controller
 {
@@ -59,11 +59,11 @@ class Controller
 		\Foomo\MVC::abort();
 		header('Content-Type: text/plain;charset=utf-8;');
 		echo \Foomo\Services\ProxyGenerator\PHP\RPC::render(
-				$this->model->serviceClassName,
-				new \Foomo\Services\ProxyGenerator\PHP\RPC(
-					\Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'),
-					'Foomo\\Services\\RPC\\Serializer\\PHP'
-				)
+			$this->model->serviceClassName,
+			new \Foomo\Services\ProxyGenerator\PHP\RPC(
+				\Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('serve'),
+				'Foomo\\Services\\RPC\\Serializer\\PHP'
+			)
 		);
 		exit;
 	}
@@ -75,7 +75,7 @@ class Controller
 	 */
 	public function actionServe($method = null)
 	{
-        \Foomo\MVC::abort();
+		\Foomo\MVC::abort();
 		$this->auth($this->model->authDomain);
 		$args = array();
 		if (!empty($method)) {
@@ -98,7 +98,7 @@ class Controller
 	 * @todo http GET support and let the browser cache things too ...
 	 *
 	 * @param string $method
-	 * @param mixed $parameters
+	 * @param mixed  $parameters
 	 */
 	public function actionGet($method, $parameters)
 	{

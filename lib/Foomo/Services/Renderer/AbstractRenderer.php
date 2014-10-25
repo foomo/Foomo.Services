@@ -20,14 +20,13 @@
 namespace Foomo\Services\Renderer;
 
 use Foomo\Services\Reflection\ServiceObjectType;
-use Foomo\Services\Reflection\ServiceOperation;
 
 /**
  * extend, if you want to render services as a pizza or somthing else useful
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 abstract class AbstractRenderer
 {
@@ -75,7 +74,7 @@ abstract class AbstractRenderer
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @param string $className
+	 * @param string           $className
 	 * @param AbstractRenderer $renderer
 	 * @return mixed
 	 */

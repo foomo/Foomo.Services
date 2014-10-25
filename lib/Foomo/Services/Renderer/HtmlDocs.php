@@ -22,9 +22,9 @@ namespace Foomo\Services\Renderer;
 /**
  * renders a html documentation for a service
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 final class HtmlDocs extends AbstractRenderer
 {
@@ -94,7 +94,7 @@ final class HtmlDocs extends AbstractRenderer
 	/**
 	 * render the service type itself
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -103,9 +103,9 @@ final class HtmlDocs extends AbstractRenderer
 
 	/**
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
-	 * @param integer $level
-	 * @param string $propName
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param integer                                      $level
+	 * @param string                                       $propName
 	 */
 	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type, $level = 0, $propName = null)
 	{
@@ -117,7 +117,7 @@ final class HtmlDocs extends AbstractRenderer
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 * @return boolean
 	 */
 	public function typeIsInRecursion(\Foomo\Services\Reflection\ServiceObjectType $type)
@@ -135,7 +135,7 @@ final class HtmlDocs extends AbstractRenderer
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
@@ -160,4 +160,3 @@ final class HtmlDocs extends AbstractRenderer
 		return str_replace('[]', '', $type->type);
 	}
 }
-

@@ -19,37 +19,39 @@
 
 namespace Foomo\Services\SOAP;
 
+use Foomo\Services\Reflection\ServiceObjectType;
+
 /**
  * generate a wsdl for a web service
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
-final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
+final class WSDLRenderer extends AbstractRenderer
 {
 	//---------------------------------------------------------------------------------------------
 	// ~ Variables
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @var DOMDocument
+	 * @var \DOMDocument
 	 */
 	private $dom;
 	/**
-	 * @var DOMElement
+	 * @var \DOMElement
 	 */
 	private $opsElement;
 	/**
-	 * @var DOMElement
+	 * @var \DOMElement
 	 */
 	private $typesElement;
 	/**
-	 * @var DOMElement
+	 * @var \DOMElement
 	 */
 	private $rootElement;
 	/**
-	 * @var DOMElement
+	 * @var \DOMElement
 	 */
 	private $bindingElement;
 	/**
@@ -89,57 +91,56 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 		$this->dom->appendChild($rootComment);
 		$this->rootElement = $this->dom->appendChild($this->dom->createElementNS('http://schemas.xmlsoap.org/wsdl/', 'definitions'));
 		$this->addAttributes(
-				array(
-			'name' => $serviceName,
-			'targetNamespace' => 'urn:' . $serviceName,
-			'xmlns:typens' => 'urn:' . $serviceName,
-			'xmlns:soap' => 'http://schemas.xmlsoap.org/wsdl/soap/',
-			'xmlns:xsd' => 'http://www.w3.org/2001/XMLSchema',
-			'xmlns:wsdl' => 'http://schemas.xmlsoap.org/wsdl/',
-			'xmlns:soapenc' => 'http://schemas.xmlsoap.org/soap/encoding/'
-				), $this->rootElement
+			array(
+				'name'            => $serviceName,
+				'targetNamespace' => 'urn:' . $serviceName,
+				'xmlns:typens'    => 'urn:' . $serviceName,
+				'xmlns:soap'      => 'http://schemas.xmlsoap.org/wsdl/soap/',
+				'xmlns:xsd'       => 'http://www.w3.org/2001/XMLSchema',
+				'xmlns:wsdl'      => 'http://schemas.xmlsoap.org/wsdl/',
+				'xmlns:soapenc'   => 'http://schemas.xmlsoap.org/soap/encoding/'
+			), $this->rootElement
 		);
 
 		$this->opsElement = $this->rootElement->appendChild(new \DOMElement('portType'));
 		$this->addAttributes(
-				array(
-			'name' => $serviceName . 'Port'
-				), $this->opsElement
+			array(
+				'name' => $serviceName . 'Port'
+			), $this->opsElement
 		);
 		$typeEl = $this->rootElement->appendChild(new \DOMElement('types'));
 		$this->typesElement = $typeEl->appendChild($this->dom->createElement('xsd:schema'));
 		$this->addAttributes(
-				array('targetNamespace' => 'urn:' . $serviceName), $this->typesElement
+			array('targetNamespace' => 'urn:' . $serviceName), $this->typesElement
 		);
 
 		$this->bindingElement = $this->dom->createElement('binding');
 		$this->addAttributes(
-				array(
-			'name' => $serviceName . 'Binding',
-			'type' => 'typens:' . $serviceName . 'Port'
-				), $this->bindingElement
+			array(
+				'name' => $serviceName . 'Binding',
+				'type' => 'typens:' . $serviceName . 'Port'
+			), $this->bindingElement
 		);
 		$soapBindingElement = $this->bindingElement->appendChild($this->dom->createElement('soap:binding'));
 		$this->addAttributes(
-				array(
-			'style' => 'rpc',
-			'transport' => 'http://schemas.xmlsoap.org/soap/http'
-				), $soapBindingElement
+			array(
+				'style'     => 'rpc',
+				'transport' => 'http://schemas.xmlsoap.org/soap/http'
+			), $soapBindingElement
 		);
 	}
 
 	/**
 	 * render the service type itself
 	 *
-	 * @param ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
-
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
@@ -147,7 +148,7 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -176,68 +177,68 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 			$messageElement = $this->dom->createElement('message');
 			array_push($messageElements, $messageElement);
 			$this->addAttributes(
-					array('name' => $op->name . 'Request'), $messageElement
+				array('name' => $op->name . 'Request'), $messageElement
 			);
 			foreach ($op->parameters as $parameterName => $parameterType) {
 				$partElement = $messageElement->appendChild(new \DOMElement('part'));
 				$this->addAttributes(
-						array(
-					'name' => $parameterName,
-					'type' => $this->mapType($parameterType)
-						), $partElement
+					array(
+						'name' => $parameterName,
+						'type' => $this->mapType($parameterType)
+					), $partElement
 				);
 			}
 			// outputMessage
 			$outputMessagElement = $this->dom->createElement('message');
 			array_push($messageElements, $outputMessagElement);
 			$this->addAttributes(
-					array('name' => $op->name . 'Response'), $outputMessagElement
+				array('name' => $op->name . 'Response'), $outputMessagElement
 			);
 			$partElement = $outputMessagElement->appendChild(new \DOMElement('part'));
 			if (!isset($op->returnType)) {
 				trigger_error('no return type set for operation ' . $op->name, E_USER_NOTICE);
 			}
 			$this->addAttributes(
-					array(
-				'name' => 'return',
-				'type' => $this->mapType($op->returnType->type)
-					), $partElement
+				array(
+					'name' => 'return',
+					'type' => $this->mapType($op->returnType->type)
+				), $partElement
 			);
 			// ops
 			$opElement = $this->opsElement->appendChild(new \DOMElement('operation'));
 			$this->addAttributes(
-					array('name' => $op->name), $opElement
+				array('name' => $op->name), $opElement
 			);
 			$docEl = $opElement->appendChild(new \DOMElement('documentation', $op->comment));
 			$inputElement = $opElement->appendChild(new \DOMElement('input'));
 			$this->addAttributes(
-					array('message' => 'typens:' . $op->name . 'Request'), $inputElement
+				array('message' => 'typens:' . $op->name . 'Request'), $inputElement
 			);
 			$outputElement = $opElement->appendChild(new \DOMElement('output'));
 			$this->addAttributes(
-					array('message' => 'typens:' . $op->name . 'Response'), $outputElement
+				array('message' => 'typens:' . $op->name . 'Response'), $outputElement
 			);
 			// binding
 			$opElement = $this->bindingElement->appendChild(new \DOMElement('operation'));
 			$this->addAttributes(
-					array('name' => $op->name), $opElement
+				array('name' => $op->name), $opElement
 			);
 			$soapActionElement = $opElement->appendChild($this->dom->createElement('soap:operation'));
 			$this->addAttributes(
-					array(
-				'soapAction' => 'urn:' . $this->serviceName . 'Action'
-					), $soapActionElement
+				array(
+					'soapAction' => 'urn:' . $this->serviceName . 'Action'
+				), $soapActionElement
 			);
 			$toDoList = array('input', 'output');
 			foreach ($toDoList as $toDo) {
 				$el = $opElement->appendChild(new \DOMElement($toDo));
 				$soapEl = $el->appendChild($this->dom->createElement('soap:body'));
 				$this->addAttributes(
-						array(
-					'use' => 'encoded',
-					'namespace' => 'urn:' . $this->serviceName,
-					'encodingStyle' => 'http://schemas.xmlsoap.org/soap/encoding/'
-						), $soapEl
+					array(
+						'use'           => 'encoded',
+						'namespace'     => 'urn:' . $this->serviceName,
+						'encodingStyle' => 'http://schemas.xmlsoap.org/soap/encoding/'
+					), $soapEl
 				);
 			}
 		}
@@ -249,21 +250,21 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 		$this->rootElement->appendChild($this->bindingElement);
 		$portEl = $this->rootElement->appendChild(new \DOMElement('service'));
 		$this->addAttributes(
-				array(
-			'name' => $this->serviceName . 'Service'
-				), $portEl
+			array(
+				'name' => $this->serviceName . 'Service'
+			), $portEl
 		);
 		$portPortEl = $portEl->appendChild(new \DOMElement('port'));
 		$this->addAttributes(
-				array(
-			'name' => $this->serviceName . 'Port',
-			'binding' => 'typens:' . $this->serviceName . 'Binding'
-				), $portPortEl
+			array(
+				'name'    => $this->serviceName . 'Port',
+				'binding' => 'typens:' . $this->serviceName . 'Binding'
+			), $portPortEl
 		);
 		$soapAddressEl = $portPortEl->appendChild($this->dom->createElement('soap:address'));
 		$this->addAttributes(
-				array('location' => '#endPointPlaceHolder#'), //$this->endPoint),
-				$soapAddressEl
+			array('location' => '#endPointPlaceHolder#'), //$this->endPoint),
+			$soapAddressEl
 		);
 		return $this->dom->saveXML();
 	}
@@ -297,8 +298,8 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 
 	/**
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
-	 * @param DOMElement $element
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \DOMElement                                  $element
 	 */
 	private function addType(\Foomo\Services\Reflection\ServiceObjectType $type, \DOMElement $element)
 	{
@@ -322,7 +323,7 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 			array_push($this->typesAdded, $fullType);
 			$complexTypeElement = $element->appendChild($this->dom->createElement('xsd:complexType'));
 			$this->addAttributes(
-					array('name' => $fullType), $complexTypeElement
+				array('name' => $fullType), $complexTypeElement
 			);
 
 			if ($isComplex && !$isArrayOf) {
@@ -357,22 +358,22 @@ final class WSDLRenderer extends \Foomo\Services\Renderer\AbstractRenderer
 				$complexContentEl = $complexTypeElement->appendChild($this->dom->createElement('xsd:complexContent'));
 				$restrEl = $complexContentEl->appendChild($this->dom->createElement('xsd:restriction'));
 				$this->addAttributes(
-						array('base' => 'soapenc:Array'), $restrEl
+					array('base' => 'soapenc:Array'), $restrEl
 				);
 				$attrEl = $restrEl->appendChild($this->dom->createElement('xsd:attribute'));
 				$this->addAttributes(
-						array(
-					'ref' => 'soapenc:arrayType',
-					'wsdl:arrayType' => $this->mapType($type->type) . '[]'
-						), $attrEl
+					array(
+						'ref'            => 'soapenc:arrayType',
+						'wsdl:arrayType' => $this->mapType($type->type) . '[]'
+					), $attrEl
 				);
 			}
 		}
 	}
 
 	/**
-	 * @param array $attrs
-	 * @param DOMElement $el
+	 * @param array      $attrs
+	 * @param \DOMElement $el
 	 */
 	private function addAttributes($attrs, \DOMElement $el)
 	{

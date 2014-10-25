@@ -44,7 +44,7 @@ class Model
 	/**
 	 * object that will handle the calls
 	 *
-	 * @var stdClass
+	 * @var mixed
 	 */
 	private $serverObject;
 	/**

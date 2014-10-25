@@ -20,9 +20,9 @@
 namespace Foomo\Services\RPC\Status;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Service
 {
@@ -31,7 +31,7 @@ class Service
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @todo: implement or remove
+	 * @todo implement or remove
 	 * @param integer $id
 	 * @return array
 	 */

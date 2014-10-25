@@ -22,9 +22,9 @@ namespace Foomo\Services\Renderer;
 /**
  * plain text docs rendering
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 final class PlainDocs extends AbstractRenderer
 {
@@ -65,7 +65,7 @@ final class PlainDocs extends AbstractRenderer
 	/**
 	 * render the service type itself
 	 *
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
 	 */
 	public function renderServiceType(\Foomo\Services\Reflection\ServiceObjectType $type)
 	{
@@ -75,10 +75,10 @@ final class PlainDocs extends AbstractRenderer
 	/**
 	 *
 	 * @staticvar array $renderedTypes
-	 * @param Foomo\Services\Reflection\ServiceObjectType $type
-	 * @param boolean $nested
+	 * @param \Foomo\Services\Reflection\ServiceObjectType $type
+	 * @param boolean                                     $nested
 	 */
-	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type, $nested=false)
+	public function renderType(\Foomo\Services\Reflection\ServiceObjectType $type, $nested = false)
 	{
 		static $renderedTypes = array();
 		if (in_array($type->type, $renderedTypes) && $nested || $nested && count($type->props) > 0) {
@@ -116,7 +116,7 @@ final class PlainDocs extends AbstractRenderer
 	}
 
 	/**
-	 * @param Foomo\Services\Reflection\ServiceOperation $op
+	 * @param \Foomo\Services\Reflection\ServiceOperation $op
 	 */
 	public function renderOperation(\Foomo\Services\Reflection\ServiceOperation $op)
 	{
@@ -152,11 +152,10 @@ final class PlainDocs extends AbstractRenderer
 	public function output()
 	{
 		return
-				$this->out . PHP_EOL .
-				'TYPES:' . PHP_EOL . PHP_EOL .
-				$this->typesOut . PHP_EOL .
-				'OPERATIONS:' . PHP_EOL . PHP_EOL .
-				$this->opsOut . PHP_EOL
-		;
+			$this->out . PHP_EOL .
+			'TYPES:' . PHP_EOL . PHP_EOL .
+			$this->typesOut . PHP_EOL .
+			'OPERATIONS:' . PHP_EOL . PHP_EOL .
+			$this->opsOut . PHP_EOL;
 	}
 }

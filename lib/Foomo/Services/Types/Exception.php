@@ -20,9 +20,9 @@
 namespace Foomo\Services\Types;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Exception extends \Exception
 {
@@ -54,10 +54,10 @@ class Exception extends \Exception
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @param string $msg [optional]
+	 * @param string  $msg  [optional]
 	 * @param integer $code [optional]
 	 */
-	public function __construct($msg='', $code=500)
+	public function __construct($msg = '', $code = 500)
 	{
 		parent::__construct($msg, $code);
 		$this->code = $this->getCode();

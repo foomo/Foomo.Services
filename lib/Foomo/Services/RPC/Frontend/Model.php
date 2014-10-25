@@ -18,12 +18,13 @@
  */
 
 namespace Foomo\Services\RPC\Frontend;
+
 use Foomo\Services\RPC\Serializer\JSON;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Model
 {
@@ -36,7 +37,7 @@ class Model
 	 */
 	public $serviceClassName;
 	/**
-	 * @var stdClass
+	 * @var mixed
 	 */
 	public $serviceClassInstance;
 	/**
@@ -48,7 +49,7 @@ class Model
 	 */
 	public $package;
 	/**
-	 * @var \Foomo\Services\ProxyGenerator\RPC\Report
+	 * @var \Foomo\Services\ProxyGenerator\Report
 	 */
 	public $proxyGeneratorReport;
 	/**
@@ -60,16 +61,15 @@ class Model
 	 */
 	public $authDomainDev;
 
-
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
 
 	/**
 	 * @param string $method
-	 * @param array $arguments
+	 * @param array  $arguments
 	 */
-	public function serve($method=null, array $arguments=array())
+	public function serve($method = null, array $arguments = array())
 	{
 		ob_start();
 		if (!is_null($method)) {
@@ -82,7 +82,7 @@ class Model
 				$parameters = array_slice($parameters, count($arguments));
 				foreach ($parameters as $parm) {
 					/* @var $parm \ReflectionParameter */
-					if(is_object($alternativeParameters)) {
+					if (is_object($alternativeParameters)) {
 						if (isset($alternativeParameters->{$parm->getName()})) {
 							$arguments[] = $alternativeParameters->{$parm->getName()};
 						} else {
@@ -109,10 +109,10 @@ class Model
 				$call = $GLOBALS['HTTP_RAW_POST_DATA'];
 			} else if (isset($_POST['call'])) {
 				$call = $_POST['call'];
-			} else  {
-                $call = file_get_contents('php://input');
-            }
-            if(empty($call)) {
+			} else {
+				$call = file_get_contents('php://input');
+			}
+			if (empty($call)) {
 				$error = __METHOD__ . ' HTTP_RAW_POST_DATA or $_POST[\'call\'] must be set';
 				echo $error;
 				trigger_error($error . var_export($_POST, true), E_USER_ERROR);
@@ -145,14 +145,14 @@ class Model
 		$descr = new \Foomo\Services\ServiceDescription();
 		$descr->url = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->baseURL;
 		$descr->documentationUrl = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('default');
-		switch($this->serializer->getType()) {
+		switch ($this->serializer->getType()) {
 			case JSON::TYPE:
 				$descr->compilationUrl = \Foomo\Utils::getServerUrl() . \Foomo\MVC::getCurrentUrlHandler()->renderMethodUrl('generateJQueryClient');
 				break;
 		}
 		$descr->package = $this->package;
 		$descr->name = $this->serviceClassName;
-        $descr->type = $this->serializer->getType();
+		$descr->type = $this->serializer->getType();
 		$descr->version = @constant($descr->name . '::VERSION');
 		return $descr;
 	}

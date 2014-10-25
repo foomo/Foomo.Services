@@ -23,36 +23,43 @@ namespace Foomo\Services\RPC\Serializer;
  * streamline RPC calls
  *
  */
-interface SerializerInterface {
-    /**
-     * your type for service descriptions
-     *
-     * @return string
-     */
-    public function getType();
+interface SerializerInterface
+{
+	// --------------------------------------------------------------------------------------------
+	// ~ Public methods
+	// --------------------------------------------------------------------------------------------
+
+	/**
+	 * your type for service descriptions
+	 *
+	 * @return string
+	 */
+	public function getType();
+
 	/**
 	 * serialize
 	 *
-	 * @param mixed $var
-	 * 
+	 * @param mixed $call
 	 * @return string serialized data
 	 */
 	public function serialize($call);
+
 	/**
 	 * unserialize
 	 *
 	 * @param string $serialized
-	 * 
 	 * @return mixed unserialized call
 	 */
 	public function unserialize($serialized);
+
 	/**
 	 * what is your mime type
 	 */
 	public function getContentMime();
+
 	/**
 	 * tells, if this serializer supports types or not
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function supportsTypes();

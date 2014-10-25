@@ -20,20 +20,30 @@
 namespace Foomo\Services\RPC\Serializer;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class JSON implements SerializerInterface
 {
-    const TYPE = 'serviceTypeRpcJson';
+	// --------------------------------------------------------------------------------------------
+	// ~ Constants
+	// --------------------------------------------------------------------------------------------
+
+	const TYPE = 'serviceTypeRpcJson';
+
 	//---------------------------------------------------------------------------------------------
 	// ~ Public methods
 	//---------------------------------------------------------------------------------------------
-    public function getType()
-    {
-        return self::TYPE;
-    }
+
+	/**
+	 * @return string
+	 */
+	public function getType()
+	{
+		return self::TYPE;
+	}
+
 	/**
 	 *
 	 * @param string $call

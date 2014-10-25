@@ -19,10 +19,13 @@
 
 namespace Foomo\Services\ProxyGenerator;
 
+use Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator;
+use Foomo\Services\ProxyGenerator\ActionScript\Report;
+
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class ActionScript
 {
@@ -33,13 +36,13 @@ class ActionScript
 	/**
 	 * compile and report
 	 *
-	 * @param string $service service class name
-	 * @param Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator $generator
-	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report
+	 * @param string            $service service class name
+	 * @param AbstractGenerator $generator
+	 * @return Report
 	 */
-	public static function generateSrc($service, \Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator $generator)
+	public static function generateSrc($service, AbstractGenerator $generator)
 	{
-		$report = new \Foomo\Services\ProxyGenerator\ActionScript\Report();
+		$report = new Report();
 		$report->generator = $generator;
 		$report->swcFilename = $generator->getSWCFilename();
 		$report->tgzFilename = $generator->getTGZFilename();
@@ -47,7 +50,7 @@ class ActionScript
 			$report->report = $generator->render($service, $generator);
 			$report->report = 'Source generation success : ' . PHP_EOL . PHP_EOL . $report->report . PHP_EOL;
 			$report->success = true;
-		} catch (Exception $e) {
+		} catch (\Exception $e) {
 			$report->success = false;
 			$report->report .= 'Source generation failed:' . PHP_EOL;
 			$report->report .= '----------- ' . $e->getMessage() . ' ----------' . PHP_EOL . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
@@ -56,11 +59,11 @@ class ActionScript
 	}
 
 	/**
-	 * @param string $service service class name
-	 * @param Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator $generator
-	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report
+	 * @param string            $service service class name
+	 * @param AbstractGenerator $generator
+	 * @return Report
 	 */
-	public static function packSrc($service, $generator)
+	public static function packSrc($service, AbstractGenerator $generator)
 	{
 		$report = self::generateSrc($service, $generator);
 		if ($report->success) {
@@ -68,7 +71,7 @@ class ActionScript
 				$packingReport = $report->generator->packTgz();
 				$report->report .= 'Source packaging success : ' . PHP_EOL . $packingReport . PHP_EOL;
 				$report->success = true;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$report->success = false;
 				$report->report .= 'Source packaging failure : ' . PHP_EOL;
 				$report->report .= '----------- ' . $e->getMessage() . ' ----------' . PHP_EOL . PHP_EOL . $e->getTraceAsString() . PHP_EOL;
@@ -78,12 +81,12 @@ class ActionScript
 	}
 
 	/**
-	 * @param string $service service class name
-	 * @param Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator $generator
-	 * @param string $configId Flex config entry to use
-	 * @return Foomo\Services\ProxyGenerator\ActionScript\Report
+	 * @param string            $service  service class name
+	 * @param AbstractGenerator $generator
+	 * @param string            $configId Flex config entry to use
+	 * @return Report
 	 */
-	public static function compileSrc($service, $generator, $configId)
+	public static function compileSrc($service, AbstractGenerator $generator, $configId)
 	{
 		$report = self::generateSrc($service, $generator);
 		if ($report->success) {
@@ -91,7 +94,7 @@ class ActionScript
 				$compilationReport = $report->generator->compile($configId);
 				$report->report = 'COMPILATION SUCCESS : ' . PHP_EOL . PHP_EOL . $compilationReport . PHP_EOL;
 				$report->success = true;
-			} catch (Exception $e) {
+			} catch (\Exception $e) {
 				$report->success = false;
 				$report->report .= 'COMPILATION FAILURE :' . PHP_EOL;
 				$report->report .= '----------- ' . $e->getMessage() . ' ----------' . PHP_EOL . PHP_EOL . $e->getTraceAsString() . PHP_EOL;

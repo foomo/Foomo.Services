@@ -19,17 +19,16 @@
 
 namespace Foomo\Services\SOAP;
 
-use Foomo\Services\SOAP;
-use Foomo\Services\ServiceDescription;
 use Foomo\Services\Reflection;
-use Foomo\Services\Renderer\HtmlDocs;
+use Foomo\Services\ServiceDescription;
+use Foomo\Services\SOAP;
 
 /**
  * utility class, which provides all the extended documentation, interface and proxy generation functionality for the SoapServer
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 final class Utils
 {
@@ -44,7 +43,7 @@ final class Utils
 	 */
 	public static function explainMachine($service)
 	{
-		if(isset($service->ASProxyCompilerSettings)) {
+		if (isset($service->ASProxyCompilerSettings)) {
 			$package = $service->ASProxyCompilerSettings->targetPackage;
 		} else {
 			$package = '';
@@ -64,6 +63,7 @@ final class Utils
 		echo serialize($description);
 		// echo serialize(array('package' => $package, 'class' => $service->className));
 	}
+
 	/**
 	 * @param string $serviceClassName
 	 *
@@ -73,6 +73,7 @@ final class Utils
 	{
 		return WSDLRenderer::render($serviceClassName);
 	}
+
 	/**
 	 * compiles the AS Proxy
 	 *
@@ -95,28 +96,29 @@ final class Utils
 		}
 		*/
 	}
+
 	/**
 	 * streams the generated proxy to the client or outputs an error message
 	 *
 	 * @param ServiceSoap $service
-	 * @param boolean $asSWC stream the SWC or the tgz
+	 * @param boolean     $asSWC stream the SWC or the tgz
 	 */
 	public static function getASProxy(ServiceSoap $service, $asSWC = false)
 	{
 		$downloadName = $service->className;
-		if($asSWC) {
+		if ($asSWC) {
 			$mime = 'application/octet-stream';
 			$downloadName .= '.swc';
 		} else {
 			$mime = 'application/x-compressed';
 			$downloadName .= '.tgz';
 		}
-		$file = realpath(sys_get_temp_dir()) . '/' . $downloadName ;
+		$file = realpath(sys_get_temp_dir()) . '/' . $downloadName;
 		//die($file);
-		if(isset($service->ASProxyCompilerSettings) && file_exists($file)) {
+		if (isset($service->ASProxyCompilerSettings) && file_exists($file)) {
 			\Foomo\Utils::streamFile($file, $downloadName, $mime, true);
 			exit;
-		} elseif(!file_exists($file) && isset($service->ASProxyCompilerSettings)) {
+		} elseif (!file_exists($file) && isset($service->ASProxyCompilerSettings)) {
 			$error = 'compile first and check, if the compilation succeeded ' . $file . ' does not exist and I can not stream it to you';
 		} else {
 			$error = 'no ASProxyCompilerSettings set ?!';

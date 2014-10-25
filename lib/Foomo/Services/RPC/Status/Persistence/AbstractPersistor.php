@@ -20,10 +20,10 @@
 namespace Foomo\Services\RPC\Status\Persistence;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
- * @todo: implement or remove
+ * @author  jan <jan@bestbytes.de>
+ * @todo    implement or remove
  */
 class AbstractPersistor
 {

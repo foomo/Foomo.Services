@@ -20,9 +20,9 @@
 namespace Foomo\Services\Reflection;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class ServiceOperation
 {
@@ -82,6 +82,13 @@ class ServiceOperation
 	// ~ Constructor
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * @param string     $name
+	 * @param \Foomo\Reflection\PhpDocArg $returnType
+	 * @param \Foomo\Reflection\PhpDocArg[] $throwsTypes
+	 * @param \Foomo\Reflection\PhpDocArg[] $messageTypes
+	 * @param string $comment
+	 */
 	public function __construct($name, $returnType = null, $throwsTypes = null, $messageTypes = null, $comment = null)
 	{
 		$this->name = $name;
@@ -100,28 +107,30 @@ class ServiceOperation
 	 *
 	 * @param string $name name of the parameter
 	 * @param string $type type of the parameter
+	 * @throws \Exception
 	 */
 	public function addParameter($name, $type)
 	{
-		if(!isset($this->parameters[$name])) {
+		if (!isset($this->parameters[$name])) {
 			$this->parameters[$name] = $type;
 		} else {
-			throw new \Exception('parameter "'.$name.'":'.$type.' was already used', self::ERROR_PARAMETER_USED);
+			throw new \Exception('parameter "' . $name . '":' . $type . ' was already used', self::ERROR_PARAMETER_USED);
 		}
 	}
 
 	/**
 	 * add parameter docs
 	 *
-	 * @param string $name name of the parameter
+	 * @param string                      $name name of the parameter
 	 * @param \Foomo\Reflection\PhpDocArg $type info on the parameter
+	 * @throws \Exception
 	 */
 	public function addParameterDocs($name, \Foomo\Reflection\PhpDocArg $type)
 	{
-		if(!isset($this->parameterDocs[$name])) {
+		if (!isset($this->parameterDocs[$name])) {
 			$this->parameterDocs[$name] = $type;
 		} else {
-			throw new \Exception('parameter '.$name.'was already used', self::ERROR_PARAMETER_USED);
+			throw new \Exception('parameter ' . $name . 'was already used', self::ERROR_PARAMETER_USED);
 		}
 	}
 }

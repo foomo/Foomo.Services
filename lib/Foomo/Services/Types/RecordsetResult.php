@@ -22,9 +22,9 @@ namespace Foomo\Services\Types;
 /**
  * standard paging record set for value objects in services
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 abstract class RecordsetResult
 {

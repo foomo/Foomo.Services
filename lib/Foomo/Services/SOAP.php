@@ -19,14 +19,16 @@
 
 namespace Foomo\Services;
 
+use Foomo\MVC;
+
 /**
  * A soap server
  * reads a given class and all types referenced
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
- * @todo workaround wsdl.cache_path, check caching in general
+ * @author  jan <jan@bestbytes.de>
+ * @todo    workaround wsdl.cache_path, check caching in general
  */
 class SOAP
 {
@@ -34,8 +36,11 @@ class SOAP
 	// ~ Public static methods
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * @param mixed $serviceClassInstance
+	 */
 	public static function serveClass($serviceClassInstance)
 	{
-		echo \Foomo\MVC::run(new SOAP\Frontend($serviceClassInstance));
+		echo MVC::run(new SOAP\Frontend($serviceClassInstance));
 	}
 }

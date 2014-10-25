@@ -19,18 +19,18 @@
 
 namespace Foomo\Services;
 
-use ReflectionClass;
-use Foomo\Reflection\PhpDocEntry;
 use Foomo\Reflection\PhpDocArg;
+use Foomo\Reflection\PhpDocEntry;
 use Foomo\Services\Reflection\ServiceObjectType;
 use Foomo\Services\Reflection\ServiceOperation;
+use ReflectionClass;
 
 /**
  * reads a given class and all types referenced
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Reflection
 {
@@ -39,8 +39,6 @@ class Reflection
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * service type
-	 *
 	 * @var \Foomo\Services\Reflection\ServiceObjectType
 	 */
 	private $serviceType;
@@ -61,6 +59,9 @@ class Reflection
 	// ~ Constructor
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * @param string $className
+	 */
 	public function __construct($className)
 	{
 		$this->className = $className;
@@ -110,6 +111,9 @@ class Reflection
 	// ~ Private methods
 	//---------------------------------------------------------------------------------------------
 
+	/**
+	 * @param string $className
+	 */
 	private function read($className)
 	{
 		$this->serviceType = new ServiceObjectType($className);
@@ -157,7 +161,6 @@ class Reflection
 	 * register and return atype
 	 *
 	 * @param \Foomo\Reflection\PhpDocArg $arg
-	 *
 	 * @return \Foomo\Reflection\PhpDocArg
 	 */
 	private function registerType(PhpDocArg $arg)
@@ -183,5 +186,4 @@ class Reflection
 			}
 		}
 	}
-
 }

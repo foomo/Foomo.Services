@@ -18,20 +18,26 @@
  */
 
 namespace Foomo\Services;
+
+use Foomo\Frontend\ToolboxConfig\MenuEntry;
+use Foomo\Frontend\ToolboxInterface;
 use Foomo\Modules\MakeResult;
+use Foomo\Modules\ModuleBase;
+use Foomo\Modules\Resource;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
-class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\ToolboxInterface
+class Module extends ModuleBase implements ToolboxInterface
 {
 	//---------------------------------------------------------------------------------------------
 	// ~ Constants
 	//---------------------------------------------------------------------------------------------
-	const VERSION = '0.3.0';
-	const NAME = 'Foomo.Services';
+
+	const VERSION = '0.4.0';
+	const NAME    = 'Foomo.Services';
 
 	//---------------------------------------------------------------------------------------------
 	// ~ Overriden methods
@@ -58,8 +64,8 @@ class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\Toolbo
 	public static function getResources()
 	{
 		return array(
-			\Foomo\Modules\Resource\Module::getResource('Foomo', '0.3.*'),
-			\Foomo\Modules\Resource\PhpModule::getResource('amf')->isNiceToHave(true)
+			Resource\Module::getResource('Foomo', '0.3.*'),
+			Resource\PhpModule::getResource('amf')->isNiceToHave(true)
 		);
 	}
 
@@ -69,24 +75,29 @@ class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\Toolbo
 
 	/**
 	 * @internal
-	 * @return array
+	 * @return MenuEntry[]
 	 */
 	public static function getMenu()
 	{
 		return array(
-			\Foomo\Frontend\ToolboxConfig\MenuEntry::create('Root.Modules.Services', 'Services', self::NAME, 'Foomo.Services')
+			MenuEntry::create('Root.Modules.Services', 'Services', self::NAME, 'Foomo.Services')
 		);
 	}
+
+	/**
+	 * @param string     $target
+	 * @param MakeResult $result
+	 */
 	public static function make($target, MakeResult $result)
 	{
-		switch($target) {
+		switch ($target) {
 			case 'all':
-				foreach(Utils::buildAllLocalServices() as $line) {
+				foreach (Utils::buildAllLocalServices() as $line) {
 					$result->addEntry($line);
 				}
 				break;
 			case 'clean':
-				foreach(Utils::cleanAllLocalServices() as $line) {
+				foreach (Utils::cleanAllLocalServices() as $line) {
 					$result->addEntry($line);
 				}
 				break;
@@ -94,5 +105,4 @@ class Module extends \Foomo\Modules\ModuleBase implements \Foomo\Frontend\Toolbo
 				$result->addEntry('nothing to make here for target ' . $target);
 		}
 	}
-
 }

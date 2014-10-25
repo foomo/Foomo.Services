@@ -22,9 +22,9 @@ namespace Foomo\Services\Types;
 /**
  * Class to model Time Ranges with one Start- and one End-time
  *
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class TimeRange
 {
@@ -59,7 +59,8 @@ class TimeRange
 	 *
 	 * @return integer
 	 */
-	public function getTimeSpan() {
+	public function getTimeSpan()
+	{
 		if ($this->end != null and $this->start != null) {
 			return ($this->end - $this->start);
 		}

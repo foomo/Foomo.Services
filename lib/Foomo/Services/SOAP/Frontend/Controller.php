@@ -20,9 +20,9 @@
 namespace Foomo\Services\SOAP\Frontend;
 
 /**
- * @link www.foomo.org
+ * @link    www.foomo.org
  * @license www.gnu.org/licenses/lgpl.txt
- * @author jan <jan@bestbytes.de>
+ * @author  jan <jan@bestbytes.de>
  */
 class Controller
 {
@@ -31,7 +31,7 @@ class Controller
 	//---------------------------------------------------------------------------------------------
 
 	/**
-	 * @var Foomo\Services\Soap\Frontend\Model
+	 * @var \Foomo\Services\Soap\Frontend\Model
 	 */
 	public $model;
 
