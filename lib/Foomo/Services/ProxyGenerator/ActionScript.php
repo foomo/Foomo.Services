@@ -20,7 +20,6 @@
 namespace Foomo\Services\ProxyGenerator;
 
 use Foomo\Services\ProxyGenerator\ActionScript\AbstractGenerator;
-use Foomo\Services\ProxyGenerator\ActionScript\Report;
 
 /**
  * @link    www.foomo.org
@@ -38,11 +37,11 @@ class ActionScript
 	 *
 	 * @param string            $service service class name
 	 * @param AbstractGenerator $generator
-	 * @return Report
+	 * @return \Foomo\Services\ProxyGenerator\ActionScript\Report
 	 */
 	public static function generateSrc($service, AbstractGenerator $generator)
 	{
-		$report = new Report();
+		$report = new \Foomo\Services\ProxyGenerator\ActionScript\Report();
 		$report->generator = $generator;
 		$report->swcFilename = $generator->getSWCFilename();
 		$report->tgzFilename = $generator->getTGZFilename();
@@ -61,7 +60,7 @@ class ActionScript
 	/**
 	 * @param string            $service service class name
 	 * @param AbstractGenerator $generator
-	 * @return Report
+	 * @return \Foomo\Services\ProxyGenerator\ActionScript\Report
 	 */
 	public static function packSrc($service, AbstractGenerator $generator)
 	{
@@ -84,7 +83,7 @@ class ActionScript
 	 * @param string            $service  service class name
 	 * @param AbstractGenerator $generator
 	 * @param string            $configId Flex config entry to use
-	 * @return Report
+	 * @return \Foomo\Services\ProxyGenerator\ActionScript\Report
 	 */
 	public static function compileSrc($service, AbstractGenerator $generator, $configId)
 	{

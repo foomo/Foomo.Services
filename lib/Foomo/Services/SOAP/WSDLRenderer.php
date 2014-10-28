@@ -20,6 +20,7 @@
 namespace Foomo\Services\SOAP;
 
 use Foomo\Services\Reflection\ServiceObjectType;
+use Foomo\Services\Renderer\AbstractRenderer;
 
 /**
  * generate a wsdl for a web service
