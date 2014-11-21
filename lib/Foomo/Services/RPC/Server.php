@@ -30,6 +30,7 @@ use Foomo\Services\RPC\Protocol\Reply\Exception as ReplyException;
 use Foomo\Services\RPC\Protocol\Reply\Head as ReplyHead;
 use Foomo\Services\RPC\Protocol\Reply\MethodReply;
 use Foomo\Services\RPC\Serializer\SerializerInterface;
+use Foomo\SimpleData\VoMapper;
 use Foomo\Timer;
 use Foomo\Utils;
 use ReflectionClass;
@@ -132,6 +133,14 @@ class Server
 				// @todo depending upon the serializer data must be casted
 				// i.e. json does not support types => cast from hash to object
 				// based on reflection
+				$methodReflection = new \ReflectionMethod($serviceClassInstance, $methodCall->method);
+				foreach ($methodReflection->getParameters() as $parameter) {
+					if (null != $reflClass = $parameter->getClass())  {
+						$className = $reflClass->getName();
+						$pos = $parameter->getPosition();
+						$methodCall->arguments[$pos] = VoMapper::map($methodCall->arguments[$pos], new $className);
+					}
+				}
 			}
 			$useArgs = array();
 			$sortArgs = false;
