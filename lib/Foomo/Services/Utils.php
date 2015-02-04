@@ -286,12 +286,7 @@ class Utils
 					if (!empty($serviceDescription->compilationUrl)) {
 						$report[] = 'calling ' . $serviceDescription->compilationUrl;
 						$parts = parse_url($serviceDescription->compilationUrl);
-						$urlWithCredentials =
-							$parts['scheme'] . '://' .
-							urlencode($_SERVER['PHP_AUTH_USER']) . ':' . urlencode($_SERVER['PHP_AUTH_PW']) . '@' .
-							$parts['host'] .
-							(isset($parts['port']) ? ':' . $parts['port'] : '') .
-							$parts['path'];
+						$urlWithCredentials = \Foomo\Utils::getServerUrl(null, true) . $parts["path"];
 						file_get_contents($urlWithCredentials);
 					}
 				}
