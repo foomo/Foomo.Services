@@ -17,6 +17,8 @@
 
 */
 
+var Foomo = Foomo || {};
+Foomo.$ = Foomo.$ || window.jQuery;
 (function( window ) {
 	var mixinStub = function(operation, arguments) {
 		operation.data = {
@@ -49,7 +51,7 @@
 				operation.data._errorCallback(operation);
 			}
 		};
-		operation.data.ajax = $.ajax({
+		operation.data.ajax = Foomo.$.ajax({
 			dataType: 'json',
 			url: url,
 			type: postData === null?'GET':'POST',
