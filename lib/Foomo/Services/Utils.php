@@ -89,11 +89,38 @@ class Utils
 			if (($serviceDescription = @unserialize($serialized)) && ($serviceDescription instanceof ServiceDescription)) {
 				$cache[$key] = $serviceDescription;
 			} else {
-				trigger_error('could not unserialize service description from ' . $serviceUrl);
+				trigger_error('could not unserialize service description from ' . $serviceUrl, E_USER_WARNING);
 				$cache[$key] = null;
 			}
 		}
 		return $cache[$key];
+	}
+
+	/**
+	 * handle a service description explain request if not implemented
+	 */
+	public static function handleExplainDescriptionNotImplemented()
+	{
+		if(isset($_GET['explain'])) {
+			self::handleDescriptionNotImplemented();
+		}
+	}
+
+	/**
+	 * handle a service description explain machine request if not implemented
+	 */
+	public static function handleExplainMachineDescriptionNotImplemented()
+	{
+		if(isset($_GET['explainMachine'])) {
+			self::handleDescriptionNotImplemented();
+		}
+	}
+
+	private static function handleDescriptionNotImplemented()
+	{
+		header('HTTP/1.1 501 Not Implemented');
+		echo 'explain method not implemented';
+		exit;
 	}
 
 	/**
