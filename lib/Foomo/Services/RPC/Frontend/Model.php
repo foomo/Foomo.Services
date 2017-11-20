@@ -80,19 +80,23 @@ class Model
 			if (count($arguments) < count($parameters)) {
 				$alternativeParameters = $this->serializer->unserialize(file_get_contents('php://input'));
 				$parameters = array_slice($parameters, count($arguments));
-				foreach ($parameters as $parm) {
+				foreach ($parameters as $i => $parm) {
 					/* @var $parm \ReflectionParameter */
 					if (is_object($alternativeParameters)) {
 						if (isset($alternativeParameters->{$parm->getName()})) {
-							$arguments[] = $alternativeParameters->{$parm->getName()};
+							$arguments[$i] = $alternativeParameters->{$parm->getName()};
 						} else {
-							break;
+							if (!isset($arguments[$i])) {
+								$arguments[$i] = null;
+							}
 						}
 					} elseif (is_array($alternativeParameters)) {
 						if (isset($alternativeParameters[$parm->getName()])) {
-							$arguments[] = $alternativeParameters[$parm->getName()];
+							$arguments[$i] = $alternativeParameters[$parm->getName()];
 						} else {
-							break;
+							if (!isset($arguments[$i])) {
+								$arguments[$i] = null;
+							}
 						}
 					}
 				}
