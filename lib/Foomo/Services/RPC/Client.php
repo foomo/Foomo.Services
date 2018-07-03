@@ -39,23 +39,23 @@ class Client
 	 */
 	protected $serializer;
 	/**
-	 * Enter description here...
+	 * name of the class to talk to
 	 *
-	 * @var unknown_type
+	 * @var string
 	 */
 	protected $targetClass;
 	/**
-	 * Enter description here...
+	 * uri of the service
 	 *
-	 * @var unknown_type
+	 * @var string
 	 */
 	protected $endPoint;
 	/**
 	 * that is where the cookies for curl get stored
 	 *
-	 * @var string
+	 * @var string[]
 	 */
-	private $cookies = array();
+	protected $cookies = array();
 	/**
 	 * the currently returned reply - see
 	 *
@@ -170,10 +170,6 @@ class Client
 		return $methodReply->value;
 	}
 
-	//---------------------------------------------------------------------------------------------
-	// ~ Private methods
-	//---------------------------------------------------------------------------------------------
-
 	/**
 	 *
 	 * @param string $clientVersion
@@ -181,7 +177,7 @@ class Client
 	 * @param array $arguments
 	 * @return \Foomo\Services\RPC\Protocol\Call
 	 */
-	private function getRequestForSimpleCall($clientVersion, $name, $arguments)
+	protected function getRequestForSimpleCall($clientVersion, $name, $arguments)
 	{
 		$request = new Protocol\Call();
 		$request->head = new Protocol\Call\Head();
@@ -202,14 +198,14 @@ class Client
 	 * @param string $data string to post
 	 * @return string
 	 */
-	private function post($data)
+	protected function post($data)
 	{
 		$ch = $this->getHandleForPost($data);
 		$result = curl_exec($ch);
 
 		if($result === false) {
 			curl_close($ch);
-			trigger_error('a curl error occurred ' . curl_error($ch), E_USER_ERROR);
+			trigger_error('a curl error occurred ' . curl_error($ch), E_USER_WARNING);
 		} else {
 			$replyData = $this->extractData($result, $ch);
 			foreach($replyData['cookies'] as $cookieName => $cookieValue) {
@@ -225,7 +221,7 @@ class Client
 	 * @param resource $ch
 	 * @return array
 	 */
-	private function extractData($result, $ch)
+	protected function extractData($result, $ch)
 	{
 		$headerLength = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 		$header = substr($result, 0, $headerLength);
@@ -237,7 +233,7 @@ class Client
 	 * @param mixed $data
 	 * @return resource a cURL handle on success, false on errors.
 	 */
-	private function getHandleForPost($data)
+	protected function getHandleForPost($data)
 	{
 		$ch = curl_init();
 
@@ -266,7 +262,7 @@ class Client
 	 * @param array $dataArray
 	 * @return array
 	 */
-	private function multiPost($dataArray)
+	protected function multiPost($dataArray)
 	{
 
         $mh = curl_multi_init();
@@ -302,9 +298,9 @@ class Client
 
 	/**
 	 * @param string $headers
-	 * @return string
+	 * @return string[]
 	 */
-	private function extractSetCookies($headers)
+	protected function extractSetCookies($headers)
 	{
 		$cookies = array();
 		$lines = explode(chr(10), $headers);
