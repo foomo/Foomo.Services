@@ -151,7 +151,6 @@ class JQuery extends \Foomo\Services\Renderer\AbstractRenderer
 				case 'bool':
 				case 'boolean':
 				case 'double':
-					continue;
 					break;
 				default:
 					return true;
