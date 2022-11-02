@@ -36,7 +36,7 @@ class Module extends ModuleBase implements ToolboxInterface
 	// ~ Constants
 	//---------------------------------------------------------------------------------------------
 
-	const VERSION = '0.4.1';
+	const VERSION = '0.4.2';
 	const NAME    = 'Foomo.Services';
 
 	//---------------------------------------------------------------------------------------------
@@ -64,8 +64,7 @@ class Module extends ModuleBase implements ToolboxInterface
 	public static function getResources()
 	{
 		return array(
-			Resource\Module::getResource('Foomo', '0.3.*'),
-			Resource\PhpModule::getResource('amf')->isNiceToHave(true)
+			Resource\Module::getResource('Foomo', '0.3.*')
 		);
 	}
 

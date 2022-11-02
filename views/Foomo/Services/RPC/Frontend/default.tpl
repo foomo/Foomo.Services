@@ -10,7 +10,7 @@ Foomo\HTMLDocument::getInstance()->addStylesheets(array(
 ));
 
 Foomo\HTMLDocument::getInstance()->addJavascripts(array(
-	\Foomo\ROOT_HTTP . '/js/jquery-1.6.1.min.js',
+	\Foomo\ROOT_HTTP . '/js/jquery-1.6.3.min.js',
 	\Foomo\ROOT_HTTP . '/js/jquery.address-1.4.min.js',
 	\Foomo\ROOT_HTTP . '/js/modules.js'
 ))

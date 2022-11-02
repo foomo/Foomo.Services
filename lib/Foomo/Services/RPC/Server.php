@@ -135,7 +135,7 @@ class Server
 				// based on reflection
 				$methodReflection = new \ReflectionMethod($serviceClassInstance, $methodCall->method);
 				foreach ($methodReflection->getParameters() as $parameter) {
-					if (null != $reflClass = $parameter->getClass())  {
+					if (null != $reflClass = \Foomo\Reflection\Utils::getClass($parameter))  {
 						$className = $reflClass->getName();
 						$pos = $parameter->getPosition();
 						$methodCall->arguments[$pos] = VoMapper::map($methodCall->arguments[$pos], new $className);
